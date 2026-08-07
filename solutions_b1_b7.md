@@ -5,7 +5,9 @@
 
 ## Bài 1:
 
-1. Chưa làm
+1. **Lưu đồ hệ thống tiền lương**
+
+   ![Lưu đồ hệ thống tiền lương](assets/svg/01_payroll_system_flow.svg)
 
 2. Những nguy cơ của hệ thống:
    - Dữ liệu chấm công có thể không chính xác hoặc chưa được xác nhận, dẫn đến tính lương sai.
@@ -19,15 +21,25 @@
 
 ## Bài 2:
 
-1. Chưa làm
+1. **Lưu đồ quy trình thanh toán tiền lương**
 
-2. Chưa làm
+   ![Lưu đồ quy trình thanh toán tiền lương](assets/svg/02_payroll_payment_flow.svg)
+
+2. **Sơ đồ dòng dữ liệu quy trình thanh toán tiền lương**
+
+   ![Sơ đồ dòng dữ liệu quy trình thanh toán tiền lương](assets/svg/03_payroll_payment_dfd.svg)
 
 ---
 
 # 2
 
-Chưa làm
+## Sơ đồ dòng dữ liệu hệ thống bán trái cây tươi và thu tiền
+
+![Sơ đồ dòng dữ liệu hệ thống bán trái cây tươi và thu tiền](assets/svg/04_fresh_fruit_dfd.svg)
+
+## Lưu đồ hệ thống bán trái cây tươi và thu tiền
+
+![Lưu đồ hệ thống bán trái cây tươi và thu tiền](assets/svg/05_fresh_fruit_flow.svg)
 
 ---
 
@@ -44,7 +56,13 @@ Chưa làm
 | Bộ phận kho | Phối hợp với bộ phận mua hàng kiểm đếm, nhận và xác nhận hàng; lập phiếu nhập kho 2 liên; chuyển liên 1 cho kế toán và lưu liên 2 tại kho. |
 | Phòng kế toán | Nhận đơn đề nghị mua hàng liên 2, đơn đặt hàng liên 3, phiếu nhập kho liên 1 và hóa đơn; đối chiếu chứng từ với hóa đơn; ghi sổ mua hàng; xử lý thanh toán cho nhà cung cấp. |
 
-2. Chưa làm
+2. **Sơ đồ dòng dữ liệu tổng quát**
+
+   ![Sơ đồ dòng dữ liệu tổng quát quy trình mua hàng và thanh toán](assets/svg/06_purchase_context_dfd.svg)
+
+   **Sơ đồ dòng dữ liệu chi tiết cấp 0**
+
+   ![Sơ đồ dòng dữ liệu chi tiết cấp 0 quy trình mua hàng và thanh toán](assets/svg/07_purchase_level0_dfd.svg)
 
 3. Những nguy cơ có thể xảy ra:
    - Mua hàng không cần thiết, vượt nhu cầu hoặc chưa được phê duyệt hợp lệ.
@@ -72,7 +90,9 @@ Chưa làm
 | Phòng vật tư | Nhận đề nghị mua vật tư liên 2; mua vật tư theo kế hoạch; nhận vật tư; lập biên bản giao nhận; chuyển biên bản giao nhận và hóa đơn cho kế toán; chuyển vật tư cho thủ kho. |
 | Kế toán | Nhận dự toán và kế hoạch thi công; nhận hóa đơn, biên bản giao nhận và phiếu nhập kho liên 2; đối chiếu chứng từ và ghi sổ kế toán. |
 
-2. Chưa làm
+2. **Lưu đồ tài liệu quy trình cấp và mua vật tư**
+
+   ![Lưu đồ tài liệu quy trình cấp và mua vật tư](assets/svg/08_material_document_flow.svg)
 
 3. Những nguy cơ có thể xảy ra:
    - Các bộ phận có thể sử dụng sai phiên bản bản vẽ hoặc kế hoạch thi công nếu có thay đổi nhưng không được cập nhật đồng bộ.
@@ -90,7 +110,9 @@ Chưa làm
 
 # 5
 
-Chưa làm
+## Sơ đồ dòng dữ liệu hệ thống bán trái cây tươi và thu tiền
+
+![Sơ đồ dòng dữ liệu hệ thống bán trái cây tươi và thu tiền](assets/svg/04_fresh_fruit_dfd.svg)
 
 ---
 
@@ -110,8 +132,14 @@ Chưa làm
 
 ## Bài 1:
 
-Chưa làm
+### Sơ đồ dòng dữ liệu tổng quát
+
+![Sơ đồ dòng dữ liệu tổng quát quá trình bán hàng và thu tiền](assets/svg/09_sales_context_dfd.svg)
+
+### Sơ đồ dòng dữ liệu chi tiết cấp 0
+
+![Sơ đồ dòng dữ liệu chi tiết cấp 0 quá trình bán hàng và thu tiền](assets/svg/10_sales_level0_dfd.svg)
 
 ## Bài 2:
 
-Chưa làm
+![Lưu đồ quá trình bán hàng và thu tiền](assets/svg/11_sales_flow.svg)
