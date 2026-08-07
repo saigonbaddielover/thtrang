@@ -84,11 +84,11 @@
 | Đối tượng | Hoạt động |
 |---|---|
 | Phòng thiết kế | Lập bản vẽ công trình 3 bản; lưu 1 bản; gửi 1 bản cho phòng dự án và 1 bản cho đội thi công. |
-| Phòng dự án | Nhận bản vẽ công trình; lập dự toán công trình và kế hoạch thi công từng giai đoạn; gửi cho kế toán và đội thi công. |
+| Phòng dự án | Nhận bản vẽ công trình; lập dự toán công trình và kế hoạch thi công từng giai đoạn; gửi dự toán và kế hoạch cho kế toán; chỉ gửi kế hoạch thi công cho đội thi công. |
 | Đội thi công | Nhận bản vẽ công trình và kế hoạch thi công; lập đề nghị cấp vật tư theo giai đoạn gửi thủ kho; nhận vật tư để thi công. |
 | Thủ kho | Nhận đề nghị cấp vật tư; kiểm tra, đối chiếu khối lượng vật tư tồn kho; lập đề nghị mua vật tư 2 liên; lưu liên 1, chuyển liên 2 cho phòng vật tư; nhận vật tư từ phòng vật tư; lập phiếu nhập kho 2 liên; lưu liên 1, chuyển liên 2 cho kế toán; giao vật tư cho đội thi công. |
 | Phòng vật tư | Nhận đề nghị mua vật tư liên 2; mua vật tư theo kế hoạch; nhận vật tư; lập biên bản giao nhận; chuyển biên bản giao nhận và hóa đơn cho kế toán; chuyển vật tư cho thủ kho. |
-| Kế toán | Nhận dự toán và kế hoạch thi công; nhận hóa đơn, biên bản giao nhận và phiếu nhập kho liên 2; đối chiếu chứng từ và ghi sổ kế toán. |
+| Kế toán | Nhận dự toán và kế hoạch thi công; nhận hóa đơn và biên bản giao nhận từ phòng vật tư; nhận phiếu nhập kho liên 2 từ thủ kho; đối chiếu chứng từ và ghi sổ kế toán. |
 
 2. **Lưu đồ tài liệu quy trình cấp và mua vật tư**
 
@@ -134,12 +134,12 @@
 
 ### Sơ đồ dòng dữ liệu tổng quát
 
-![Sơ đồ dòng dữ liệu tổng quát quá trình bán hàng và thu tiền](assets/svg/09_sales_context_dfd.svg)
+![Sơ đồ dòng dữ liệu tổng quát quá trình bán hàng](assets/svg/09_sales_context_dfd.svg)
 
 ### Sơ đồ dòng dữ liệu chi tiết cấp 0
 
-![Sơ đồ dòng dữ liệu chi tiết cấp 0 quá trình bán hàng và thu tiền](assets/svg/10_sales_level0_dfd.svg)
+![Sơ đồ dòng dữ liệu chi tiết cấp 0 quá trình bán hàng](assets/svg/10_sales_level0_dfd.svg)
 
 ## Bài 2:
 
-![Lưu đồ quá trình bán hàng và thu tiền](assets/svg/11_sales_flow.svg)
+![Lưu đồ quá trình bán hàng](assets/svg/11_sales_flow.svg)
