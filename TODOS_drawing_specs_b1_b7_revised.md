@@ -1685,16 +1685,21 @@ Nhận Đề nghị mua vật tư liên 2
 → Mua vật tư theo kế hoạch
 → Nhận vật tư mua về
 → Lập Biên bản giao nhận
+
+Hóa đơn
+(nằm trong custody của Phòng vật tư;
+nguồn lập/phát hành không nêu trong đề)
 ```
 
 Sau đó:
 
 ```text
 Biên bản giao nhận → Kế toán
+Hóa đơn → Kế toán
 Vật tư mua về → Thủ kho
 ```
 
-`Hóa đơn` là một document riêng đi tới Kế toán. Đề không nêu nguồn lập/phát hành hóa đơn, nên diagram phải ghi rõ `nguồn không nêu trong đề` và không được nối provenance của hóa đơn từ Phòng vật tư.
+`Hóa đơn` là document riêng nằm trong custody của Phòng vật tư trước khi được Phòng vật tư chuyển tới Kế toán. Đề không nêu nguồn lập/phát hành hóa đơn, nên diagram phải đặt annotation `Nguồn lập/phát hành không nêu trong đề` và không được nối process lập/phát hành nào vào document này.
 
 ### Kế toán
 
