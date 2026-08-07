@@ -1358,11 +1358,11 @@ n_customer_inv document HĐ liên 1
   - `PGH liên 1 → customer`
   - `PGH liên 2 → billing`
   - `PGH liên 3 → accounting`
-  - `PXK → archive`
+  - `n_receive_pxk → n_store_pxk` label `PXK`; archive lineage must not originate from `n_pgh`
 - billing:
   - `HĐ liên 1 → customer`
   - `HĐ liên 2 → accounting`
-  - `PGH → archive`
+  - `n_receive_pgh → n_store_pgh` label `PGH`; archive lineage must not originate from `n_invoice`
 - accounting:
   - PGH3 + HĐ2 hội tụ tại `n_receive_docs`
   - `n_receive_docs → n_reconcile`
@@ -1690,9 +1690,11 @@ Nhận Đề nghị mua vật tư liên 2
 Sau đó:
 
 ```text
-Biên bản giao nhận + Hóa đơn → Kế toán
-Vật tư → Thủ kho
+Biên bản giao nhận → Kế toán
+Vật tư mua về → Thủ kho
 ```
+
+`Hóa đơn` là một document riêng đi tới Kế toán. Đề không nêu nguồn lập/phát hành hóa đơn, nên diagram phải ghi rõ `nguồn không nêu trong đề` và không được nối provenance của hóa đơn từ Phòng vật tư.
 
 ### Kế toán
 
@@ -1729,7 +1731,7 @@ Do 6 lane:
   - accounting reconciliation ở phần dưới.
 - `Dự toán + Kế hoạch` đi tới Kế toán ở upper corridor; `Kế hoạch thi công` đi riêng tới Đội thi công.
 - Luồng `Vật tư` chạy lower corridor:
-  `Phòng vật tư → Thủ kho → Đội thi công`.
+  `n_bought_material → n_warehouse_material → n_construction_material`.
 - Không cho luồng vật tư chồng lên luồng chứng từ.
 
 Không dùng ELK.
@@ -1961,7 +1963,7 @@ Không dùng type mơ hồ `archive/process`.
 ### Kế toán bán hàng
 
 ```text
-n_acc_receive process      Nhận Phiếu giao hàng đã ký vào ngày hôm sau
+n_acc_receive process      Nhận bàn giao Phiếu giao hàng đã ký
 n_seq         process      Kiểm tra số thứ tự các liên
 n_sum         process      Tính toán/cộng doanh số
 n_software    process      Nhập Phiếu giao hàng vào phần mềm kế toán
@@ -1994,7 +1996,7 @@ Không tạo actor/lane máy tính.
 9. `n_customer_sign → n_customer_keep` label `1 liên khách giữ`
 10. `n_customer_sign → n_return_doc` label `1 liên đã ký trả lại`
 11. `n_return_doc → n_acc_receive` label `Cuối ngày`
-12. `n_acc_receive → n_seq`
+12. `n_acc_receive → n_seq` label `Ngày hôm sau`
 13. `n_seq → n_sum`
 14. `n_sum → n_software`
 15. `n_software → d_revenue` label `Ghi nhận doanh thu`
