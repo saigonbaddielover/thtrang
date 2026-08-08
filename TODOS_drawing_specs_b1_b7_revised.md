@@ -2506,3 +2506,60 @@ semantic correctness pass
 Nếu bất kỳ gate nào không chạy được thì phải ghi `Skipped` cùng residual risk; không được tự chuyển gate đó thành `Passed`.
 
 Không coi `MCP call success` đồng nghĩa với `diagram đúng`.
+
+---
+
+# 26. Issue #3 Connector Layout and Final QA Standard
+
+This section is normative for every diagram asset in this project.
+
+## 26.1. Connector construction
+
+- Set explicit `exitX`, `exitY`, `entryX`, and `entryY` on every edge.
+- Prefer a direct orthogonal edge when source and target can share a clean corridor.
+- Use explicit waypoints only when they create a deliberate corridor around nodes, labels, or lane dividers.
+- Keep at least 20 px from a lane divider when a route is running parallel to that divider; crossing a divider is allowed only as a single intentional transfer segment.
+- Keep at least 24 px from the page boundary where geometry permits.
+- Do not use `jumpStyle=arc`.
+- Do not use micro-jogs, hairpins, backtracking, stacked shared paths, or routes that run along lane borders.
+- Keep fan-in/fan-out paths at separate levels or corridors, with distinct label positions.
+- Preserve physical-document versus data-information semantics through the existing edge styles and labels.
+
+### Multi-edge anchor distribution
+
+- Audit all attached edges as a set for every shape with two or more connections.
+- Do not reuse the same attachment point for independent flows unless an explicit junction is intended.
+- Distribute same-side anchors in geometric order of their destinations/sources; use materially separated `entryY`/`exitY` or `entryX`/`exitX` values.
+- Keep incoming and outgoing attachment zones separate when that improves traceability.
+- If a shape is too small for clear attachment spacing, resize or relayout it instead of clustering arrowheads.
+- Reject a diagram when anchor ordering creates an avoidable crossing, hairpin, shared segment, or indistinguishable arrowhead cluster, even if a collision script reports no overlap.
+
+## 26.2. Geometry and label rules
+
+- No connector may cross an unrelated connector, node, swimlane header, or text label.
+- Edge labels must not overlap another label or node and must remain inside the canonical page.
+- Document copies and return flows must have visually distinct corridors and unambiguous arrow direction.
+- Node geometry must remain positive, finite, and inside the canonical A4 page.
+- The canonical source is `drawio-src/<name>.xml`; `.drawio`, SVG, and PNG are regenerated from that source after every fix.
+
+## 26.3. Required approval gates
+
+Each diagram is processed serially:
+
+```text
+canonical XML
+-> local preflight
+-> Draw.io MCP create_diagram
+-> page-aware SVG/PNG render
+-> geometry audit
+-> text audit
+-> full-resolution visual inspection
+-> fix and repeat if needed
+-> APPROVED
+```
+
+The final approval record must separately report semantic solution, notation, canonical XML, MCP structural/render, visual QA, A4 page-bound QA, and final asset inspection. A skipped gate is never converted to `PASS`; its reason and residual risk must be recorded.
+
+## 26.4. Issue #3 completion evidence
+
+All eleven diagrams were audited in the required serial order. The final SVG geometry audit reported zero unrelated connector crossings, connector-node crossings, label-label overlaps, and label-node overlaps for every diagram. The browser text audit reported `PASS 11 SVG files`. Each final asset was inspected at full PNG resolution after regeneration.
