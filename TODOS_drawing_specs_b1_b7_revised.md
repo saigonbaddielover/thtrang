@@ -2522,6 +2522,9 @@ This section is normative for every diagram asset in this project.
 - Keep at least 24 px from the page boundary where geometry permits.
 - Do not use `jumpStyle=arc`.
 - Do not use micro-jogs, hairpins, backtracking, stacked shared paths, or routes that run along lane borders.
+- The rendered first segment must leave the declared source side outward, and the rendered final shaft and arrowhead must approach the declared target side perpendicularly. A corner anchor may use either of its two perimeter sides, but it must not create a tangent or border-running attachment.
+- Keep each rendered endpoint shaft at least 15 px long. If the available gap is smaller, relayout the connected nodes or choose another valid perimeter port instead of accepting a micro-jog.
+- Validate the rendered arrow polygon and route, not only the XML `source`, `target`, `exitX`, `exitY`, `entryX`, and `entryY` fields. A semantically correct edge still fails when the renderer creates a reversed, tangent, floating, or visually ambiguous arrowhead.
 - Keep fan-in/fan-out paths at separate levels or corridors, with distinct label positions.
 - Preserve physical-document versus data-information semantics through the existing edge styles and labels.
 
@@ -2562,4 +2565,4 @@ The final approval record must separately report semantic solution, notation, ca
 
 ## 26.4. Issue #3 completion evidence
 
-All eleven diagrams were audited in the required serial order. The final SVG geometry audit reported zero unrelated connector crossings, connector-node crossings, label-label overlaps, and label-node overlaps for every diagram. The browser text audit reported `PASS 11 SVG files`. Each final asset was inspected at full PNG resolution after regeneration.
+All eleven diagrams were audited in the required serial order. The final rendered-connector audit checked all 139 edges and reported zero wrong endpoint directions, endpoint micro-jogs, shared paths, unrelated crossings, connector-node crossings, label-label overlaps, and label-node overlaps. The connector validator passed all eleven diagrams under both PowerShell 7 and Windows PowerShell 5.1. The browser text audit reported `PASS 11 SVG files`. Each final asset was inspected at full PNG resolution after regeneration.
