@@ -39,6 +39,7 @@ Always read:
 - [audit-recipes.md](references/audit-recipes.md) before running a read-only or approval audit;
 - [failure-catalog.md](references/failure-catalog.md) during every audit or repair;
 - [visual-quality.md](references/visual-quality.md) before sizing, styling, rendering, or final inspection.
+- [construction-gates.md](references/construction-gates.md) before creating, laying out again, or repairing a diagram.
 
 Read when applicable:
 
@@ -83,6 +84,10 @@ Require an explicit notation profile for BPMN, UML, ERD, engineering, electrical
 7. Keep each edge `mxGeometry` relative and parent cross-container edges above their containers.
 8. Keep one `mxGraphModel` root per canonical page.
 
+For a dense page, do not create the full edge set before the first rendered audit. Build nodes first, then add and approve route clusters in this order: semantic backbone, boundary/cross-lane flows, stores and fan-in/fan-out, returns, then labels. Maintain the port, corridor, and label ledger required by [construction-gates.md](references/construction-gates.md).
+
+Use cardinal-center ports for the first render of irregular shapes. Off-center ellipse, rhombus, document, cylinder, archive, or custom-stencil ports require an explicit normal endpoint shaft and a passing rendered contact audit before another incident edge is added.
+
 Resize or relayout before shrinking type. After any shape move or resize, recompute physical ports and rerender every incident edge, neighboring corridor, label, and lane boundary in the impact region.
 
 Use MCP `create_diagram` with XML and omit post-layout/routing for final hand-crafted geometry. Use ELK or libavoid only for disposable exploration unless the result can be captured and revalidated.
@@ -95,6 +100,7 @@ Resolve paths relative to the project or skill. Never hardcode a machine path.
 - Run `scripts/sync_drawio.ps1` for `.drawio` import or update.
 - Run `scripts/export_drawio.ps1` for page-aware SVG, PNG, PDF, and artifact provenance.
 - Run `scripts/validate_drawio.ps1` in `Audit` mode while iterating and in `Approval` mode only with semantic, notation, artifact, warning-disposition, and visual-inspection evidence required by the task.
+- Run `scripts/compare_drawio_reports.ps1` after every repair and reject a repair that introduces any new error or warning fingerprint or does not reduce the tracked issue count.
 - Run `scripts/export_drawio_crops.ps1` after validation to create inspectable crops for structured findings.
 - Run `scripts/test_profile_fixtures.ps1` after changing a notation profile, contract schema, or family stencil mapping.
 
@@ -127,6 +133,8 @@ Repair canonical XML only. Prefer this order:
 5. restore typography and visual hierarchy;
 6. rerender every impacted region and all final assets;
 7. rerun every required gate.
+
+Treat each repair as a transaction. Freeze the prior canonical XML, assets, and validation report; change one connected incident region; rerender; compare reports; keep the change only when it removes at least one error or warning without introducing another. After two failed attempts in the same repair class, stop patching coordinates and rebuild the region from its node, port, corridor, and label plan.
 
 Do not patch SVG or PNG. Do not hide a collision with a white label background. Do not replace an exact notation with a visually similar generic primitive without explicit acceptance.
 

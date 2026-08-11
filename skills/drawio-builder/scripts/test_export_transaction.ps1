@@ -84,6 +84,30 @@ exit /b 3
     $lateFiles = @(Get-ChildItem -LiteralPath $lateDirectory -Force -File | Select-Object -ExpandProperty Name | Sort-Object)
     Add-Result 'late-format-failure-preserves-bundle' ($lateResult.ExitCode -ne 0 -and $lateResult.Output -match 'PDF must contain exactly one page' -and (Get-Sha256 $lateSvg) -eq $lateSvgHash -and (Get-Sha256 $latePdf) -eq $latePdfHash -and (@(Compare-Object @('diagram.pdf','diagram.svg') $lateFiles)).Count -eq 0) $lateResult.Output
 
+    $overflowRenderer = Join-Path $rendererDirectory 'overflow-renderer.cmd'
+    Write-Utf8File $overflowRenderer @'
+@echo off
+setlocal
+set "outputPath="
+:parse
+if "%~1"=="" goto render
+if /I "%~1"=="-o" set "outputPath=%~2"
+shift
+goto parse
+:render
+if "%outputPath%"=="" exit /b 2
+>"%outputPath%" echo ^<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 831 1170"^>^<rect x="827" y="100" width="4" height="20"/^>^</svg^>
+exit /b 0
+'@
+    $overflowDirectory = Join-Path $scratch 'page-overflow'
+    New-Item -ItemType Directory -Path $overflowDirectory | Out-Null
+    $overflowSvg = Join-Path $overflowDirectory 'diagram.svg'
+    Write-Utf8File $overflowSvg '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 827 1169"><text>old-svg</text></svg>'
+    $overflowHash = Get-Sha256 $overflowSvg
+    $overflowResult = Invoke-ChildScript $exporter @('-CanonicalPath',$canonical,'-DrawioPath',$wrapper,'-PageId','transaction-page','-DrawioExecutable',$overflowRenderer,'-SvgPath',$overflowSvg)
+    $overflowFiles = @(Get-ChildItem -LiteralPath $overflowDirectory -Force -File | Select-Object -ExpandProperty Name | Sort-Object)
+    Add-Result 'page-content-overflow-is-diagnostic' ($overflowResult.ExitCode -ne 0 -and $overflowResult.Output -match 'SVG content exceeds canonical page bounds' -and (Get-Sha256 $overflowSvg) -eq $overflowHash -and (@(Compare-Object @('diagram.svg') $overflowFiles)).Count -eq 0) $overflowResult.Output
+
     $manifestDirectory = Join-Path $scratch 'manifest-failure'
     New-Item -ItemType Directory -Path $manifestDirectory | Out-Null
     $manifestSvg = Join-Path $manifestDirectory 'diagram.svg'
