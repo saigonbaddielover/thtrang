@@ -269,6 +269,7 @@ $profile = Get-Content -LiteralPath $QualityProfilePath -Raw -Encoding UTF8 | Co
 $nodeLabelClearance = [double]$profile.clearance.nodeLabelInk
 $collisionOverlap = [double]$profile.clearance.collisionOverlap
 $associationMargin = if ($profile.clearance.PSObject.Properties['edgeLabelAssociation']) { [double]$profile.clearance.edgeLabelAssociation } elseif ($profile.clearance.PSObject.Properties['labelAssociationMargin']) { [double]$profile.clearance.labelAssociationMargin } else { 6.0 }
+$ownerMaximum = [double]$profile.clearance.edgeLabelOwnerMaximum
 $bodyMinimum = [double]$profile.fonts.bodyMinimum
 $edgeMinimum = [double]$profile.fonts.edgeMinimum
 $pageWidth = [double]$source.mxGraphModel.pageWidth
@@ -412,6 +413,9 @@ foreach($entry in $edgeLabels.GetEnumerator()){
     if(-not$edgePoints.ContainsKey($entry.Key)){continue}
     $center=[pscustomobject]@{X=($entry.Value.Left+$entry.Value.Right)/2.0;Y=($entry.Value.Top+$entry.Value.Bottom)/2.0}
     $ownDistance=Get-PointPolylineDistance $center @($edgePoints[$entry.Key]);$closestId='';$closestDistance=[double]::PositiveInfinity
+    if($ownDistance-gt$ownerMaximum){
+        Add-Issue $issues 'edge-label-owner-distance' $entry.Key ("Owner distance {0:N2}px exceeds {1:N2}px" -f $ownDistance,$ownerMaximum)
+    }
     foreach($candidate in $edgePoints.GetEnumerator()){
         if($candidate.Key-eq$entry.Key){continue}
         $distance=Get-PointPolylineDistance $center @($candidate.Value)

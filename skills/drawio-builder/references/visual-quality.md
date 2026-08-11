@@ -39,6 +39,8 @@ Use orthogonal routes for process, document, DFD, architecture, network, and mos
 
 Place edge labels in clear whitespace. Keep every label clear of shapes, unrelated routes, bends, arrowheads, labels, lane headers, and dividers. Require a measurable association advantage to its own edge.
 
+Keep the rendered label center within `clearance.edgeLabelOwnerMaximum` of its owner polyline. A label can be closer to its owner than every unrelated edge and still be visually detached when the absolute gap is too large.
+
 ## Composition
 
 Align repeated nodes and normalize repeated sizes within the quality-profile tolerance. Use a stable spacing grid and preserve deliberate whitespace around dense nodes, fan-in/fan-out, and return flows.

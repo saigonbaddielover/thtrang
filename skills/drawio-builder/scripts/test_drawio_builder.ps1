@@ -358,6 +358,7 @@ try {
         Add-TestResult 'detect-internal-micro-jog' ($invalidVisualValidation.ExitCode -eq 1 -and 'internal-micro-jog' -in $connectorIssues) $invalidVisualValidation.Output
         Add-TestResult 'detect-divider-clearance' ($invalidVisualValidation.ExitCode -eq 1 -and 'divider-clearance' -in $connectorIssues) $invalidVisualValidation.Output
         Add-TestResult 'detect-edge-label-node-collision' ($invalidVisualValidation.ExitCode -eq 1 -and 'edge-label-node-collision' -in $labelIssues) $invalidVisualValidation.Output
+        Add-TestResult 'detect-edge-label-owner-distance' ($invalidVisualValidation.ExitCode -eq 1 -and 'edge-label-owner-distance' -in $labelIssues) $invalidVisualValidation.Output
         Add-TestResult 'detect-archive-slope-overflow' ($invalidVisualValidation.ExitCode -eq 1 -and ('left-slope-clearance' -in $archiveIssues -or 'right-slope-clearance' -in $archiveIssues)) $invalidVisualValidation.Output
         $invalidVisualReport = Join-Path $scratch 'invalid-visual-report.json'
         Write-Utf8File $invalidVisualReport $invalidVisualValidation.Output

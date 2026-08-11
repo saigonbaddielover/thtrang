@@ -57,6 +57,7 @@
 | Label-edge collision | Label masks another route or arrow | Label bounds clear unrelated connector strokes | Move label or route |
 | Label-label collision | Dense labels overlap | Every label has an independent readable region | Reorder routes, wrap, or increase spacing |
 | Misassociation | Label is closer to another edge than its owner | Own-edge distance beats unrelated-edge distance by the profile margin | Move label into its edge corridor |
+| Detached owner label | Label is not closer to another edge but still floats far from its owner | Label-center distance to the owner stays below the profile maximum | Move the label onto clear whitespace beside its owner segment |
 | Bend or arrow masking | White background covers route topology | Label clears bends, endpoint shafts, and arrowheads | Move away from the endpoint |
 | Divider masking | Label background breaks a lane line | Label clears lane headers and dividers | Use the lane interior or a dedicated corridor |
 

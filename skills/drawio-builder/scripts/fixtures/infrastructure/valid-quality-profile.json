@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "profile": "test",
   "pages": {
     "portrait": { "width": 827, "height": 1169 },
@@ -17,7 +17,8 @@
     "pageConnector": 24,
     "laneMinimum": 5,
     "lanePreferred": 10,
-    "edgeLabelAssociation": 6
+    "edgeLabelAssociation": 6,
+    "edgeLabelOwnerMaximum": 32
   },
   "composition": { "alignmentTolerance": 2, "sizeTolerance": 2, "spacingVarianceWarning": 8, "minimumContrast": 4.5 },
   "export": { "pngScale": 1.75 }

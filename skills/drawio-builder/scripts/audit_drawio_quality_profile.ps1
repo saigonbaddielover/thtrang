@@ -53,7 +53,7 @@ else { try { $quality = Get-Content -LiteralPath $QualityProfilePath -Raw -Encod
 
 $rootFields = @('schemaVersion','profile','pages','fonts','clearance','composition','export')
 if (Test-ObjectContract $quality 'quality-profile' $rootFields $rootFields) {
-    if (-not (Test-JsonInteger $quality.schemaVersion) -or [int64]$quality.schemaVersion -ne 2) { Add-Issue 'quality-profile-schema' 'schemaVersion' 'schemaVersion must be the integer 2' }
+    if (-not (Test-JsonInteger $quality.schemaVersion) -or [int64]$quality.schemaVersion -ne 3) { Add-Issue 'quality-profile-schema' 'schemaVersion' 'schemaVersion must be the integer 3' }
     if ($quality.profile -isnot [string] -or [string]::IsNullOrWhiteSpace([string]$quality.profile)) { Add-Issue 'quality-profile-value' 'profile' 'profile must be a nonempty string' }
     if (Test-ObjectContract $quality.pages 'pages' @('portrait','landscape') @('portrait','landscape')) {
         foreach ($orientation in @('portrait','landscape')) {
@@ -67,7 +67,7 @@ if (Test-ObjectContract $quality 'quality-profile' $rootFields $rootFields) {
         if (-not (Test-JsonArray $quality.fonts.requiredFamilies) -or @($quality.fonts.requiredFamilies).Count -eq 0) { Add-Issue 'quality-profile-array' 'fonts.requiredFamilies' 'Expected a nonempty array' }
         else { foreach ($family in @($quality.fonts.requiredFamilies)) { if ($family -isnot [string] -or [string]::IsNullOrWhiteSpace([string]$family)) { Add-Issue 'quality-profile-value' 'fonts.requiredFamilies' 'Every family must be a nonempty string' } } }
     }
-    $clearanceFields = @('labelInk','nodeLabelInk','collisionOverlap','shapeOutline','arrowContact','endpointStub','parallelDivider','pageConnector','laneMinimum','lanePreferred','edgeLabelAssociation')
+    $clearanceFields = @('labelInk','nodeLabelInk','collisionOverlap','shapeOutline','arrowContact','endpointStub','parallelDivider','pageConnector','laneMinimum','lanePreferred','edgeLabelAssociation','edgeLabelOwnerMaximum')
     if (Test-ObjectContract $quality.clearance 'clearance' $clearanceFields $clearanceFields) { foreach ($field in $clearanceFields) { if (-not (Test-PositiveNumber $quality.clearance.$field)) { Add-Issue 'quality-profile-number' "clearance.$field" 'Expected a finite positive number' } } }
     $compositionFields = @('alignmentTolerance','sizeTolerance','spacingVarianceWarning','minimumContrast')
     if (Test-ObjectContract $quality.composition 'composition' $compositionFields $compositionFields) {
