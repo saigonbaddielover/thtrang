@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "diagram": { "id": "cloud-provider-release-unknown", "family": "cloud", "subtype": "provider-icon-set", "orientation": "landscape", "page": { "width": 1169, "height": 827 }, "standard": { "name": "AWS Architecture Icons", "version": "UNKNOWN", "source": "https://aws.amazon.com/architecture/icons/" }, "context": { "provider": "AWS" } },
+  "nodes": [
+    { "id": "lambda", "label": "Order handler", "semanticType": "aws-lambda" }
+  ],
+  "edges": []
+}

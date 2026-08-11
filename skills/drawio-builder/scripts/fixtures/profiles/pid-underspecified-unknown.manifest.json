@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "diagram": { "id": "pid-underspecified-unknown", "family": "pid", "subtype": "process-diagram", "orientation": "landscape", "page": { "width": 1169, "height": 827 }, "standard": { "name": "ISO 10628-1:2014; equipment and instrument-symbol standard required", "version": "UNKNOWN", "source": "https://www.iso.org/standard/51840.html" } },
+  "nodes": [
+    { "id": "valve", "label": "HV-101", "semanticType": "other-equipment" }
+  ],
+  "edges": []
+}

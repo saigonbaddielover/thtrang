@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "diagram": { "id": "data-flow-yourdon-demarco-unknown", "family": "data-flow", "subtype": "yourdon-demarco", "orientation": "landscape", "page": { "width": 1169, "height": 827 }, "standard": { "name": "Yourdon-DeMarco authoritative mapping required", "version": "UNKNOWN", "source": "https://www.iso.org/standard/11955.html" } },
+  "nodes": [
+    { "id": "process", "label": "Process order", "semanticType": "process" }
+  ],
+  "edges": []
+}

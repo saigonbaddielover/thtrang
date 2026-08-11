@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "diagram": { "id": "electrical-underspecified-unknown", "family": "electrical", "subtype": "electrotechnical-diagram", "orientation": "landscape", "page": { "width": 1169, "height": 827 }, "standard": { "name": "IEC 60617 symbol reference required", "version": "UNKNOWN", "source": "https://webstore.iec.ch/en/publication/2723" } },
+  "nodes": [
+    { "id": "transformer", "label": "T1", "semanticType": "other-electrical-symbol" }
+  ],
+  "edges": []
+}

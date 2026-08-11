@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "omg-bpmn-2-0-2",
+  "family": "bpmn",
+  "subtype": "process-collaboration",
+  "provenance": {
+    "standard": "OMG BPMN 2.0.2 / ISO IEC 19510:2013",
+    "version": "2.0.2",
+    "source": "https://www.omg.org/spec/BPMN/2.0.2/",
+    "mcpDiscovery": {
+      "server": "drawio",
+      "build": "42835e3@2026-08-02T20:17:10.515Z",
+      "verifiedAt": "2026-08-11T00:00:00Z",
+      "results": [
+        { "query": "bpmn user task", "title": "User", "styleSha256": "ad95ee7f42277b3dffb1e862bb113cdd453086db2b1f69ce5859bbd1d52952fe" },
+        { "query": "bpmn exclusive gateway", "title": "Exclusive", "styleSha256": "d7dc9e45fdd514bc517c5a83b68b3e9c4197d24f31345722f11f9a73b2803889" },
+        { "query": "bpmn start event", "title": "None Start", "styleSha256": "d0bfd26794767946e8afb77b9cc8a06068eb483816e6a32c5dc6298d63602d9a" }
+      ]
+    }
+  },
+  "nodeTypes": {
+    "none-start-event": { "styleMatchers": [{ "allOf": ["shape=mxgraph.bpmn.event", "outline=standard", "symbol=general"] }], "shapeClass": "ellipse" },
+    "user-task": { "styleMatchers": [{ "allOf": ["shape=mxgraph.bpmn.task2", "taskMarker=user"] }], "shapeClass": "rounded-rectangle" },
+    "exclusive-gateway": { "styleMatchers": [{ "allOf": ["shape=mxgraph.bpmn.gateway2", "gwType=exclusive"] }], "shapeClass": "rhombus" },
+    "other-event": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:bpmn <event-type> event"] }], "shapeClass": "ellipse" },
+    "other-activity": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:bpmn <activity-type> task"] }], "shapeClass": "rounded-rectangle" },
+    "other-gateway": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:bpmn <gateway-type> gateway"] }], "shapeClass": "rhombus" },
+    "pool-or-lane": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:bpmn pool lane"] }], "shapeClass": "swimlane", "container": true }
+  },
+  "edgeTypes": {
+    "sequence-flow": { "direction": "directed", "style": { "endArrow": "block", "dashed": "0" } },
+    "message-flow": { "direction": "directed", "style": { "startArrow": "oval", "endArrow": "open", "dashed": "1" } },
+    "association": { "direction": "undirected", "style": { "endArrow": "none", "dashed": "1" } }
+  },
+  "rules": [
+    { "id": "live-stencil-required", "severity": "ERROR", "description": "Resolve every LIVE_SEARCH_REQUIRED matcher with live MCP search and record the server build before notation approval." },
+    { "id": "live-style-not-semantic-proof", "severity": "ERROR", "description": "A live Draw.io MCP style match proves renderer availability only; validate BPMN semantics against OMG BPMN 2.0.2." },
+    { "id": "sequence-flow-pool-boundary", "severity": "ERROR", "description": "Do not use sequence flow across pool boundaries." },
+    { "id": "message-flow-participants", "severity": "ERROR", "description": "Use message flow only between distinct participants." }
+  ]
+}

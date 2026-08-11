@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "notation-neutral-data-flow",
+  "family": "data-flow",
+  "subtype": "context-or-level-0",
+  "provenance": {
+    "standard": "ISO 5807:1985 data-flowchart scope; notation variant intentionally unspecified",
+    "version": "1985",
+    "source": "https://www.iso.org/standard/11955.html"
+  },
+  "nodeTypes": {
+    "external-entity": { "styleMatchers": [{ "allOf": ["html=1", "whiteSpace=wrap"], "noneOf": ["shape="] }], "shapeClass": "rectangle" },
+    "process": { "styleMatchers": [{ "allOf": ["shape=ellipse"] }], "shapeClass": "ellipse" },
+    "data-store": { "styleMatchers": [{ "allOf": ["shape=mxgraph.dfd.dataStoreID"] }, { "allOf": ["shape=partialRectangle"] }], "shapeClass": "data-store" }
+  },
+  "edgeTypes": {
+    "data-flow": { "direction": "directed", "style": { "endArrow": "block", "endFill": "1" } }
+  },
+  "rules": [
+    { "id": "variant-must-be-explicit", "severity": "ERROR", "description": "Do not claim Gane-Sarson or Yourdon/DeMarco without an authoritative mapping selected by the user or source." },
+    { "id": "boundary-flow-conservation", "severity": "ERROR", "description": "Context and level-0 external boundary-flow multisets must match." },
+    { "id": "data-noun-labels", "severity": "ERROR", "description": "Use data noun phrases rather than control actions for data-flow labels." }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "fixtures": [
+    { "schema": "artifact-manifest.schema.json", "document": "valid-artifact-manifest.json", "valid": true },
+    { "schema": "artifact-manifest.schema.json", "document": "invalid-artifact-manifest.json", "valid": false },
+    { "schema": "diagram-contract.schema.json", "document": "valid-diagram-contract.json", "valid": true },
+    { "schema": "diagram-contract.schema.json", "document": "invalid-diagram-contract.json", "valid": false },
+    { "schema": "notation-profile.schema.json", "document": "valid-notation-profile.json", "valid": true },
+    { "schema": "notation-profile.schema.json", "document": "invalid-notation-profile.json", "valid": false },
+    { "schema": "quality-profile.schema.json", "document": "valid-quality-profile.json", "valid": true },
+    { "schema": "quality-profile.schema.json", "document": "invalid-quality-profile.json", "valid": false },
+    { "schema": "warning-dispositions.schema.json", "document": "valid-warning-dispositions.json", "valid": true },
+    { "schema": "warning-dispositions.schema.json", "document": "invalid-warning-dispositions.json", "valid": false },
+    { "schema": "visual-inspection.schema.json", "document": "valid-visual-inspection.json", "valid": true },
+    { "schema": "visual-inspection.schema.json", "document": "invalid-visual-inspection.json", "valid": false },
+    { "schema": "crop-report.schema.json", "document": "valid-crop-report.json", "valid": true },
+    { "schema": "crop-report.schema.json", "document": "invalid-crop-report.json", "valid": false }
+  ]
+}

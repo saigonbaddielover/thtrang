@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "omg-uml-2-5-1-sequence",
+  "family": "uml",
+  "subtype": "sequence",
+  "provenance": { "standard": "OMG UML 2.5.1", "version": "2.5.1", "source": "https://www.omg.org/spec/UML/2.5.1/" },
+  "nodeTypes": {
+    "lifeline": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:uml lifeline"] }], "shapeClass": "lifeline", "container": true },
+    "execution": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:uml activation"] }], "shapeClass": "execution-specification" },
+    "combined-fragment": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:uml combined fragment"] }], "shapeClass": "frame", "container": true }
+  },
+  "edgeTypes": {
+    "synchronous-message": { "direction": "directed", "style": { "endArrow": "block", "endFill": "1" } },
+    "asynchronous-message": { "direction": "directed", "style": { "endArrow": "open" } },
+    "reply": { "direction": "directed", "style": { "endArrow": "open", "dashed": "1" } }
+  },
+  "rules": [
+    { "id": "message-time-order", "severity": "ERROR", "description": "Render message order monotonically from top to bottom unless a notation-defined exception applies." },
+    { "id": "lifeline-contact", "severity": "ERROR", "description": "Attach every message endpoint to the intended lifeline or execution specification." }
+  ]
+}

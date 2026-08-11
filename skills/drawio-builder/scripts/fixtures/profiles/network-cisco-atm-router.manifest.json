@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "diagram": {
+    "id": "network-cisco-atm-router",
+    "family": "network",
+    "subtype": "logical-or-physical",
+    "orientation": "landscape",
+    "page": { "width": 1169, "height": 827 },
+    "standard": { "name": "Cisco network icon convention", "version": "UNKNOWN", "source": "https://www.cisco.com/c/en/us/about/brand-center/network-topology-icons.html" },
+    "context": { "vendor": "Cisco", "networkLayer": "logical" }
+  },
+  "nodes": [
+    { "id": "router_a", "label": "ATM edge A", "semanticType": "cisco-atm-router" },
+    { "id": "router_b", "label": "ATM edge B", "semanticType": "cisco-atm-router" }
+  ],
+  "edges": [
+    { "id": "wan_link", "source": "router_a", "target": "router_b", "label": "WAN link", "direction": "undirected", "relationType": "link" }
+  ]
+}

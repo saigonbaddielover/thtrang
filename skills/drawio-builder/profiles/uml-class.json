@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "omg-uml-2-5-1-class",
+  "family": "uml",
+  "subtype": "class",
+  "provenance": { "standard": "OMG UML 2.5.1", "version": "2.5.1", "source": "https://www.omg.org/spec/UML/2.5.1/" },
+  "nodeTypes": {
+    "classifier": { "styleMatchers": [{ "allOf": ["swimlane", "horizontal=1"] }, { "allOf": ["rounded=0", "whiteSpace=wrap"], "noneOf": ["shape="] }], "shapeClass": "compartmented-rectangle" },
+    "interface": { "styleMatchers": [{ "allOf": ["swimlane", "horizontal=1"] }, { "allOf": ["ellipse", "aspect=fixed"] }], "shapeClass": "classifier" }
+  },
+  "edgeTypes": {
+    "association": { "direction": "undirected", "style": { "endArrow": "none" } },
+    "directed-association": { "direction": "directed", "style": { "endArrow": "open" } },
+    "generalization": { "direction": "directed", "style": { "endArrow": "block", "endFill": "0" } },
+    "realization": { "direction": "directed", "style": { "endArrow": "block", "endFill": "0", "dashed": "1" } },
+    "dependency": { "direction": "directed", "style": { "endArrow": "open", "dashed": "1" } },
+    "aggregation": { "direction": "directed", "style": { "startArrow": "diamond", "startFill": "0" } },
+    "composition": { "direction": "directed", "style": { "startArrow": "diamond", "startFill": "1" } }
+  },
+  "rules": [
+    { "id": "multiplicity-readable", "severity": "ERROR", "description": "Keep multiplicity labels adjacent to their association ends without touching nodes or arrowheads." },
+    { "id": "relationship-semantics-explicit", "severity": "ERROR", "description": "Match line, fill, and arrowhead to the declared UML relationship type." },
+    { "id": "basic-shapes-are-normative-carriers", "severity": "ERROR", "description": "UML classifiers may use basic compartmented rectangles; semantic type and stereotype must come from the manifest rather than live stencil search." }
+  ]
+}

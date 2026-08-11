@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "diagram": { "id": "bpmn-core", "family": "bpmn", "subtype": "process-collaboration", "orientation": "landscape", "page": { "width": 1169, "height": 827 }, "standard": { "name": "OMG BPMN", "version": "2.0.2", "source": "https://www.omg.org/spec/BPMN/2.0.2/" } },
+  "nodes": [
+    { "id": "start", "label": "Start", "semanticType": "none-start-event" },
+    { "id": "task", "label": "Review request", "semanticType": "user-task" },
+    { "id": "gateway", "label": "Approved?", "semanticType": "exclusive-gateway" }
+  ],
+  "edges": [
+    { "id": "sequence_start", "source": "start", "target": "task", "label": "", "direction": "directed", "relationType": "sequence-flow" },
+    { "id": "sequence_review", "source": "task", "target": "gateway", "label": "", "direction": "directed", "relationType": "sequence-flow" }
+  ]
+}

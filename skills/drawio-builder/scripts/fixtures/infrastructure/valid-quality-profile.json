@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 2,
+  "profile": "test",
+  "pages": { "portrait": { "width": 827, "height": 1169 } },
+  "fonts": { "bodyMinimum": 10.5, "edgeMinimum": 10, "titleMinimum": 14, "requiredFamilies": ["Arial"] },
+  "clearance": { "endpointStub": 15 },
+  "composition": { "alignmentTolerance": 2, "sizeTolerance": 2, "spacingVarianceWarning": 8, "minimumContrast": 4.5 },
+  "export": { "pngScale": 1.75 }
+}

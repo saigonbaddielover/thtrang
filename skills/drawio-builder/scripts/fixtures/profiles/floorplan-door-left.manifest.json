@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "diagram": {
+    "id": "floorplan-door-left",
+    "family": "floorplan",
+    "subtype": "building-space-layout",
+    "orientation": "landscape",
+    "page": { "width": 1169, "height": 827 },
+    "standard": { "name": "ISO 4157-1 building and space designation only", "version": "1998", "source": "https://www.iso.org/standard/26189.html" },
+    "context": {
+      "scaleRatio": { "drawingUnits": 1, "modelUnits": 50, "modelUnit": "mm" },
+      "dimensions": [
+        { "elementId": "room", "width": 30450, "height": 31350, "unit": "mm", "source": "Fixture geometry specification" },
+        { "elementId": "door", "width": 4000, "height": 4250, "unit": "mm", "source": "Fixture geometry specification" }
+      ],
+      "wallOpenings": [
+        { "openingId": "door", "wallId": "wall_west", "handedness": "left", "swing": "inward", "width": 4000, "unit": "mm", "source": "Fixture geometry specification" }
+      ],
+      "circulationClearances": [
+        { "id": "circulation", "minimumWidth": 1500, "unit": "mm", "source": "Fixture geometry specification" }
+      ]
+    }
+  },
+  "nodes": [
+    { "id": "room", "label": "Room 101", "semanticType": "space", "parent": "1" },
+    { "id": "wall_west", "label": "West wall", "semanticType": "annotation", "parent": "room" },
+    { "id": "door", "label": "D-101", "semanticType": "door-left", "parent": "room" },
+    { "id": "clearance", "label": "Clearance point", "semanticType": "circulation-point", "parent": "room" }
+  ],
+  "edges": [
+    { "id": "circulation", "source": "door", "target": "clearance", "label": "Accessible route", "direction": "directed", "relationType": "circulation-path" }
+  ]
+}

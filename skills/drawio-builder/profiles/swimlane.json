@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "process-swimlane-responsibility",
+  "family": "process",
+  "subtype": "swimlane",
+  "provenance": {
+    "standard": "ISO 5807:1985 flowchart semantics; responsibility lanes are a local layout contract",
+    "version": "1985",
+    "source": "https://www.iso.org/standard/11955.html"
+  },
+  "nodeTypes": {
+    "lane": { "styleMatchers": [{ "allOf": ["swimlane"] }], "shapeClass": "swimlane", "container": true },
+    "process": { "styleMatchers": [{ "allOf": ["rounded=0", "whiteSpace=wrap"], "noneOf": ["shape="] }], "shapeClass": "rectangle" },
+    "decision": { "styleMatchers": [{ "allOf": ["shape=rhombus"] }], "shapeClass": "rhombus" }
+  },
+  "edgeTypes": {
+    "flow": { "direction": "directed", "style": { "endArrow": "block", "endFill": "1" } }
+  },
+  "rules": [
+    { "id": "lane-ownership", "severity": "ERROR", "description": "Place each activity in the lane of the responsible actor." },
+    { "id": "lane-header-clearance", "severity": "ERROR", "description": "Keep nodes, labels, and connectors out of lane headers unless they are header content." }
+  ]
+}

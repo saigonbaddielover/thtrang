@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "diagram": { "id": "process-document-flow-swimlane", "family": "process", "subtype": "document-flow-swimlane", "orientation": "portrait", "page": { "width": 827, "height": 1169 }, "standard": { "name": "ISO 5807:1985 flowchart semantics with project-defined responsibility lanes", "version": "1985", "source": "https://www.iso.org/standard/11955.html" } },
+  "nodes": [
+    { "id": "requester_lane", "label": "Requester", "semanticType": "lane", "parent": "1" },
+    { "id": "records_lane", "label": "Records", "semanticType": "lane", "parent": "1" },
+    { "id": "prepare", "label": "Prepare request", "semanticType": "process", "lane": "requester_lane" },
+    { "id": "request_copy", "label": "Request copy", "semanticType": "document", "lane": "requester_lane", "copyLineage": "request-original-copy-1" },
+    { "id": "archive", "label": "Request archive", "semanticType": "archive", "lane": "records_lane", "copyLineage": "request-original-copy-1" }
+  ],
+  "edges": [
+    { "id": "control", "source": "prepare", "target": "request_copy", "label": "", "direction": "directed", "relationType": "control-flow" },
+    { "id": "document", "source": "request_copy", "target": "archive", "label": "Filed request", "direction": "directed", "relationType": "document-flow", "copyLineage": "request-original-copy-1" }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "assetSha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "cropReportSha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+  "reviewedAt": "2026-08-11T00:00:00Z",
+  "reviewer": "independent-reviewer",
+  "fullPage": "PASS",
+  "cropsReviewed": 2,
+  "reviewedCrops": [
+    { "id": "001-connector-crossing", "sha256": "1111111111111111111111111111111111111111111111111111111111111111" },
+    { "id": "002-label-collision", "sha256": "2222222222222222222222222222222222222222222222222222222222222222" }
+  ],
+  "notes": "Full page and all generated problem crops were inspected at native resolution."
+}

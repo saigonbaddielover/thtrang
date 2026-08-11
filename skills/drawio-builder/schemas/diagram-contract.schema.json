@@ -1,0 +1,387 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/drawio-builder/diagram-contract.schema.json",
+  "title": "Draw.io Diagram Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "diagram", "nodes", "edges"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "diagram": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "family", "orientation"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "family": {
+          "enum": [
+            "process",
+            "data-flow",
+            "bpmn",
+            "uml",
+            "erd",
+            "architecture",
+            "cloud",
+            "network",
+            "engineering",
+            "electrical",
+            "pid",
+            "floorplan",
+            "wireframe",
+            "generic"
+          ]
+        },
+        "subtype": { "type": "string", "minLength": 1 },
+        "orientation": { "enum": ["portrait", "landscape", "custom"] },
+        "page": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["width", "height"],
+          "properties": {
+            "width": { "type": "number", "exclusiveMinimum": 0 },
+            "height": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        "standard": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "source"],
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "version": { "type": "string" },
+            "source": { "type": "string", "minLength": 1 }
+          }
+        },
+        "context": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "provider": { "type": "string", "minLength": 1 },
+            "providerIconRelease": { "type": "string", "minLength": 1, "not": { "const": "UNKNOWN" } },
+            "providerIconSource": { "type": "string", "minLength": 1 },
+            "vendor": { "type": "string", "minLength": 1 },
+            "vendorConvention": { "type": "string", "minLength": 1, "not": { "const": "UNKNOWN" } },
+            "vendorIconRelease": { "type": "string", "minLength": 1, "not": { "const": "UNKNOWN" } },
+            "vendorIconSource": { "type": "string", "minLength": 1 },
+            "networkLayer": { "enum": ["logical", "physical", "security-zone", "traffic-flow"] },
+            "standardEdition": { "type": "string", "minLength": 1, "not": { "const": "UNKNOWN" } },
+            "symbolStandard": { "type": "string", "minLength": 1, "not": { "const": "UNKNOWN" } },
+            "symbolStandardEdition": { "type": "string", "minLength": 1, "not": { "const": "UNKNOWN" } },
+            "instrumentStandard": { "type": "string", "minLength": 1, "not": { "const": "UNKNOWN" } },
+            "instrumentStandardEdition": { "type": "string", "minLength": 1, "not": { "const": "UNKNOWN" } },
+            "projectLegend": { "type": "string", "minLength": 1 },
+            "scaleRatio": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["drawingUnits", "modelUnits", "modelUnit"],
+              "properties": {
+                "drawingUnits": { "type": "number", "exclusiveMinimum": 0 },
+                "modelUnits": { "type": "number", "exclusiveMinimum": 0 },
+                "modelUnit": { "enum": ["mm", "cm", "m", "in", "ft"] }
+              }
+            },
+            "dimensions": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["elementId", "width", "height", "unit", "source"],
+                "properties": {
+                  "elementId": { "type": "string", "minLength": 1 },
+                  "width": { "type": "number", "exclusiveMinimum": 0 },
+                  "height": { "type": "number", "exclusiveMinimum": 0 },
+                  "unit": { "enum": ["mm", "cm", "m", "in", "ft"] },
+                  "source": { "type": "string", "minLength": 1 }
+                }
+              }
+            },
+            "wallOpenings": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["openingId", "wallId", "handedness", "swing", "width", "unit", "source"],
+                "properties": {
+                  "openingId": { "type": "string", "minLength": 1 },
+                  "wallId": { "type": "string", "minLength": 1 },
+                  "handedness": { "enum": ["left", "right", "double", "not-applicable"] },
+                  "swing": { "enum": ["inward", "outward", "both", "fixed"] },
+                  "width": { "type": "number", "exclusiveMinimum": 0 },
+                  "unit": { "enum": ["mm", "cm", "m", "in", "ft"] },
+                  "source": { "type": "string", "minLength": 1 }
+                }
+              }
+            },
+            "circulationClearances": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "minimumWidth", "unit", "source"],
+                "properties": {
+                  "id": { "type": "string", "minLength": 1 },
+                  "minimumWidth": { "type": "number", "exclusiveMinimum": 0 },
+                  "unit": { "enum": ["mm", "cm", "m", "in", "ft"] },
+                  "source": { "type": "string", "minLength": 1 }
+                }
+              }
+            },
+            "fidelity": { "enum": ["low", "mid", "high"] },
+            "designSystem": { "type": "string", "minLength": 1, "not": { "const": "UNKNOWN" } },
+            "designSystemVersion": { "type": "string", "minLength": 1, "not": { "const": "UNKNOWN" } },
+            "viewport": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["width", "height", "unit"],
+              "properties": {
+                "width": { "type": "number", "exclusiveMinimum": 0 },
+                "height": { "type": "number", "exclusiveMinimum": 0 },
+                "unit": { "const": "px" }
+              }
+            },
+            "componentStates": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["componentId", "state"],
+                "properties": {
+                  "componentId": { "type": "string", "minLength": 1 },
+                  "state": { "type": "string", "minLength": 1 }
+                }
+              }
+            },
+            "interactionLegend": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "meaning"],
+                "properties": {
+                  "id": { "type": "string", "minLength": 1 },
+                  "meaning": { "type": "string", "minLength": 1 }
+                }
+              }
+            },
+            "repeatedComponents": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["group", "semanticType", "width", "height", "count"],
+                "properties": {
+                  "group": { "type": "string", "minLength": 1 },
+                  "semanticType": { "type": "string", "minLength": 1 },
+                  "width": { "type": "number", "exclusiveMinimum": 0 },
+                  "height": { "type": "number", "exclusiveMinimum": 0 },
+                  "count": { "type": "integer", "minimum": 2 }
+                }
+              }
+            },
+            "symbolMappings": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["nodeId", "semanticType", "reference", "source"],
+                "properties": {
+                  "nodeId": { "type": "string", "minLength": 1 },
+                  "semanticType": { "type": "string", "minLength": 1 },
+                  "reference": { "type": "string", "minLength": 1, "not": { "const": "UNKNOWN" } },
+                  "source": { "type": "string", "minLength": 1 },
+                  "tag": { "type": "string", "minLength": 1 },
+                  "orientation": { "enum": ["north", "east", "south", "west"] },
+                  "ports": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["id", "role", "side"],
+                      "properties": {
+                        "id": { "type": "string", "minLength": 1 },
+                        "role": { "type": "string", "minLength": 1 },
+                        "side": { "enum": ["top", "right", "bottom", "left"] }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "semanticType"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string" },
+          "semanticType": { "type": "string", "minLength": 1 },
+          "shapeClass": { "type": "string", "minLength": 1 },
+          "parent": { "type": "string", "minLength": 1 },
+          "lane": { "type": "string", "minLength": 1 },
+          "copyLineage": { "type": "string", "minLength": 1 },
+          "tag": { "type": "string", "minLength": 1 },
+          "orientation": { "enum": ["north", "east", "south", "west"] },
+          "componentState": { "type": "string", "minLength": 1 },
+          "repeatGroup": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "source", "target", "label", "direction"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "source": { "type": "string", "minLength": 1 },
+          "target": { "type": "string", "minLength": 1 },
+          "label": { "type": "string" },
+          "direction": { "enum": ["directed", "undirected", "bidirectional"] },
+          "relationType": { "type": "string", "minLength": 1 },
+          "sourceSides": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "enum": ["top", "right", "bottom", "left"] }
+          },
+          "targetSides": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "enum": ["top", "right", "bottom", "left"] }
+          },
+          "copyLineage": { "type": "string", "minLength": 1 },
+          "boundaryFlowId": { "type": "string", "minLength": 1 },
+          "sourcePort": { "type": "string", "minLength": 1 },
+          "targetPort": { "type": "string", "minLength": 1 },
+          "lineClass": { "type": "string", "minLength": 1 },
+          "flowDirection": { "enum": ["source-to-target", "target-to-source", "bidirectional", "none"] },
+          "conductorType": { "type": "string", "minLength": 1 },
+          "connectionSemantics": { "enum": ["connected", "crossing-without-connection"] },
+          "interactionLegendId": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "ruleDispositions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ruleId", "decision", "evidence"],
+        "properties": {
+          "ruleId": { "type": "string", "minLength": 1 },
+          "decision": { "enum": ["verified", "accepted", "not-applicable"] },
+          "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source"],
+            "properties": {
+              "source": { "type": "string", "minLength": 1 },
+              "reference": { "type": "string", "minLength": 1 },
+              "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+              "reason": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "decision": { "const": "verified" } }, "required": ["decision"] },
+            "then": { "properties": { "evidence": { "anyOf": [{ "required": ["reference"] }, { "required": ["sha256"] }] } } }
+          },
+          {
+            "if": { "properties": { "decision": { "enum": ["accepted", "not-applicable"] } }, "required": ["decision"] },
+            "then": { "properties": { "evidence": { "required": ["reason"] } } }
+          }
+        ]
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "diagram": {
+            "properties": {
+              "family": {
+                "enum": ["bpmn", "uml", "erd", "engineering", "electrical", "pid"]
+              }
+            },
+            "required": ["family"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "diagram": { "required": ["standard"] }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "diagram": { "properties": { "family": { "const": "cloud" } }, "required": ["family"] } } },
+      "then": { "properties": { "diagram": { "required": ["context"], "properties": { "context": { "required": ["provider", "providerIconRelease", "providerIconSource"] } } } } }
+    },
+    {
+      "if": { "properties": { "diagram": { "properties": { "family": { "const": "network" } }, "required": ["family"] } } },
+      "then": { "properties": { "diagram": { "required": ["context"], "properties": { "context": { "required": ["vendor", "vendorConvention", "vendorIconRelease", "vendorIconSource", "networkLayer"] } } } } }
+    },
+    {
+      "if": { "properties": { "diagram": { "properties": { "family": { "const": "floorplan" } }, "required": ["family"] } } },
+      "then": { "properties": { "diagram": { "required": ["context"], "properties": { "context": { "required": ["scaleRatio", "symbolStandard", "symbolStandardEdition", "dimensions", "wallOpenings", "circulationClearances"] } } } } }
+    },
+    {
+      "if": { "properties": { "diagram": { "properties": { "family": { "const": "wireframe" } }, "required": ["family"] } } },
+      "then": { "properties": { "diagram": { "required": ["context"], "properties": { "context": { "required": ["viewport", "fidelity", "designSystem", "designSystemVersion", "componentStates", "interactionLegend", "repeatedComponents"] } } } } }
+    },
+    {
+      "if": { "properties": { "diagram": { "properties": { "family": { "const": "engineering" } }, "required": ["family"] } } },
+      "then": { "properties": { "diagram": { "required": ["context"], "properties": { "context": { "required": ["symbolStandard", "symbolMappings"] } } } } }
+    },
+    {
+      "if": { "properties": { "diagram": { "properties": { "family": { "const": "electrical" } }, "required": ["family"] } } },
+      "then": {
+        "properties": {
+          "diagram": {
+            "required": ["context"],
+            "properties": {
+              "context": {
+                "required": ["standardEdition", "symbolStandard", "symbolStandardEdition", "symbolMappings"],
+                "properties": { "symbolMappings": { "items": { "required": ["nodeId", "semanticType", "reference", "source", "orientation", "ports"] } } }
+              }
+            }
+          },
+          "edges": { "items": { "required": ["sourcePort", "targetPort", "conductorType", "connectionSemantics"] } }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "diagram": { "properties": { "family": { "const": "pid" } }, "required": ["family"] } } },
+      "then": {
+        "properties": {
+          "diagram": {
+            "required": ["context"],
+            "properties": {
+              "context": {
+                "required": ["symbolStandard", "symbolStandardEdition", "instrumentStandard", "instrumentStandardEdition", "projectLegend", "symbolMappings"],
+                "properties": { "symbolMappings": { "items": { "required": ["nodeId", "semanticType", "reference", "source", "tag", "ports"] } } }
+              }
+            }
+          },
+          "edges": { "items": { "required": ["sourcePort", "targetPort", "lineClass", "flowDirection"] } }
+        }
+      }
+    }
+  ]
+}

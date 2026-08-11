@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "nist-fips-184-idef1x",
+  "family": "erd",
+  "subtype": "idef1x",
+  "provenance": { "standard": "NIST FIPS PUB 184 IDEF1X", "version": "1993", "source": "https://nvlpubs.nist.gov/nistpubs/Legacy/FIPS/fipspub184.pdf" },
+  "nodeTypes": {
+    "entity": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:idef1x entity"] }], "shapeClass": "idef1x-entity" },
+    "category": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:idef1x category"] }], "shapeClass": "idef1x-category" }
+  },
+  "edgeTypes": {
+    "identifying-relationship": { "direction": "undirected", "style": { "LIVE_SEARCH_REQUIRED": "idef1x identifying relationship" } },
+    "non-identifying-relationship": { "direction": "undirected", "style": { "LIVE_SEARCH_REQUIRED": "idef1x non-identifying relationship" } }
+  },
+  "rules": [
+    { "id": "live-stencil-required", "severity": "ERROR", "description": "Resolve all IDEF1X symbols and line conventions through a verified stencil or user-provided symbol mapping." },
+    { "id": "relationship-kind-distinct", "severity": "ERROR", "description": "Do not interchange identifying and non-identifying relationship notation." }
+  ]
+}

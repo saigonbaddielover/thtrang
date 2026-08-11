@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "iso-10628-pid",
+  "family": "pid",
+  "subtype": "process-diagram",
+  "provenance": {
+    "standard": "ISO 10628-1:2014 process diagrams for chemical and petrochemical industry",
+    "version": "2014",
+    "source": "https://www.iso.org/standard/51840.html",
+    "mcpDiscovery": {
+      "server": "drawio",
+      "build": "42835e3@2026-08-02T20:17:10.515Z",
+      "verifiedAt": "2026-08-11T00:00:00Z",
+      "results": [
+        { "query": "pid globe valve", "title": "Globe Valve", "styleSha256": "433bce874a986312d33904b654a739ffff7a07e39b7736978424a7c8c7aae4b3" }
+      ]
+    }
+  },
+  "nodeTypes": {
+    "globe-valve": { "styleMatchers": [{ "allOf": ["shape=mxgraph.pid2valves.valve", "valveType=globe"] }], "shapeClass": "pid-equipment" },
+    "other-equipment": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:iso 10628 equipment <type>"] }], "shapeClass": "pid-equipment" },
+    "instrument": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:<selected-standard> instrument <tag>"] }], "shapeClass": "pid-instrument" }
+  },
+  "edgeTypes": {
+    "process-line": { "direction": "directed", "style": { "LIVE_SEARCH_REQUIRED": "iso 10628 process line type" } },
+    "signal-line": { "direction": "directed", "style": { "LIVE_SEARCH_REQUIRED": "selected instrument standard signal line" } }
+  },
+  "rules": [
+    { "id": "part-two-symbol-source", "severity": "ERROR", "description": "Select and cite exact editions of the applicable equipment-symbol and instrument-symbol standards before resolving symbols." },
+    { "id": "line-class-distinct", "severity": "ERROR", "description": "Record source and target ports, flow direction, and the process, utility, electrical, pneumatic, or signal line class for every connector." },
+    { "id": "tag-required", "severity": "ERROR", "description": "Preserve source-defined equipment and instrument tags exactly in both the node contract and symbol mapping." },
+    { "id": "ports-required", "severity": "ERROR", "description": "Record named port roles for every tagged item connected by a process or signal line." },
+    { "id": "live-style-not-pid-proof", "severity": "ERROR", "description": "A live Draw.io MCP globe-valve result proves renderer availability only; validate the symbol against the selected P&ID standard." }
+  ]
+}

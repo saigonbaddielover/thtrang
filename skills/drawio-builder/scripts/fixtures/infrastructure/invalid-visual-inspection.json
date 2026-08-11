@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "assetSha256": "not-a-hash",
+  "cropReportSha256": "not-a-hash",
+  "reviewedAt": "not-a-date",
+  "reviewer": "",
+  "fullPage": "SKIPPED",
+  "cropsReviewed": -1,
+  "reviewedCrops": [
+    { "id": "", "sha256": "not-a-hash" }
+  ],
+  "notes": ""
+}

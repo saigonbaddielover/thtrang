@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "omg-uml-2-5-1-deployment",
+  "family": "uml",
+  "subtype": "deployment",
+  "provenance": { "standard": "OMG UML 2.5.1", "version": "2.5.1", "source": "https://www.omg.org/spec/UML/2.5.1/" },
+  "nodeTypes": {
+    "node": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:uml deployment node"] }], "shapeClass": "node", "container": true },
+    "artifact": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:uml artifact"] }], "shapeClass": "artifact" },
+    "execution-environment": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:uml execution environment"] }], "shapeClass": "node", "container": true }
+  },
+  "edgeTypes": {
+    "communication-path": { "direction": "undirected", "style": { "endArrow": "none" } },
+    "dependency": { "direction": "directed", "style": { "endArrow": "open", "dashed": "1" } }
+  },
+  "rules": [
+    { "id": "deployed-artifact-containment", "severity": "ERROR", "description": "Contain or explicitly deploy each artifact to its intended node or execution environment." }
+  ]
+}

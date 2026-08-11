@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "diagram": { "id": "erd-crows-foot", "family": "erd", "subtype": "crows-foot", "orientation": "landscape", "page": { "width": 1169, "height": 827 }, "standard": { "name": "MySQL Workbench Crow's Foot convention", "version": "8.0", "source": "https://dev.mysql.com/doc/workbench/en/wb-relationship-tools.html" } },
+  "nodes": [
+    { "id": "customer", "label": "Customer", "semanticType": "entity" },
+    { "id": "order", "label": "Order", "semanticType": "entity" }
+  ],
+  "edges": [
+    { "id": "places", "source": "customer", "target": "order", "label": "", "direction": "undirected", "relationType": "mandatory-one-to-mandatory-many" }
+  ]
+}

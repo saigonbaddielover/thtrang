@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "groups": [
+    {
+      "id": "process",
+      "families": ["process"],
+      "notationCoverage": ["process"],
+      "profileCoverage": ["profiles/document-flow-swimlane.json", "profiles/document-flow.json", "profiles/process.json", "profiles/swimlane.json"],
+      "positive": "process/positive.xml",
+      "notationInvalid": "process/notation-invalid.xml",
+      "visualInvalid": "process/visual-invalid.xml"
+    },
+    {
+      "id": "data-flow",
+      "families": ["data-flow"],
+      "notationCoverage": ["data-flow"],
+      "profileCoverage": ["profiles/data-flow-gane-sarson-unknown.json", "profiles/data-flow-yourdon-demarco-unknown.json", "profiles/data-flow.json"],
+      "positive": "data-flow/positive.xml",
+      "notationInvalid": "data-flow/notation-invalid.xml",
+      "visualInvalid": "data-flow/visual-invalid.xml"
+    },
+    {
+      "id": "modeling",
+      "families": ["bpmn", "uml", "erd"],
+      "notationCoverage": ["uml"],
+      "profileCoverage": ["profiles/bpmn.json", "profiles/erd-chen.json", "profiles/erd-crows-foot.json", "profiles/erd-idef1x.json", "profiles/uml-activity.json", "profiles/uml-class.json", "profiles/uml-component.json", "profiles/uml-deployment.json", "profiles/uml-sequence.json", "profiles/uml-state.json"],
+      "positive": "modeling/positive.xml",
+      "notationInvalid": "modeling/notation-invalid.xml",
+      "visualInvalid": "modeling/visual-invalid.xml"
+    },
+    {
+      "id": "topology",
+      "families": ["architecture", "cloud", "network"],
+      "notationCoverage": ["architecture"],
+      "profileCoverage": ["profiles/architecture.json", "profiles/cloud.json", "profiles/network.json"],
+      "positive": "topology/positive.xml",
+      "notationInvalid": "topology/notation-invalid.xml",
+      "visualInvalid": "topology/visual-invalid.xml"
+    },
+    {
+      "id": "technical",
+      "families": ["engineering", "electrical", "pid"],
+      "notationCoverage": [],
+      "profileCoverage": ["profiles/electrical.json", "profiles/engineering.json", "profiles/pid.json"],
+      "positive": "technical/positive.xml",
+      "notationInvalid": "technical/notation-invalid.xml",
+      "visualInvalid": "technical/visual-invalid.xml"
+    },
+    {
+      "id": "spatial",
+      "families": ["floorplan", "wireframe"],
+      "notationCoverage": ["wireframe"],
+      "profileCoverage": ["profiles/floorplan.json", "profiles/wireframe.json"],
+      "positive": "spatial/positive.xml",
+      "notationInvalid": "spatial/notation-invalid.xml",
+      "visualInvalid": "spatial/visual-invalid.xml"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "network-vendor-explicit",
+  "family": "network",
+  "subtype": "logical-or-physical",
+  "provenance": {
+    "standard": "Vendor and diagram layer must be selected explicitly; no universal network icon notation asserted",
+    "source": "https://www.iso.org/standard/74393.html",
+    "mcpDiscovery": {
+      "server": "drawio",
+      "build": "42835e3@2026-08-02T20:17:10.515Z",
+      "verifiedAt": "2026-08-11T00:00:00Z",
+      "providerRelease": "UNKNOWN",
+      "results": [
+        { "query": "cisco router", "title": "10700", "styleSha256": "617ff7df6e2c7845de59fb0ae6a8b9b6fccd7884712b44b34fd986e1c5513b21" },
+        { "query": "cisco router", "title": "ATM Router", "styleSha256": "e4365ed040b771717a99648e8ee5695c438f84ea51444bf96ed5e06145829fcb" },
+        { "query": "cisco router", "title": "Content Router", "styleSha256": "888b38b9ab4131dc900d9719a346e304f750d2b5d5255f5f0be9f08a6c14fc09" }
+      ]
+    }
+  },
+  "nodeTypes": {
+    "cisco-10700": { "styleMatchers": [{ "allOf": ["shape=mxgraph.cisco.routers.10700"] }], "shapeClass": "network-device" },
+    "cisco-atm-router": { "styleMatchers": [{ "allOf": ["shape=mxgraph.cisco.routers.atm_router"] }], "shapeClass": "network-device" },
+    "cisco-content-router": { "styleMatchers": [{ "allOf": ["shape=mxgraph.cisco19.rect", "prIcon=content_router"] }], "shapeClass": "network-device" },
+    "other-device": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:<vendor> network <device>"] }], "shapeClass": "network-device" },
+    "zone": { "styleMatchers": [{ "allOf": ["container=1", "swimlane"] }], "shapeClass": "container", "container": true }
+  },
+  "edgeTypes": {
+    "link": { "direction": "undirected", "style": { "endArrow": "none" } },
+    "directed-path": { "direction": "directed", "style": { "endArrow": "block" } },
+    "bidirectional-link": { "direction": "bidirectional", "style": { "startArrow": "block", "endArrow": "block" } }
+  },
+  "rules": [
+    { "id": "layer-required", "severity": "ERROR", "description": "Declare logical, physical, security-zone, or traffic-flow intent before selecting symbols and relationships." },
+    { "id": "vendor-convention-release-required", "severity": "ERROR", "description": "Declare the exact vendor convention, icon release, and primary release source; a vendor name alone is insufficient." },
+    { "id": "live-stencil-required", "severity": "ERROR", "description": "Resolve vendor and device symbols through live MCP search; generic substitution requires explicit acceptance." },
+    { "id": "live-style-not-network-proof", "severity": "ERROR", "description": "A live Draw.io MCP result proves renderer availability only; confirm device model and network semantics from the source specification." },
+    { "id": "link-semantics-explicit", "severity": "ERROR", "description": "Declare each connector as an undirected link, directed path, or bidirectional link in the semantic manifest." }
+  ]
+}

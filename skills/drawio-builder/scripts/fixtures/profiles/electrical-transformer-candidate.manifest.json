@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "diagram": {
+    "id": "electrical-transformer-candidate",
+    "family": "electrical",
+    "subtype": "electrotechnical-diagram",
+    "orientation": "landscape",
+    "page": { "width": 1169, "height": 827 },
+    "standard": { "name": "IEC 60617 Database", "version": "2026 DB", "source": "https://webstore.iec.ch/en/publication/2723" },
+    "context": { "standardEdition": "2026 DB", "symbolStandard": "IEC 60617 Database", "symbolStandardEdition": "2026 DB" }
+  },
+  "nodes": [
+    { "id": "transformer_a", "label": "T1", "semanticType": "live-transformer-candidate", "orientation": "north" },
+    { "id": "transformer_b", "label": "T2", "semanticType": "live-transformer-candidate", "orientation": "north" }
+  ],
+  "edges": [
+    { "id": "conductor", "source": "transformer_a", "target": "transformer_b", "label": "Feeder", "direction": "undirected", "relationType": "conductor", "sourcePort": "secondary", "targetPort": "primary", "conductorType": "fixture-feeder", "connectionSemantics": "connected" }
+  ]
+}

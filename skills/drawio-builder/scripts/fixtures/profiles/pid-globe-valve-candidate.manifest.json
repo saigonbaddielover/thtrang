@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "diagram": {
+    "id": "pid-globe-valve-candidate",
+    "family": "pid",
+    "subtype": "process-diagram",
+    "orientation": "landscape",
+    "page": { "width": 1169, "height": 827 },
+    "standard": { "name": "ISO 10628-1 process-diagram framework", "version": "2014", "source": "https://www.iso.org/standard/51840.html" },
+    "context": { "projectLegend": "Symbol and line legend not supplied" }
+  },
+  "nodes": [
+    { "id": "valve_a", "label": "HV-101", "semanticType": "globe-valve", "tag": "HV-101" },
+    { "id": "valve_b", "label": "HV-102", "semanticType": "globe-valve", "tag": "HV-102" }
+  ],
+  "edges": [
+    { "id": "process_line", "source": "valve_a", "target": "valve_b", "label": "Process fluid", "direction": "directed", "relationType": "process-line", "sourcePort": "outlet", "targetPort": "inlet", "lineClass": "process", "flowDirection": "source-to-target" }
+  ]
+}
