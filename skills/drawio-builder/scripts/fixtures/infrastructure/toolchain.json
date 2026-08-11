@@ -9,6 +9,6 @@
     "repository": "openai/codex",
     "commit": "3c60d4da648bfa98e3c51c5161ac2720519c733e",
     "downloadUrl": "https://raw.githubusercontent.com/openai/codex/3c60d4da648bfa98e3c51c5161ac2720519c733e/codex-rs/skills/src/assets/samples/skill-creator/scripts/quick_validate.py",
-    "sha256": "5347a0a09cfb546bba1c0d1a30dae0a233d9a05f57bd4e7877155c588bcdabf7"
+    "sha256": "6cc9dc3199c935916cf6f73fcbbbb0e3bb1b58c8f5109fefa499978908164f51"
   }
 }
