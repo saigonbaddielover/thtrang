@@ -51,12 +51,18 @@ try {
     $swapped = Join-Path $scratch 'swapped.json'
     $warningRegression = Join-Path $scratch 'warning-regression.json'
     $unchanged = Join-Path $scratch 'unchanged.json'
+    $cleanBefore = Join-Path $scratch 'clean-before.json'
+    $cleanAfter = Join-Path $scratch 'clean-after.json'
+    $dirtyStage = Join-Path $scratch 'dirty-stage.json'
     Write-Report $before @((New-Issue 'connector-crossing' 'e8'),(New-Issue 'source-micro-jog' 'e2'))
     Write-Report $improved @((New-Issue 'source-micro-jog' 'e2'))
     Write-Report $regressed @((New-Issue 'connector-crossing' 'e8'),(New-Issue 'source-micro-jog' 'e2'),(New-Issue 'target-direction' 'e9'))
     Write-Report $swapped @((New-Issue 'connector-crossing' 'e8'),(New-Issue 'label-node-collision' 'e4'))
     Write-Report $warningRegression @((New-Issue 'source-micro-jog' 'e2'),(New-Issue 'spacing-variance' 'node-group' 'WARNING'))
     Copy-Item -LiteralPath $before -Destination $unchanged
+    Write-Report $cleanBefore @()
+    Write-Report $cleanAfter @()
+    Write-Report $dirtyStage @((New-Issue 'target-direction' 'e9'))
 
     $improvedResult = Invoke-Compare $before $improved
     $improvedData = $improvedResult.Output | ConvertFrom-Json
@@ -79,6 +85,14 @@ try {
 
     $allowedResult = Invoke-Compare $before $unchanged @('-AllowNoImprovement')
     Add-Result 'explicit-no-op-allowed' ($allowedResult.ExitCode -eq 0) $allowedResult.Output
+
+    $cleanStageResult = Invoke-Compare $cleanBefore $cleanAfter @('-Operation','Construction')
+    $cleanStageData = $cleanStageResult.Output | ConvertFrom-Json
+    Add-Result 'clean-construction-stage-accepted' ($cleanStageResult.ExitCode -eq 0 -and $cleanStageData.Decision -eq 'ACCEPT STAGE') $cleanStageResult.Output
+
+    $dirtyStageResult = Invoke-Compare $cleanBefore $dirtyStage @('-Operation','Construction')
+    $dirtyStageData = $dirtyStageResult.Output | ConvertFrom-Json
+    Add-Result 'dirty-construction-stage-rejected' ($dirtyStageResult.ExitCode -eq 1 -and $dirtyStageData.Decision -eq 'REJECT STAGE' -and $dirtyStageData.IntroducedCount -eq 1) $dirtyStageResult.Output
 
     $failed = @($results | Where-Object { -not $_.Passed })
     [pscustomobject]@{

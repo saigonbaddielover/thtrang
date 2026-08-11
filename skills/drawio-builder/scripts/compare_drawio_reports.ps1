@@ -5,6 +5,9 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$AfterReportPath,
 
+    [ValidateSet('Repair','Construction')]
+    [string]$Operation = 'Repair',
+
     [switch]$ErrorsOnly,
     [switch]$AllowNoImprovement
 )
@@ -92,11 +95,18 @@ if ($null -eq $afterCount) { $afterCount = 0 }
 if ($null -eq $introducedCount) { $introducedCount = 0 }
 if ($null -eq $fixedCount) { $fixedCount = 0 }
 $improved = $afterCount -lt $beforeCount
-$passed = $introduced.Count -eq 0 -and ($improved -or $AllowNoImprovement)
+$passed = if ($Operation -eq 'Construction') {
+    $beforeCount -eq 0 -and $afterCount -eq 0 -and $introduced.Count -eq 0
+}
+else {
+    $introduced.Count -eq 0 -and ($improved -or $AllowNoImprovement)
+}
+$decision = if ($passed -and $Operation -eq 'Construction') { 'ACCEPT STAGE' } elseif ($passed) { 'ACCEPT REPAIR' } elseif ($Operation -eq 'Construction') { 'REJECT STAGE' } else { 'REJECT REPAIR' }
 
 $result = [pscustomobject]@{
     BeforeReport = (Resolve-Path -LiteralPath $BeforeReportPath).Path
     AfterReport = (Resolve-Path -LiteralPath $AfterReportPath).Path
+    Operation = $Operation
     ErrorsOnly = [bool]$ErrorsOnly
     BeforeIssueCount = [int]$beforeCount
     AfterIssueCount = [int]$afterCount
@@ -105,7 +115,7 @@ $result = [pscustomobject]@{
     FixedCount = [int]$fixedCount
     Introduced = $introduced
     Fixed = $fixed
-    Decision = if ($passed) { 'ACCEPT REPAIR' } else { 'REJECT REPAIR' }
+    Decision = $decision
 }
 $result | ConvertTo-Json -Depth 6
 if (-not $passed) { exit 1 }

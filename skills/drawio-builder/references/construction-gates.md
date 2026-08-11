@@ -61,7 +61,10 @@ For each route stage:
 3. export page-aware SVG and PNG;
 4. run `validate_drawio.ps1 -ValidationMode Audit`;
 5. inspect the full page and every problem crop;
-6. keep the stage only when it introduces no new error.
+6. compare the clean previous stage with `compare_drawio_reports.ps1 -Operation Construction`;
+7. keep the stage only when both reports contain zero tracked errors and warnings.
+
+Construction mode is intentionally strict: the previous stage and the new stage must both be clean. It rejects any stage built on unresolved findings and any new finding introduced by the added route cluster.
 
 Treat the first full-graph render as a process failure for a dense page. A page with more than one routing region must be built and audited region by region.
 

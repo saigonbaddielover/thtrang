@@ -100,7 +100,7 @@ Resolve paths relative to the project or skill. Never hardcode a machine path.
 - Run `scripts/sync_drawio.ps1` for `.drawio` import or update.
 - Run `scripts/export_drawio.ps1` for page-aware SVG, PNG, PDF, and artifact provenance.
 - Run `scripts/validate_drawio.ps1` in `Audit` mode while iterating and in `Approval` mode only with semantic, notation, artifact, warning-disposition, and visual-inspection evidence required by the task.
-- Run `scripts/compare_drawio_reports.ps1` after every repair and reject a repair that introduces any new error or warning fingerprint or does not reduce the tracked issue count.
+- Run `scripts/compare_drawio_reports.ps1 -Operation Construction` between clean build stages and `-Operation Repair` after every repair. Reject a construction stage unless both reports are clean; reject a repair that introduces any new error or warning fingerprint or does not reduce the tracked issue count.
 - Run `scripts/export_drawio_crops.ps1` after validation to create inspectable crops for structured findings.
 - Run `scripts/test_profile_fixtures.ps1` after changing a notation profile, contract schema, or family stencil mapping.
 
