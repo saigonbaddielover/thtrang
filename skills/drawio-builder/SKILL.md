@@ -17,6 +17,8 @@ Work on one page at a time:
 
 Do not start the next page before the current page is approved. Parallelize only independent read-only audits or isolated forward tests. Never let concurrent workers edit the same canonical source.
 
+Make construction progress externally reviewable. Within 60 seconds of starting a build stage, persist a canonical draft or report the exact blocker and stop. Never replace a required file checkpoint with extended in-memory route optimization.
+
 Use canonical XML for final precision. Use Mermaid only for a disposable draft when the user explicitly requests it. Never claim viewer-side ELK or libavoid changes are persisted unless their resulting geometry was captured into canonical XML and revalidated.
 
 ## Establish truth before drawing
@@ -84,7 +86,7 @@ Require an explicit notation profile for BPMN, UML, ERD, engineering, electrical
 7. Keep each edge `mxGeometry` relative and parent cross-container edges above their containers.
 8. Keep one `mxGraphModel` root per canonical page.
 
-For a dense page, do not create the full edge set before the first rendered audit. Build nodes first, then add and approve route clusters in this order: semantic backbone, boundary/cross-lane flows, stores and fan-in/fan-out, returns, then labels. Maintain the port, corridor, and label ledger required by [construction-gates.md](references/construction-gates.md).
+For a dense page, do not create the full edge set before the first rendered audit. Build and audit a zero-edge node-only stage before optimizing route coordinates. Then plan, add, and approve route clusters in this order: semantic backbone, boundary/cross-lane flows, stores and fan-in/fan-out, returns, then labels. Grow the port, corridor, and label ledger just in time; future-cluster geometry remains `UNPLANNED` until that cluster is current. Follow the bounded persistence contract in [construction-gates.md](references/construction-gates.md).
 
 Use cardinal-center ports for the first render of irregular shapes. Off-center ellipse, rhombus, document, cylinder, archive, or custom-stencil ports require an explicit normal endpoint shaft and a passing rendered contact audit before another incident edge is added.
 

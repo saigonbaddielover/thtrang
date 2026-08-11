@@ -3,6 +3,7 @@
 ## Contents
 
 - Build order
+- Persistence checkpoints
 - Node and port plan
 - Corridor and label plan
 - Incremental render loop
@@ -24,15 +25,31 @@ Do not author every edge of a dense diagram before the first rendered audit. Bui
 
 Render and audit after every stage that adds routes. Do not advance while the current stage has an `ERROR`.
 
+## Persistence checkpoints
+
+Do not optimize a complete dense-page route plan in memory before creating the node-only stage. Persist the smallest reviewable artifact first:
+
+1. write the requirement inventory and an initial ledger whose unresolved route fields are explicitly `UNPLANNED`;
+2. create canonical XML with containers, lanes, final-size nodes, and zero edges;
+3. sync, render, audit, and visually inspect that node-only stage;
+4. plan only the next route cluster, update its ledger rows, and persist the next canonical stage;
+5. repeat until the page is complete.
+
+Within 60 seconds of beginning a construction stage, either persist a canonical draft or report the exact blocker and stop. Do not spend multiple status intervals optimizing coordinates without a new reviewable file. A partial draft may be marked `PARTIAL` or `NOT APPROVED`; it must never be represented as a passing stage.
+
+Keep every stage bounded to one deliverable. When asked for a node-only checkpoint, do not calculate final edge corridors, add edges, or begin the next stage in the same work unit. A later routing discovery may move nodes, but that risk is preferable to an invisible full-page design that cannot be audited incrementally.
+
 ## Node and port plan
 
-Before writing an edge, record:
+Before writing an edge in the current route cluster, record:
 
 ```text
 edge | source | source side | source port | first shaft | corridor | final shaft | target port | target side | label zone
 ```
 
 Use cardinal-center ports for the first render of ellipses, rhombi, documents, cylinders, archives, and custom stencils. Use an off-center irregular-shape port only when obstacle geometry requires it; give it an explicit normal shaft and verify its actual rendered contact before adding another incident route.
+
+Do not require final port, corridor, waypoint, or label-zone coordinates for future clusters during the node-only stage. Keep those ledger cells `UNPLANNED` until their cluster becomes current.
 
 Keep the first bend and final bend outside the source and target outline by at least `clearance.endpointStub`. A waypoint inside a shape bounding box or within the endpoint-stub distance of an irregular outline is not a usable shaft plan.
 
