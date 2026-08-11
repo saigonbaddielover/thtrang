@@ -35,6 +35,7 @@ $requiredPaths = @(
     'scripts\sync_drawio.ps1',
     'scripts\export_drawio.ps1',
     'scripts\validate_drawio.ps1',
+    'scripts\audit_drawio_quality_profile.ps1',
     'scripts\audit_drawio_artifacts.ps1',
     'scripts\audit_drawio_connectors.ps1',
     'scripts\audit_drawio_labels.ps1',
@@ -46,6 +47,7 @@ $requiredPaths = @(
     'scripts\test_profile_fixtures.ps1',
     'scripts\test_artifact_binding.ps1',
     'scripts\test_visual_evidence.ps1',
+    'scripts\test_approval_workflow.ps1',
     'scripts\test_export_transaction.ps1',
     'scripts\lib\Drawio.Contract.psm1',
     'scripts\lib\Drawio.Core.psm1',
@@ -55,6 +57,8 @@ $requiredPaths = @(
     'scripts\lib\Svg.Ink.psm1',
     'scripts\fixtures\profiles\index.json',
     'scripts\fixtures\families\coverage.json'
+    'scripts\fixtures\approval\approved-process.xml'
+    'scripts\fixtures\approval\approved-process.manifest.json'
 )
 foreach ($requiredPath in $requiredPaths) {
     if (-not (Test-Path -LiteralPath (Join-Path $SkillPath $requiredPath) -PathType Leaf)) { Add-Issue "Required file not found: $requiredPath" }

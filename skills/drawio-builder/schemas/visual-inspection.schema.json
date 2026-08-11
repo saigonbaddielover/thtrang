@@ -20,7 +20,7 @@
         "additionalProperties": false,
         "required": ["id", "sha256"],
         "properties": {
-          "id": { "type": "string", "minLength": 1 },
+          "id": { "type": "string", "minLength": 1, "description": "Filename stem of the matching EXPORTED crop Path in the bound crop report." },
           "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
         }
       }

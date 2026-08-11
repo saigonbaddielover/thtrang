@@ -338,6 +338,9 @@ try {
         $visualEvidenceSuite = Invoke-Tool (Join-Path $PSScriptRoot 'test_visual_evidence.ps1') @('-SourcePath',$validPath,'-SvgPath',$svgPath,'-PngPath',$pngPath,'-ScratchDirectory',$scratch)
         Add-TestResult 'visual-evidence-contract' ($visualEvidenceSuite.ExitCode -eq 0) $visualEvidenceSuite.Output
 
+        $approvalSuite = Invoke-Tool (Join-Path $PSScriptRoot 'test_approval_workflow.ps1') @('-SkillPath',$SkillPath,'-DrawioExecutable',$DrawioExecutable,'-ScratchDirectory',$scratch)
+        Add-TestResult 'approval-workflow-contract' ($approvalSuite.ExitCode -eq 0) $approvalSuite.Output
+
         $invalidVisualDrawio = Join-Path $scratch 'invalid-visual.drawio'
         $invalidVisualSvg = Join-Path $scratch 'invalid-visual.svg'
         $invalidVisualPng = Join-Path $scratch 'invalid-visual.png'

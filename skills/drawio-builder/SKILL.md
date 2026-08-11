@@ -47,7 +47,7 @@ Read when applicable:
 - [lifecycle.md](references/lifecycle.md) before import, sync, export, artifact manifests, or multi-page work;
 - [diagram-families.md](references/diagram-families.md) before choosing a family or profile;
 - [dfd-notation.md](references/dfd-notation.md) for every context or DFD task;
-- the matching file under `references/families/` for BPMN, UML, ERD, architecture, cloud, network, engineering, electrical, P&ID, floorplan, or wireframe work.
+- [process](references/families/process.md), [data-flow](references/families/data-flow.md), [BPMN](references/families/bpmn.md), [UML](references/families/uml.md), [ERD](references/families/erd.md), [architecture](references/families/architecture.md), [cloud](references/families/cloud.md), [network](references/families/network.md), [engineering](references/families/engineering.md), [electrical](references/families/electrical.md), [P&ID](references/families/pid.md), [floorplan](references/families/floorplan.md), or [wireframe](references/families/wireframe.md) when that family applies.
 
 ## Select a family contract
 

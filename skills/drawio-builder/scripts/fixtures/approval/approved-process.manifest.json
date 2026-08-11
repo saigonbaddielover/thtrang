@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "diagram": {
+    "id": "approved-process",
+    "family": "process",
+    "subtype": "flowchart",
+    "orientation": "portrait",
+    "page": { "width": 827, "height": 1169 },
+    "standard": { "name": "ISO 5807:1985", "version": "1985", "source": "https://www.iso.org/standard/11955.html" }
+  },
+  "nodes": [
+    { "id": "task-a", "label": "Receive request", "semanticType": "process", "parent": "1" },
+    { "id": "task-b", "label": "Approve request", "semanticType": "process", "parent": "1" },
+    { "id": "review-note", "label": "Human review required", "semanticType": "annotation", "parent": "1" }
+  ],
+  "edges": [
+    { "id": "flow", "source": "task-a", "target": "task-b", "label": "Validated request", "direction": "directed", "relationType": "flow", "sourceSides": ["right"], "targetSides": ["left"] }
+  ],
+  "ruleDispositions": [
+    { "ruleId": "single-primary-reading-path", "decision": "verified", "evidence": { "source": "Semantic manifest", "reference": "edges.flow" } },
+    { "ruleId": "decision-outcomes-labeled", "decision": "verified", "evidence": { "source": "Semantic manifest", "reference": "nodes" } }
+  ]
+}
