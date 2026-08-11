@@ -217,6 +217,8 @@ try {
     Add-TestResult 'profile-fixture-suite' ($profileFixtureSuite.ExitCode -eq 0) $profileFixtureSuite.Output
     $transactionSuite = Invoke-Tool (Join-Path $PSScriptRoot 'test_export_transaction.ps1') @('-SkillPath', $SkillPath)
     Add-TestResult 'export-transaction-contract' ($transactionSuite.ExitCode -eq 0) $transactionSuite.Output
+    $repairLoopSuite = Invoke-Tool (Join-Path $PSScriptRoot 'test_repair_loop.ps1') @('-SkillPath', $SkillPath)
+    Add-TestResult 'repair-loop-contract' ($repairLoopSuite.ExitCode -eq 0) $repairLoopSuite.Output
     $artifactScratchRoot = Join-Path $SkillPath '.tmp'
     $artifactScratchExisted = Test-Path -LiteralPath $artifactScratchRoot
     $artifactBindingSuite = Invoke-Tool (Join-Path $PSScriptRoot 'test_artifact_binding.ps1') @('-SkillPath',$SkillPath)
@@ -356,6 +358,7 @@ try {
         Add-TestResult 'detect-internal-micro-jog' ($invalidVisualValidation.ExitCode -eq 1 -and 'internal-micro-jog' -in $connectorIssues) $invalidVisualValidation.Output
         Add-TestResult 'detect-divider-clearance' ($invalidVisualValidation.ExitCode -eq 1 -and 'divider-clearance' -in $connectorIssues) $invalidVisualValidation.Output
         Add-TestResult 'detect-edge-label-node-collision' ($invalidVisualValidation.ExitCode -eq 1 -and 'edge-label-node-collision' -in $labelIssues) $invalidVisualValidation.Output
+        Add-TestResult 'detect-edge-label-owner-distance' ($invalidVisualValidation.ExitCode -eq 1 -and 'edge-label-owner-distance' -in $labelIssues) $invalidVisualValidation.Output
         Add-TestResult 'detect-archive-slope-overflow' ($invalidVisualValidation.ExitCode -eq 1 -and ('left-slope-clearance' -in $archiveIssues -or 'right-slope-clearance' -in $archiveIssues)) $invalidVisualValidation.Output
         $invalidVisualReport = Join-Path $scratch 'invalid-visual-report.json'
         Write-Utf8File $invalidVisualReport $invalidVisualValidation.Output

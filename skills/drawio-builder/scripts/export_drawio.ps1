@@ -356,8 +356,11 @@ try {
         Remove-SvgSentinel $svgTemporary
         [xml]$svg = Get-Content -LiteralPath $svgTemporary -Raw -Encoding UTF8
         $viewBox = @(([string]$svg.svg.viewBox).Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries) | ForEach-Object { [double]$_ })
-        if ($viewBox.Count -ne 4 -or [math]::Abs($viewBox[2] - $pageWidth) -gt 1.0 -or [math]::Abs($viewBox[3] - $pageHeight) -gt 1.0) {
-            throw "SVG viewBox does not match canonical page: $($svg.svg.viewBox)"
+        if ($viewBox.Count -ne 4) { throw "SVG viewBox is invalid: $($svg.svg.viewBox)" }
+        $overflow = $viewBox[0] -lt -1.0 -or $viewBox[1] -lt -1.0 -or $viewBox[2] -gt ($pageWidth + 1.0) -or $viewBox[3] -gt ($pageHeight + 1.0)
+        if ($overflow) { throw "SVG content exceeds canonical page bounds: $($svg.svg.viewBox). Move page-edge shapes, labels, or routes inward" }
+        if ([math]::Abs($viewBox[0]) -gt 1.0 -or [math]::Abs($viewBox[1]) -gt 1.0 -or [math]::Abs($viewBox[2] - $pageWidth) -gt 1.0 -or [math]::Abs($viewBox[3] - $pageHeight) -gt 1.0) {
+            throw "SVG page sentinel did not establish canonical bounds: $($svg.svg.viewBox)"
         }
         if ($svg.SelectSingleNode("//*[@data-cell-id='__drawio_builder_page_bounds__']")) { throw 'SVG page sentinel removal failed' }
     }

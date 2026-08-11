@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "profile": "a4-print",
   "pages": {
     "portrait": { "width": 827, "height": 1169 },
@@ -22,7 +22,8 @@
     "pageConnector": 24.0,
     "laneMinimum": 5.0,
     "lanePreferred": 10.0,
-    "edgeLabelAssociation": 6.0
+    "edgeLabelAssociation": 6.0,
+    "edgeLabelOwnerMaximum": 32.0
   },
   "composition": {
     "alignmentTolerance": 2.0,

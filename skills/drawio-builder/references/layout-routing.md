@@ -16,6 +16,8 @@ Lay out the semantic backbone before secondary records or annotations. Choose a 
 
 Align repeated nodes to a stable grid. Distribute them consistently. Prefer a larger shape or lane over compressed text or a narrow connector gap.
 
+Build dense routing incrementally. Approve the semantic backbone before adding boundary flows, approve boundary flows before store/fan routes, and approve those before returns and labels. Use the route ledger and repair transaction in [construction-gates.md](construction-gates.md).
+
 ## Shape placement
 
 Keep unrelated shapes out of connector corridors. Give dense nodes more surrounding whitespace. Place stores and archives where incoming document flows can approach a valid side without sharing an arrowhead.
@@ -27,6 +29,8 @@ Do not place source and target perimeters so close that the rendered arrow shaft
 Use normalized `exitX`, `exitY`, `entryX`, and `entryY` values in `[0,1]`. At least one coordinate at each end must lie on the perimeter. A right-side departure must begin rightward; a top entry must approach downward; a bottom entry must approach upward.
 
 Avoid corner anchors unless the route is intentionally allowed to use either adjacent side. Recompute anchor fractions after resizing a shape so the physical port remains at the intended coordinate.
+
+Start irregular shapes with cardinal-center ports. Treat an off-center port as a higher-risk exception: place an explicit first or final waypoint outside the rendered outline by the endpoint-stub clearance, then render and validate that edge before adding another edge to the region.
 
 Validate the rendered contact point against the actual source and target outlines. A declared side and a correctly directed segment are insufficient when the arrow tip floats, enters the interior, or lands on a neighboring side of an irregular shape.
 

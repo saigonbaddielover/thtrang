@@ -57,6 +57,7 @@
 | Label-edge collision | Label masks another route or arrow | Label bounds clear unrelated connector strokes | Move label or route |
 | Label-label collision | Dense labels overlap | Every label has an independent readable region | Reorder routes, wrap, or increase spacing |
 | Misassociation | Label is closer to another edge than its owner | Own-edge distance beats unrelated-edge distance by the profile margin | Move label into its edge corridor |
+| Detached owner label | Label is not closer to another edge but still floats far from its owner | Label-center distance to the owner stays below the profile maximum | Move the label onto clear whitespace beside its owner segment |
 | Bend or arrow masking | White background covers route topology | Label clears bends, endpoint shafts, and arrowheads | Move away from the endpoint |
 | Divider masking | Label background breaks a lane line | Label clears lane headers and dividers | Use the lane interior or a dedicated corridor |
 
@@ -82,6 +83,7 @@
 | Wrong PDF page | Old or mismatched PDF survives | Page count and `MediaBox` match canonical page | Reject and preserve the prior output |
 | Asset mismatch | Canonical, wrapper, SVG, PNG, or PDF differ | Artifact manifest hashes one reviewed revision | Regenerate the entire requested asset set |
 | Renderer drift | Different Draw.io builds alter output | Renderer version is pinned or explicitly reviewed | Rerender and update validated provenance |
+| Oversized page viewBox | A page-edge route or label expands content beyond the sentinel | Rendered page origin and size stay within canonical tolerance | Move the page-edge content inward; reproduce with a minimal page before blaming the renderer |
 
 ## Audit integrity
 
@@ -96,3 +98,5 @@ Treat these as mandatory visual checks even when automation reports zero issues:
 - final full-resolution asset consistency.
 
 Every confirmed failure becomes a synthetic regression fixture. Never encode an unaudited diagram as a clean golden baseline.
+
+Compare the validation report before and after every repair. A change that trades one issue for another, increases issue multiplicity, or leaves the targeted error unchanged is a rejected repair, not progress.
