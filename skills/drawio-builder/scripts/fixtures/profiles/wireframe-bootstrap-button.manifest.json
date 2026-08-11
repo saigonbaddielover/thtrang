@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "diagram": {
+    "id": "wireframe-bootstrap-button",
+    "family": "wireframe",
+    "subtype": "ui-layout",
+    "orientation": "landscape",
+    "page": { "width": 1169, "height": 827 },
+    "standard": { "name": "Project-selected Bootstrap button contract", "version": "5.3", "source": "https://getbootstrap.com/docs/5.3/components/buttons/" },
+    "context": {
+      "viewport": { "width": 1440, "height": 900, "unit": "px" },
+      "fidelity": "mid",
+      "designSystem": "Bootstrap",
+      "designSystemVersion": "5.3",
+      "componentStates": [
+        { "componentId": "submit", "state": "default" },
+        { "componentId": "return", "state": "default" }
+      ],
+      "interactionLegend": [
+        { "id": "navigate", "meaning": "Navigate to the target screen after activation" }
+      ],
+      "repeatedComponents": [
+        { "group": "primary-actions", "semanticType": "bootstrap-button", "width": 80, "height": 40, "count": 2 }
+      ]
+    }
+  },
+  "nodes": [
+    { "id": "checkout", "label": "Checkout", "semanticType": "screen", "parent": "1" },
+    { "id": "confirmation", "label": "Confirmation", "semanticType": "screen", "parent": "1" },
+    { "id": "submit", "label": "Submit", "semanticType": "bootstrap-button", "parent": "checkout", "componentState": "default", "repeatGroup": "primary-actions" },
+    { "id": "return", "label": "Return", "semanticType": "bootstrap-button", "parent": "confirmation", "componentState": "default", "repeatGroup": "primary-actions" }
+  ],
+  "edges": [
+    { "id": "navigate", "source": "submit", "target": "confirmation", "label": "Submit order", "direction": "directed", "relationType": "interaction", "interactionLegendId": "navigate" }
+  ],
+  "ruleDispositions": [
+    { "ruleId": "component-contract-required", "decision": "verified", "evidence": { "source": "Semantic manifest", "reference": "diagram.context" } },
+    { "ruleId": "accessibility-boundary", "decision": "accepted", "evidence": { "source": "https://www.w3.org/TR/WCAG22/", "reason": "The fixture exercises notation and contract structure, not implemented-interface conformance." } },
+    { "ruleId": "spatial-consistency", "decision": "verified", "evidence": { "source": "Semantic manifest", "reference": "diagram.context.repeatedComponents" } },
+    { "ruleId": "interaction-semantics-explicit", "decision": "verified", "evidence": { "source": "Semantic manifest", "reference": "edges.navigate.interactionLegendId" } },
+    { "ruleId": "live-style-not-design-system-proof", "decision": "verified", "evidence": { "source": "Draw.io MCP build 42835e3@2026-08-02T20:17:10.515Z", "sha256": "73fb2e4b653eb2538da3beb65d6b7ab7b4538b666d56d90588de3428739a2ace" } }
+  ]
+}

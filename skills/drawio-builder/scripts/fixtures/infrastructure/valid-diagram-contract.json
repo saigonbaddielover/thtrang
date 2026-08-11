@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "diagram": { "id": "process-1", "family": "process", "orientation": "portrait", "page": { "width": 827, "height": 1169 } },
+  "nodes": [
+    { "id": "start", "label": "Start", "semanticType": "terminator" },
+    { "id": "end", "label": "End", "semanticType": "terminator" }
+  ],
+  "edges": [
+    { "id": "e1", "source": "start", "target": "end", "label": "", "direction": "directed", "sourceSides": ["bottom"], "targetSides": ["top"] }
+  ]
+}

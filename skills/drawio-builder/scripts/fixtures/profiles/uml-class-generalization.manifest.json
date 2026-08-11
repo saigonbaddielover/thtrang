@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "diagram": { "id": "uml-class-generalization", "family": "uml", "subtype": "class", "orientation": "landscape", "page": { "width": 1169, "height": 827 }, "standard": { "name": "OMG UML", "version": "2.5.1", "source": "https://www.omg.org/spec/UML/2.5.1/" } },
+  "nodes": [
+    { "id": "base", "label": "Account", "semanticType": "classifier" },
+    { "id": "derived", "label": "SavingsAccount", "semanticType": "classifier" }
+  ],
+  "edges": [
+    { "id": "generalization", "source": "derived", "target": "base", "label": "", "direction": "directed", "relationType": "generalization" }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "iso-4157-floorplan-designation",
+  "family": "floorplan",
+  "subtype": "building-space-layout",
+  "provenance": {
+    "standard": "ISO 4157-1:1998 building and space designation; this standard does not define every plan symbol",
+    "version": "1998",
+    "source": "https://www.iso.org/standard/26189.html",
+    "mcpDiscovery": {
+      "server": "drawio",
+      "build": "42835e3@2026-08-02T20:17:10.515Z",
+      "verifiedAt": "2026-08-11T00:00:00Z",
+      "results": [
+        { "query": "floorplan door", "title": "Door", "styleSha256": "4aa2d62cd19a3955f9333b0cf2f7e4f869b30f239ec7ce91bf31abe3a1f9959e" },
+        { "query": "floorplan door", "title": "Door", "styleSha256": "56ad7ce8936e2f66d00bda377f18aabf74acc35d7d67b524bb41163e35a0aa01" }
+      ]
+    }
+  },
+  "nodeTypes": {
+    "space": { "styleMatchers": [{ "allOf": ["container=1", "swimlane"] }], "shapeClass": "space", "container": true },
+    "door-left": { "styleMatchers": [{ "allOf": ["shape=mxgraph.floorplan.doorLeft", "aspect=fixed"] }], "shapeClass": "building-element" },
+    "door-right": { "styleMatchers": [{ "allOf": ["shape=mxgraph.floorplan.doorRight", "aspect=fixed"] }], "shapeClass": "building-element" },
+    "circulation-point": { "styleMatchers": [{ "allOf": ["shape=ellipse", "aspect=fixed"] }], "shapeClass": "spatial-marker" },
+    "other-building-element": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:<selected-building-standard> <element>"] }], "shapeClass": "building-element" }
+  },
+  "edgeTypes": {
+    "circulation-path": { "direction": "directed", "style": { "endArrow": "block", "dashed": "1" } }
+  },
+  "rules": [
+    { "id": "scale-and-units-required", "severity": "ERROR", "description": "Declare an explicit drawing-unit to model-unit ratio and authoritative element dimensions before spatial approval." },
+    { "id": "symbol-standard-required", "severity": "ERROR", "description": "Select the applicable building symbol standard before notation approval; ISO 4157 alone is insufficient." },
+    { "id": "wall-opening-contract", "severity": "ERROR", "description": "Record each opening's wall, handedness, swing, width, unit, and authoritative source." },
+    { "id": "containment-and-clearance", "severity": "ERROR", "description": "Record required circulation clearances and keep fixtures, openings, labels, and routes correctly contained." },
+    { "id": "live-style-not-building-proof", "severity": "ERROR", "description": "Live door styles prove renderer availability only; confirm handedness, swing, dimensions, and notation against the selected building standard." }
+  ]
+}

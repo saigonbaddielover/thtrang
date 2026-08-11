@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "iso-5807-document-flow-swimlane",
+  "family": "process",
+  "subtype": "document-flow-swimlane",
+  "provenance": {
+    "standard": "ISO 5807:1985 flowchart semantics; document lineage and responsibility lanes are explicit project contracts",
+    "version": "1985",
+    "source": "https://www.iso.org/standard/11955.html",
+    "verifiedAt": "2026-08-11T00:00:00Z",
+    "mcpDiscovery": {
+      "server": "drawio",
+      "build": "42835e3@2026-08-02T20:17:10.515Z",
+      "verifiedAt": "2026-08-11T00:00:00Z",
+      "results": [
+        { "query": "flowchart document", "title": "Document", "styleSha256": "0068b6d6591dabf3333c03d9e5da895751bafa5d17c98ee231e801eab42261a5" },
+        { "query": "flowchart archive inverted triangle", "title": "Final Report / Archive", "styleSha256": "c47d42e6a11352629cab489aa2210acfac4a692c04d6aad073fcd7b251b2902c" }
+      ]
+    }
+  },
+  "nodeTypes": {
+    "lane": { "styleMatchers": [{ "allOf": ["swimlane"] }], "shapeClass": "swimlane", "container": true },
+    "process": { "styleMatchers": [{ "allOf": ["rounded=0", "whiteSpace=wrap"], "noneOf": ["shape="] }], "shapeClass": "rectangle" },
+    "decision": { "styleMatchers": [{ "allOf": ["shape=rhombus"] }, { "allOf": ["rhombus"] }], "shapeClass": "rhombus" },
+    "document": { "styleMatchers": [{ "allOf": ["shape=mxgraph.flowchart.document2"] }, { "allOf": ["shape=document"] }], "shapeClass": "document" },
+    "archive": { "styleMatchers": [{ "allOf": ["shape=mxgraph.dfd.archive"] }, { "allOf": ["triangle", "direction=south"] }, { "allOf": ["shape=triangle", "direction=south"] }], "shapeClass": "archive-triangle" }
+  },
+  "edgeTypes": {
+    "document-flow": { "direction": "directed", "style": { "endArrow": "block", "endFill": "1" } },
+    "control-flow": { "direction": "directed", "style": { "endArrow": "block", "endFill": "1" } }
+  },
+  "rules": [
+    { "id": "copy-lineage-explicit", "severity": "ERROR", "description": "Record every document copy and destination in the semantic manifest." },
+    { "id": "lane-ownership", "severity": "ERROR", "description": "Place each activity and document in the lane of the responsible actor or explicitly model the handoff." },
+    { "id": "lane-header-clearance", "severity": "ERROR", "description": "Keep nodes, labels, and connectors out of lane headers unless they are header content." },
+    { "id": "archive-label-safe", "severity": "ERROR", "description": "Keep archive text below the divider and inside both slopes and the bottom border." },
+    { "id": "live-style-not-semantic-proof", "severity": "ERROR", "description": "Live Draw.io MCP document and archive styles prove renderer availability only; validate their project meaning in the semantic manifest." }
+  ]
+}

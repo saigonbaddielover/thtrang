@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "dispositions": [
+    {
+      "gate": "rendered-labels",
+      "type": "unknown-shape-safe-area",
+      "element": "service",
+      "decision": "accepted",
+      "reason": "Full-resolution inspection confirms the label clears the verified stencil outline."
+    }
+  ]
+}

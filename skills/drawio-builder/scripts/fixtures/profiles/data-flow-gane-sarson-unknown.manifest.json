@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "diagram": { "id": "data-flow-gane-sarson-unknown", "family": "data-flow", "subtype": "gane-sarson", "orientation": "landscape", "page": { "width": 1169, "height": 827 }, "standard": { "name": "Gane-Sarson authoritative mapping required", "version": "UNKNOWN", "source": "https://www.iso.org/standard/11955.html" } },
+  "nodes": [
+    { "id": "process", "label": "Process order", "semanticType": "process" }
+  ],
+  "edges": []
+}

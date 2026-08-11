@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "profile": "test",
+  "pages": {},
+  "fonts": { "bodyMinimum": 0, "edgeMinimum": 0, "titleMinimum": 0, "requiredFamilies": [] },
+  "clearance": {},
+  "composition": { "alignmentTolerance": -1, "sizeTolerance": -1, "spacingVarianceWarning": -1, "minimumContrast": 0 },
+  "export": {}
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 2,
+  "profile": "test",
+  "pages": {
+    "portrait": { "width": 827, "height": 1169 },
+    "landscape": { "width": 1169, "height": 827 }
+  },
+  "fonts": { "bodyMinimum": 10.5, "edgeMinimum": 10, "titleMinimum": 14, "requiredFamilies": ["Arial"] },
+  "clearance": {
+    "labelInk": 8,
+    "nodeLabelInk": 2,
+    "collisionOverlap": 2,
+    "shapeOutline": 2,
+    "arrowContact": 3,
+    "endpointStub": 15,
+    "parallelDivider": 20,
+    "pageConnector": 24,
+    "laneMinimum": 5,
+    "lanePreferred": 10,
+    "edgeLabelAssociation": 6
+  },
+  "composition": { "alignmentTolerance": 2, "sizeTolerance": 2, "spacingVarianceWarning": 8, "minimumContrast": 4.5 },
+  "export": { "pngScale": 1.75 }
+}

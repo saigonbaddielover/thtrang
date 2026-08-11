@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/drawio-builder/visual-inspection.schema.json",
+  "title": "Draw.io Visual Inspection Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "assetSha256", "cropReportSha256", "reviewedAt", "reviewer", "fullPage", "cropsReviewed", "reviewedCrops", "notes"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "assetSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "cropReportSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "reviewedAt": { "type": "string", "format": "date-time" },
+    "reviewer": { "type": "string", "minLength": 1 },
+    "fullPage": { "enum": ["PASS", "FAIL"] },
+    "cropsReviewed": { "type": "integer", "minimum": 0 },
+    "reviewedCrops": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "sha256"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1, "description": "Filename stem of the matching EXPORTED crop Path in the bound crop report." },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+        }
+      }
+    },
+    "notes": { "type": "string", "minLength": 1 }
+  }
+}

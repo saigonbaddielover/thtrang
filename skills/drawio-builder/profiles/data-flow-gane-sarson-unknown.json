@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "data-flow-gane-sarson-unknown",
+  "family": "data-flow",
+  "subtype": "gane-sarson",
+  "provenance": { "standard": "Gane-Sarson mapping not bundled; ISO 5807 is cited only for general data-flowchart scope", "version": "UNKNOWN", "source": "https://www.iso.org/standard/11955.html" },
+  "nodeTypes": {
+    "external-entity": { "styleMatchers": [{ "allOf": ["AUTHORITATIVE_MAPPING_REQUIRED:gane-sarson external entity"] }], "shapeClass": "unknown" },
+    "process": { "styleMatchers": [{ "allOf": ["AUTHORITATIVE_MAPPING_REQUIRED:gane-sarson process"] }], "shapeClass": "unknown" },
+    "data-store": { "styleMatchers": [{ "allOf": ["AUTHORITATIVE_MAPPING_REQUIRED:gane-sarson data store"] }], "shapeClass": "unknown" }
+  },
+  "edgeTypes": {
+    "data-flow": { "direction": "directed", "style": { "AUTHORITATIVE_MAPPING_REQUIRED": "gane-sarson data flow" } }
+  },
+  "rules": [
+    { "id": "authoritative-mapping-required", "severity": "ERROR", "description": "Notation approval remains UNKNOWN until an authoritative Gane-Sarson symbol and edge mapping is supplied." }
+  ]
+}

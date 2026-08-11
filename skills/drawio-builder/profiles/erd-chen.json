@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "erd-chen-explicit",
+  "family": "erd",
+  "subtype": "chen",
+  "provenance": { "standard": "Peter P. Chen entity-relationship model", "version": "1976", "source": "https://dl.acm.org/doi/10.1145/320434.320440" },
+  "nodeTypes": {
+    "entity": { "styleMatchers": [{ "allOf": ["rounded=0", "whiteSpace=wrap"], "noneOf": ["shape="] }], "shapeClass": "rectangle" },
+    "relationship": { "styleMatchers": [{ "allOf": ["shape=rhombus"] }], "shapeClass": "rhombus" },
+    "attribute": { "styleMatchers": [{ "allOf": ["shape=ellipse"] }], "shapeClass": "ellipse" }
+  },
+  "edgeTypes": {
+    "participation": { "direction": "undirected", "style": { "endArrow": "none" } }
+  },
+  "rules": [
+    { "id": "role-and-cardinality-readable", "severity": "ERROR", "description": "Keep relationship roles and cardinalities legible and associated with their endpoints." },
+    { "id": "no-crows-foot-mixing", "severity": "ERROR", "description": "Do not mix Crow's Foot endpoint glyphs into a Chen profile without an explicit legend." }
+  ]
+}

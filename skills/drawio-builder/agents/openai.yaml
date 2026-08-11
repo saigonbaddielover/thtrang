@@ -1,0 +1,13 @@
+interface:
+  display_name: "Draw.io Builder"
+  short_description: "Build, repair, and prove production-quality Draw.io diagrams"
+  default_prompt: "Use $drawio-builder to lock semantics and notation, build or repair canonical Draw.io XML, validate rendered geometry, and export provenance-matched final assets."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "drawio"
+      description: "Draw.io MCP server for interactive XML rendering and live shape discovery."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "erd-crows-foot-explicit",
+  "family": "erd",
+  "subtype": "crows-foot",
+  "provenance": {
+    "standard": "MySQL Workbench Crow's Foot (IE) convention; no universal normative edition asserted",
+    "source": "https://dev.mysql.com/doc/workbench/en/wb-relationship-tools.html",
+    "mcpDiscovery": {
+      "server": "drawio",
+      "build": "42835e3@2026-08-02T20:17:10.515Z",
+      "verifiedAt": "2026-08-11T00:00:00Z",
+      "results": [
+        { "query": "entity relation crow foot cardinality", "title": "0 to 1", "styleSha256": "5b71ad89cb0e4e2135e5ae09fb262866b2af8025cc5adf63e49890ce21bd6bc2" },
+        { "query": "entity relation crow foot cardinality", "title": "0 to Many Optional", "styleSha256": "1bd514ddb23c987acdc0279e29c4c97d976c619fcf536255d69f62a53a24878d" },
+        { "query": "entity relation crow foot cardinality", "title": "1", "styleSha256": "feb7e59721db5944dce2e7683bee24b6de370b55184426940cbc27a39ce60de6" },
+        { "query": "entity relation crow foot cardinality", "title": "1 Mandatory", "styleSha256": "574d04f0907fd816ab8ad7659fee0a71044c4d1065add01b7e387f403f71e4e6" },
+        { "query": "entity relation crow foot cardinality", "title": "1 to Many", "styleSha256": "6ee13f358c022d36ed321edb6823a74ca52fccf349dccf2fc818292750667614" }
+      ]
+    }
+  },
+  "nodeTypes": {
+    "entity": { "styleMatchers": [{ "allOf": ["swimlane", "horizontal=1"] }, { "allOf": ["rounded=0", "whiteSpace=wrap"], "noneOf": ["shape="] }], "shapeClass": "compartmented-rectangle" }
+  },
+  "edgeTypes": {
+    "zero-to-one": { "direction": "undirected", "style": { "edgeStyle": "entityRelationEdgeStyle", "endArrow": "ERzeroToOne" } },
+    "zero-to-many": { "direction": "undirected", "style": { "edgeStyle": "entityRelationEdgeStyle", "endArrow": "ERzeroToMany" } },
+    "exactly-one": { "direction": "undirected", "style": { "edgeStyle": "entityRelationEdgeStyle", "endArrow": "ERmandOne" } },
+    "one-to-many": { "direction": "undirected", "style": { "edgeStyle": "entityRelationEdgeStyle", "endArrow": "ERoneToMany" } },
+    "mandatory-one-to-optional-one": { "direction": "undirected", "style": { "edgeStyle": "entityRelationEdgeStyle", "startArrow": "ERmandOne", "endArrow": "ERzeroToOne" } },
+    "mandatory-one-to-mandatory-many": { "direction": "undirected", "style": { "edgeStyle": "entityRelationEdgeStyle", "startArrow": "ERmandOne", "endArrow": "ERoneToMany" } },
+    "mandatory-one-to-optional-many": { "direction": "undirected", "style": { "edgeStyle": "entityRelationEdgeStyle", "startArrow": "ERmandOne", "endArrow": "ERzeroToMany" } },
+    "optional-one-to-mandatory-many": { "direction": "undirected", "style": { "edgeStyle": "entityRelationEdgeStyle", "startArrow": "ERzeroToOne", "endArrow": "ERoneToMany" } },
+    "optional-one-to-optional-many": { "direction": "undirected", "style": { "edgeStyle": "entityRelationEdgeStyle", "startArrow": "ERzeroToOne", "endArrow": "ERzeroToMany" } },
+    "mandatory-one-to-mandatory-one": { "direction": "undirected", "style": { "edgeStyle": "entityRelationEdgeStyle", "startArrow": "ERmandOne", "endArrow": "ERmandOne" } }
+  },
+  "rules": [
+    { "id": "explicit-cardinality", "severity": "ERROR", "description": "Render minimum and maximum cardinality at both relationship ends." },
+    { "id": "source-convention-required", "severity": "ERROR", "description": "Require the assignment, repository, or user to identify the exact Crow's Foot convention before notation approval." }
+  ]
+}

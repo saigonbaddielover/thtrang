@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "iso-5807-process",
+  "family": "process",
+  "subtype": "flowchart",
+  "provenance": {
+    "standard": "ISO 5807:1985",
+    "version": "1985",
+    "source": "https://www.iso.org/standard/11955.html"
+  },
+  "nodeTypes": {
+    "terminator": { "styleMatchers": [{ "allOf": ["shape=mxgraph.flowchart.terminator"] }], "shapeClass": "terminator" },
+    "process": { "styleMatchers": [{ "allOf": ["rounded=0", "whiteSpace=wrap"], "noneOf": ["shape="] }], "shapeClass": "rectangle" },
+    "decision": { "styleMatchers": [{ "allOf": ["shape=rhombus"] }], "shapeClass": "rhombus" },
+    "document": { "styleMatchers": [{ "allOf": ["shape=document"] }], "shapeClass": "document" },
+    "data-store": { "styleMatchers": [{ "allOf": ["shape=cylinder3"] }], "shapeClass": "cylinder" }
+  },
+  "edgeTypes": {
+    "flow": { "direction": "directed", "style": { "endArrow": "block", "endFill": "1" } }
+  },
+  "rules": [
+    { "id": "single-primary-reading-path", "severity": "WARNING", "description": "Keep the primary process narrative visually dominant and unambiguous." },
+    { "id": "decision-outcomes-labeled", "severity": "ERROR", "description": "Label every semantically distinct decision outcome." }
+  ]
+}

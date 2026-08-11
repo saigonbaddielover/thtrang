@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 2,
+  "profile": "a4-print",
+  "pages": {
+    "portrait": { "width": 827, "height": 1169 },
+    "landscape": { "width": 1169, "height": 827 }
+  },
+  "fonts": {
+    "bodyMinimum": 10.5,
+    "edgeMinimum": 10.0,
+    "titleMinimum": 14.0,
+    "requiredFamilies": ["Arial", "Helvetica", "sans-serif"]
+  },
+  "clearance": {
+    "labelInk": 8.0,
+    "nodeLabelInk": 2.0,
+    "collisionOverlap": 2.0,
+    "shapeOutline": 2.0,
+    "arrowContact": 3.0,
+    "endpointStub": 15.0,
+    "parallelDivider": 20.0,
+    "pageConnector": 24.0,
+    "laneMinimum": 5.0,
+    "lanePreferred": 10.0,
+    "edgeLabelAssociation": 6.0
+  },
+  "composition": {
+    "alignmentTolerance": 2.0,
+    "sizeTolerance": 2.0,
+    "spacingVarianceWarning": 8.0,
+    "minimumContrast": 4.5
+  },
+  "export": {
+    "pngScale": 1.75
+  }
+}

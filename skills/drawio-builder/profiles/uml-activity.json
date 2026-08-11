@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "omg-uml-2-5-1-activity",
+  "family": "uml",
+  "subtype": "activity",
+  "provenance": { "standard": "OMG UML 2.5.1", "version": "2.5.1", "source": "https://www.omg.org/spec/UML/2.5.1/" },
+  "nodeTypes": {
+    "action": { "styleMatchers": [{ "allOf": ["rounded=1", "whiteSpace=wrap"], "noneOf": ["shape="] }], "shapeClass": "rounded-rectangle" },
+    "initial": { "styleMatchers": [{ "allOf": ["shape=ellipse", "fillColor=#000000"] }], "shapeClass": "filled-circle" },
+    "activity-final": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:uml activity final"] }], "shapeClass": "bullseye" },
+    "decision-or-merge": { "styleMatchers": [{ "allOf": ["shape=rhombus"] }], "shapeClass": "rhombus" },
+    "partition": { "styleMatchers": [{ "allOf": ["swimlane"] }], "shapeClass": "swimlane", "container": true }
+  },
+  "edgeTypes": {
+    "control-flow": { "direction": "directed", "style": { "endArrow": "block", "endFill": "1" } },
+    "object-flow": { "direction": "directed", "style": { "endArrow": "block", "endFill": "1" } }
+  },
+  "rules": [
+    { "id": "guards-on-outgoing-flows", "severity": "ERROR", "description": "Label semantically distinct flows leaving a decision with guards." },
+    { "id": "fork-join-bars-distinct", "severity": "ERROR", "description": "Use UML fork and join bars rather than generic process rectangles." }
+  ]
+}

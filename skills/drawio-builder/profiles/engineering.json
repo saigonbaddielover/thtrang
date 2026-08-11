@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "engineering-standard-explicit",
+  "family": "engineering",
+  "subtype": "domain-defined",
+  "provenance": { "standard": "A domain-specific engineering drawing standard is required; no generic symbol standard asserted", "source": "https://www.iso.org/ics/01.100/x/" },
+  "nodeTypes": {
+    "component": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:<standard> <component>"] }], "shapeClass": "engineering-component" }
+  },
+  "edgeTypes": {
+    "connection": { "direction": "undirected", "style": { "LIVE_SEARCH_REQUIRED": "<standard> connection line" } }
+  },
+  "rules": [
+    { "id": "standard-required", "severity": "ERROR", "description": "Require the exact domain, standard, edition, symbol reference, and unit system before notation approval." },
+    { "id": "port-connectivity-semantic", "severity": "ERROR", "description": "Treat component port attachment and connection type as semantic, not decorative." }
+  ]
+}

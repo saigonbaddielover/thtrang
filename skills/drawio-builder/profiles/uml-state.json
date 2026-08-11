@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "omg-uml-2-5-1-state",
+  "family": "uml",
+  "subtype": "state-machine",
+  "provenance": { "standard": "OMG UML 2.5.1", "version": "2.5.1", "source": "https://www.omg.org/spec/UML/2.5.1/" },
+  "nodeTypes": {
+    "state": { "styleMatchers": [{ "allOf": ["rounded=1", "whiteSpace=wrap"], "noneOf": ["shape="] }], "shapeClass": "rounded-rectangle" },
+    "initial": { "styleMatchers": [{ "allOf": ["shape=ellipse", "fillColor=#000000"] }], "shapeClass": "filled-circle" },
+    "final": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:uml state final"] }], "shapeClass": "bullseye" },
+    "choice": { "styleMatchers": [{ "allOf": ["shape=rhombus"] }], "shapeClass": "rhombus" }
+  },
+  "edgeTypes": {
+    "transition": { "direction": "directed", "style": { "endArrow": "block", "endFill": "1" } }
+  },
+  "rules": [
+    { "id": "transition-label-syntax", "severity": "WARNING", "description": "Keep trigger, guard, and effect legible and associated with the owning transition." },
+    { "id": "pseudostate-semantics", "severity": "ERROR", "description": "Do not interchange choice, junction, initial, and final pseudostate symbols." }
+  ]
+}

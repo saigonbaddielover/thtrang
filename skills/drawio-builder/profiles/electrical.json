@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "iec-60617-electrical",
+  "family": "electrical",
+  "subtype": "electrotechnical-diagram",
+  "provenance": {
+    "standard": "IEC 60617 Database",
+    "version": "2026 DB",
+    "source": "https://webstore.iec.ch/en/publication/2723",
+    "mcpDiscovery": {
+      "server": "drawio",
+      "build": "42835e3@2026-08-02T20:17:10.515Z",
+      "verifiedAt": "2026-08-11T00:00:00Z",
+      "results": [
+        { "query": "electrical transformer", "title": "Transformer", "styleSha256": "e754d6587b9d52c48fbdec5b8021fe5a9ed081e6afaf37e7e77f2cd6cc07b928" }
+      ]
+    }
+  },
+  "nodeTypes": {
+    "live-transformer-candidate": { "styleMatchers": [{ "allOf": ["shape=mxgraph.electrical.inductors.transformer", "direction=north"] }], "shapeClass": "electrical-symbol" },
+    "other-electrical-symbol": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:iec 60617 <reference-number>"] }], "shapeClass": "electrical-symbol" }
+  },
+  "edgeTypes": {
+    "conductor": { "direction": "undirected", "style": { "endArrow": "none" } }
+  },
+  "rules": [
+    { "id": "standard-edition-required", "severity": "ERROR", "description": "Record the selected electrical standard edition and its primary source before notation approval." },
+    { "id": "symbol-reference-required", "severity": "ERROR", "description": "Record the exact IEC 60617 reference number and source for every semantic symbol before notation approval." },
+    { "id": "orientation-and-ports-required", "severity": "ERROR", "description": "Record orientation and named port roles for every electrical symbol used by a conductor." },
+    { "id": "conductor-semantics-required", "severity": "ERROR", "description": "Record conductor type, source and target ports, and whether each crossing is connected or unconnected." },
+    { "id": "junction-unambiguous", "severity": "ERROR", "description": "Render connected and crossing-without-connection conductors unambiguously." },
+    { "id": "live-stencil-required", "severity": "ERROR", "description": "Use a verified licensed symbol source or live MCP match; never substitute a similar generic icon." },
+    { "id": "live-style-not-iec-proof", "severity": "ERROR", "description": "The live transformer style has no IEC 60617 reference in the MCP result and remains a candidate until mapped to the selected standard." }
+  ]
+}

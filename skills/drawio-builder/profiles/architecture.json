@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "iso-42010-architecture-description",
+  "family": "architecture",
+  "subtype": "viewpoint-defined",
+  "provenance": { "standard": "ISO/IEC/IEEE 42010:2022 architecture description; this standard does not prescribe notation", "version": "2022", "source": "https://www.iso.org/standard/74393.html" },
+  "nodeTypes": {
+    "element": { "styleMatchers": [{ "allOf": ["html=1", "whiteSpace=wrap", "rounded=0"], "noneOf": ["shape="] }], "shapeClass": "rectangle" },
+    "boundary": { "styleMatchers": [{ "allOf": ["container=1", "swimlane"] }], "shapeClass": "container", "container": true }
+  },
+  "edgeTypes": {
+    "relationship": { "direction": "undirected", "style": { "endArrow": "none" } },
+    "directed-relationship": { "direction": "directed", "style": { "endArrow": "block" } }
+  },
+  "rules": [
+    { "id": "viewpoint-required", "severity": "ERROR", "description": "Declare the architecture viewpoint, concerns, model kind, and relationship legend before notation approval." },
+    { "id": "no-notation-inference", "severity": "ERROR", "description": "Do not treat ISO/IEC/IEEE 42010 as a graphical notation specification." }
+  ]
+}

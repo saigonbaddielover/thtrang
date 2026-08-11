@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "omg-uml-2-5-1-component",
+  "family": "uml",
+  "subtype": "component",
+  "provenance": { "standard": "OMG UML 2.5.1", "version": "2.5.1", "source": "https://www.omg.org/spec/UML/2.5.1/" },
+  "nodeTypes": {
+    "component": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:uml component"] }], "shapeClass": "component" },
+    "interface": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:uml provided required interface"] }], "shapeClass": "interface" },
+    "port": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:uml port"] }], "shapeClass": "port" }
+  },
+  "edgeTypes": {
+    "dependency": { "direction": "directed", "style": { "endArrow": "open", "dashed": "1" } },
+    "realization": { "direction": "directed", "style": { "endArrow": "block", "endFill": "0", "dashed": "1" } },
+    "connector": { "direction": "undirected", "style": { "endArrow": "none" } }
+  },
+  "rules": [
+    { "id": "interface-direction", "severity": "ERROR", "description": "Keep provided and required interface symbols distinct and attached to the owning component or port." }
+  ]
+}

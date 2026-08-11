@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "drawio": {
+    "version": "31.1.8",
+    "downloadUrl": "https://github.com/jgraph/drawio-desktop/releases/download/v31.1.8/draw.io-31.1.8-windows.zip",
+    "sha256": "ec492501bf0bafc67447f5f6bb6f76daeec4b0e41335b64eb22775707a141307"
+  },
+  "officialSkillValidator": {
+    "repository": "openai/codex",
+    "commit": "3c60d4da648bfa98e3c51c5161ac2720519c733e",
+    "downloadUrl": "https://raw.githubusercontent.com/openai/codex/3c60d4da648bfa98e3c51c5161ac2720519c733e/codex-rs/skills/src/assets/samples/skill-creator/scripts/quick_validate.py",
+    "sha256": "6cc9dc3199c935916cf6f73fcbbbb0e3bb1b58c8f5109fefa499978908164f51"
+  }
+}

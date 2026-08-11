@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "diagram": { "id": "data-flow-notation-neutral", "family": "data-flow", "subtype": "context-or-level-0", "orientation": "landscape", "page": { "width": 1169, "height": 827 }, "standard": { "name": "ISO 5807:1985 data-flowchart scope; notation variant intentionally unspecified", "version": "1985", "source": "https://www.iso.org/standard/11955.html" } },
+  "nodes": [
+    { "id": "customer", "label": "Customer", "semanticType": "external-entity" },
+    { "id": "fulfillment", "label": "Fulfill order", "semanticType": "process" },
+    { "id": "orders", "label": "D1 Orders", "semanticType": "data-store" }
+  ],
+  "edges": [
+    { "id": "order_data", "source": "customer", "target": "fulfillment", "label": "Order data", "direction": "directed", "relationType": "data-flow", "boundaryFlowId": "customer-order-data" },
+    { "id": "stored_order", "source": "fulfillment", "target": "orders", "label": "Stored order", "direction": "directed", "relationType": "data-flow" }
+  ]
+}

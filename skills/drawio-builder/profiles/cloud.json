@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "cloud-provider-explicit",
+  "family": "cloud",
+  "subtype": "provider-icon-set",
+  "provenance": {
+    "standard": "Provider-owned architecture icon set required; AWS source shown as a primary example",
+    "source": "https://aws.amazon.com/architecture/icons/",
+    "mcpDiscovery": {
+      "server": "drawio",
+      "build": "42835e3@2026-08-02T20:17:10.515Z",
+      "verifiedAt": "2026-08-11T00:00:00Z",
+      "providerRelease": "UNKNOWN",
+      "results": [
+        { "query": "aws lambda", "title": "Lambda", "styleSha256": "92c29644c99ddbd68c77fea7691ffec1193974468967fc7cf74a0ec16843d134" },
+        { "query": "aws lambda", "title": "Lambda Function", "styleSha256": "226b220d642ac86c0cc8acc481c152afa2dec4fb9cf4c08f585f2d2592e17bab" }
+      ]
+    }
+  },
+  "nodeTypes": {
+    "aws-lambda": { "styleMatchers": [{ "allOf": ["shape=mxgraph.aws4.resourceIcon", "resIcon=mxgraph.aws4.lambda"] }], "shapeClass": "provider-service" },
+    "aws-lambda-function": { "styleMatchers": [{ "allOf": ["shape=mxgraph.aws4.lambda_function"] }], "shapeClass": "provider-service" },
+    "other-service": { "styleMatchers": [{ "allOf": ["LIVE_SEARCH_REQUIRED:<provider> <service>"] }], "shapeClass": "provider-service" },
+    "boundary": { "styleMatchers": [{ "allOf": ["container=1", "swimlane"] }], "shapeClass": "container", "container": true }
+  },
+  "edgeTypes": {
+    "communication": { "direction": "bidirectional", "style": { "startArrow": "block", "endArrow": "block" } },
+    "data-flow": { "direction": "directed", "style": { "endArrow": "block" } },
+    "association": { "direction": "undirected", "style": { "endArrow": "none" } }
+  },
+  "rules": [
+    { "id": "provider-required", "severity": "ERROR", "description": "Declare the provider, exact provider-owned icon-set release, and primary release source before resolving service symbols." },
+    { "id": "live-stencil-required", "severity": "ERROR", "description": "Resolve every provider service with live MCP search and record the server build; never invent a stencil ID." },
+    { "id": "live-style-not-provider-proof", "severity": "ERROR", "description": "A live Draw.io MCP result proves renderer availability only; confirm service identity and current icon guidance with the provider." },
+    { "id": "icon-integrity", "severity": "ERROR", "description": "Follow the selected provider's official restrictions on icon distortion, rotation, and labeling." },
+    { "id": "connection-semantics-explicit", "severity": "ERROR", "description": "Declare every connection as communication, data flow, or association in the semantic manifest." }
+  ]
+}

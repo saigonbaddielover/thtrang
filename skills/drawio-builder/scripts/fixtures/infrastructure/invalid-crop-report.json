@@ -1,0 +1,18 @@
+{
+  "SchemaVersion": 1,
+  "Png": "diagram.png",
+  "Svg": "diagram.svg",
+  "Report": "validation-summary.json",
+  "ValidationReportSha256": "3333333333333333333333333333333333333333333333333333333333333333",
+  "IssueCount": 1,
+  "ExportedCount": 1,
+  "SkippedCount": 0,
+  "Crops": [
+    {
+      "Gate": "rendered-labels",
+      "Element": "node-1",
+      "Type": "node-label-outside-shape",
+      "Status": "EXPORTED"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/drawio-builder/quality-profile.schema.json",
+  "title": "Draw.io Quality Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "profile", "pages", "fonts", "clearance", "composition", "export"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "profile": { "type": "string", "minLength": 1 },
+    "pages": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["portrait", "landscape"],
+      "properties": {
+        "portrait": { "$ref": "#/$defs/page" },
+        "landscape": { "$ref": "#/$defs/page" }
+      }
+    },
+    "fonts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bodyMinimum", "edgeMinimum", "titleMinimum", "requiredFamilies"],
+      "properties": {
+        "bodyMinimum": { "type": "number", "exclusiveMinimum": 0 },
+        "edgeMinimum": { "type": "number", "exclusiveMinimum": 0 },
+        "titleMinimum": { "type": "number", "exclusiveMinimum": 0 },
+        "requiredFamilies": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    },
+    "clearance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["labelInk", "nodeLabelInk", "collisionOverlap", "shapeOutline", "arrowContact", "endpointStub", "parallelDivider", "pageConnector", "laneMinimum", "lanePreferred", "edgeLabelAssociation"],
+      "properties": {
+        "labelInk": { "type": "number", "exclusiveMinimum": 0 },
+        "nodeLabelInk": { "type": "number", "exclusiveMinimum": 0 },
+        "collisionOverlap": { "type": "number", "exclusiveMinimum": 0 },
+        "shapeOutline": { "type": "number", "exclusiveMinimum": 0 },
+        "arrowContact": { "type": "number", "exclusiveMinimum": 0 },
+        "endpointStub": { "type": "number", "exclusiveMinimum": 0 },
+        "parallelDivider": { "type": "number", "exclusiveMinimum": 0 },
+        "pageConnector": { "type": "number", "exclusiveMinimum": 0 },
+        "laneMinimum": { "type": "number", "exclusiveMinimum": 0 },
+        "lanePreferred": { "type": "number", "exclusiveMinimum": 0 },
+        "edgeLabelAssociation": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alignmentTolerance", "sizeTolerance", "spacingVarianceWarning", "minimumContrast"],
+      "properties": {
+        "alignmentTolerance": { "type": "number", "minimum": 0 },
+        "sizeTolerance": { "type": "number", "minimum": 0 },
+        "spacingVarianceWarning": { "type": "number", "minimum": 0 },
+        "minimumContrast": { "type": "number", "minimum": 1 }
+      }
+    },
+    "export": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pngScale"],
+      "properties": { "pngScale": { "type": "number", "exclusiveMinimum": 0 } }
+    }
+  },
+  "$defs": {
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    }
+  }
+}

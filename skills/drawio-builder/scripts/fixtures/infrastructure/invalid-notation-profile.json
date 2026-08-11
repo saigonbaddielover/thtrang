@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "id": "Invalid Profile",
+  "family": "process",
+  "provenance": { "standard": "", "source": "" },
+  "nodeTypes": {},
+  "edgeTypes": {}
+}

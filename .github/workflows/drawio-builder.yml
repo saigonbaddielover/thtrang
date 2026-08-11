@@ -1,0 +1,67 @@
+name: Draw.io Builder
+
+on:
+  pull_request:
+    paths:
+      - "skills/drawio-builder/**"
+      - ".github/workflows/drawio-builder.yml"
+      - "drawio-src/**"
+      - "assets/drawio/**"
+      - "assets/svg/**"
+      - "assets/images/**"
+  push:
+    branches: [main]
+    paths:
+      - "skills/drawio-builder/**"
+      - ".github/workflows/drawio-builder.yml"
+      - "drawio-src/**"
+      - "assets/drawio/**"
+      - "assets/svg/**"
+      - "assets/images/**"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install schema validator
+        shell: pwsh
+        run: python -m pip install --disable-pip-version-check jsonschema pyyaml
+
+      - name: Fetch pinned tools
+        shell: pwsh
+        run: |
+          $config = Get-Content -LiteralPath "skills/drawio-builder/scripts/fixtures/infrastructure/toolchain.json" -Raw | ConvertFrom-Json
+          $toolRoot = Join-Path $env:RUNNER_TEMP "drawio-builder-tools"
+          New-Item -ItemType Directory -Path $toolRoot -Force | Out-Null
+          $archive = Join-Path $toolRoot "drawio.zip"
+          Invoke-WebRequest -Uri $config.drawio.downloadUrl -OutFile $archive
+          if ((Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant() -ne $config.drawio.sha256) { throw "Draw.io archive checksum mismatch" }
+          $drawioRoot = Join-Path $toolRoot "drawio"
+          Expand-Archive -LiteralPath $archive -DestinationPath $drawioRoot
+          $drawio = Get-ChildItem -LiteralPath $drawioRoot -Filter "draw.io.exe" -File -Recurse | Select-Object -First 1
+          if (-not $drawio) { throw "draw.io.exe not found in pinned archive" }
+          $officialValidator = Join-Path $toolRoot "quick_validate.py"
+          Invoke-WebRequest -Uri $config.officialSkillValidator.downloadUrl -OutFile $officialValidator
+          if ((Get-FileHash -LiteralPath $officialValidator -Algorithm SHA256).Hash.ToLowerInvariant() -ne $config.officialSkillValidator.sha256) { throw "Official skill validator checksum mismatch" }
+          "DRAWIO_EXECUTABLE=$($drawio.FullName)" | Out-File -LiteralPath $env:GITHUB_ENV -Encoding utf8 -Append
+          "OFFICIAL_SKILL_VALIDATOR=$officialValidator" | Out-File -LiteralPath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Validate with PowerShell 7
+        shell: pwsh
+        run: |
+          & pwsh -NoProfile -File "skills/drawio-builder/scripts/test_drawio_builder.ps1" -SkillPath "skills/drawio-builder" -DrawioExecutable $env:DRAWIO_EXECUTABLE -CorpusRoot $env:GITHUB_WORKSPACE -OfficialValidatorPath $env:OFFICIAL_SKILL_VALIDATOR
+
+      - name: Validate with Windows PowerShell 5.1
+        shell: pwsh
+        run: |
+          & powershell.exe -NoProfile -File "skills/drawio-builder/scripts/test_drawio_builder.ps1" -SkillPath "skills/drawio-builder" -DrawioExecutable $env:DRAWIO_EXECUTABLE -CorpusRoot $env:GITHUB_WORKSPACE -OfficialValidatorPath $env:OFFICIAL_SKILL_VALIDATOR

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "data-flow-yourdon-demarco-unknown",
+  "family": "data-flow",
+  "subtype": "yourdon-demarco",
+  "provenance": { "standard": "Yourdon-DeMarco mapping not bundled; ISO 5807 is cited only for general data-flowchart scope", "version": "UNKNOWN", "source": "https://www.iso.org/standard/11955.html" },
+  "nodeTypes": {
+    "external-entity": { "styleMatchers": [{ "allOf": ["AUTHORITATIVE_MAPPING_REQUIRED:yourdon-demarco external entity"] }], "shapeClass": "unknown" },
+    "process": { "styleMatchers": [{ "allOf": ["AUTHORITATIVE_MAPPING_REQUIRED:yourdon-demarco process"] }], "shapeClass": "unknown" },
+    "data-store": { "styleMatchers": [{ "allOf": ["AUTHORITATIVE_MAPPING_REQUIRED:yourdon-demarco data store"] }], "shapeClass": "unknown" }
+  },
+  "edgeTypes": {
+    "data-flow": { "direction": "directed", "style": { "AUTHORITATIVE_MAPPING_REQUIRED": "yourdon-demarco data flow" } }
+  },
+  "rules": [
+    { "id": "authoritative-mapping-required", "severity": "ERROR", "description": "Notation approval remains UNKNOWN until an authoritative Yourdon/DeMarco symbol and edge mapping is supplied." }
+  ]
+}

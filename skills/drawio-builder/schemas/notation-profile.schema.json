@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/drawio-builder/notation-profile.schema.json",
+  "title": "Draw.io Notation Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "family", "provenance", "nodeTypes", "edgeTypes"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "family": { "type": "string", "minLength": 1 },
+    "subtype": { "type": "string", "minLength": 1 },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["standard", "source"],
+      "properties": {
+        "standard": { "type": "string", "minLength": 1 },
+        "version": { "type": "string" },
+        "source": { "type": "string", "minLength": 1 },
+        "verifiedAt": { "type": "string", "format": "date-time" },
+        "mcpDiscovery": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["server", "build", "verifiedAt", "results"],
+          "properties": {
+            "server": { "type": "string", "minLength": 1 },
+            "build": { "type": "string", "minLength": 1 },
+            "verifiedAt": { "type": "string", "format": "date-time" },
+            "providerRelease": { "type": "string", "minLength": 1 },
+            "results": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["query", "title", "styleSha256"],
+                "properties": {
+                  "query": { "type": "string", "minLength": 1 },
+                  "title": { "type": "string", "minLength": 1 },
+                  "styleSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "nodeTypes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["styleMatchers", "shapeClass"],
+        "properties": {
+          "styleMatchers": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["allOf"],
+              "properties": {
+                "allOf": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": { "type": "string", "minLength": 1 }
+                },
+                "noneOf": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          },
+          "shapeClass": { "type": "string", "minLength": 1 },
+          "container": { "type": "boolean" }
+        }
+      }
+    },
+    "edgeTypes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["direction", "style"],
+        "properties": {
+          "direction": { "enum": ["directed", "undirected", "bidirectional"] },
+          "style": { "type": "object", "additionalProperties": { "type": "string" } },
+          "allowedSourceTypes": { "type": "array", "items": { "type": "string" } },
+          "allowedTargetTypes": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "severity", "description"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+          "severity": { "enum": ["ERROR", "WARNING", "INFO"] },
+          "description": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

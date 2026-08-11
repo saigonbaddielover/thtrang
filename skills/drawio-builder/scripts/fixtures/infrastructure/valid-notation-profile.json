@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "process-basic",
+  "family": "process",
+  "provenance": { "standard": "Draw.io generic process", "source": "local-profile" },
+  "nodeTypes": {
+    "process": { "styleMatchers": [{ "allOf": ["shape=process"] }], "shapeClass": "rectangle" }
+  },
+  "edgeTypes": {
+    "sequence": { "direction": "directed", "style": { "endArrow": "block" } }
+  }
+}

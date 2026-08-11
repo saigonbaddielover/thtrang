@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/drawio-builder/warning-dispositions.schema.json",
+  "title": "Draw.io Warning Dispositions",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "dispositions"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "dispositions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gate", "type", "element", "decision", "reason"],
+        "properties": {
+          "gate": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "minLength": 1 },
+          "element": { "type": "string" },
+          "decision": { "enum": ["accepted", "fixed"] },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

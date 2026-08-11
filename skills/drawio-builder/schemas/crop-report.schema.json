@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/drawio-builder/crop-report.schema.json",
+  "title": "Draw.io Problem Crop Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["SchemaVersion", "Png", "Svg", "Report", "ValidationReportSha256", "IssueCount", "ExportedCount", "SkippedCount", "Crops"],
+  "properties": {
+    "SchemaVersion": { "const": 1 },
+    "Png": { "type": "string", "minLength": 1 },
+    "Svg": { "type": "string", "minLength": 1 },
+    "Report": { "type": "string", "minLength": 1 },
+    "ValidationReportSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "IssueCount": { "type": "integer", "minimum": 0 },
+    "ExportedCount": { "type": "integer", "minimum": 0 },
+    "SkippedCount": { "type": "integer", "minimum": 0 },
+    "Crops": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["Gate", "Element", "Type", "Status"],
+        "properties": {
+          "Gate": { "type": "string", "minLength": 1 },
+          "Element": { "type": "string" },
+          "Type": { "type": "string", "minLength": 1 },
+          "Status": { "enum": ["EXPORTED", "SKIPPED"] },
+          "Reason": { "type": "string", "minLength": 1 },
+          "Path": { "type": "string", "minLength": 1, "description": "Exported crop path. The filename stem is the review ID used by visual-inspection reviewedCrops." },
+          "PixelBounds": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["X", "Y", "Width", "Height"],
+            "properties": {
+              "X": { "type": "integer", "minimum": 0 },
+              "Y": { "type": "integer", "minimum": 0 },
+              "Width": { "type": "integer", "exclusiveMinimum": 0 },
+              "Height": { "type": "integer", "exclusiveMinimum": 0 }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "Status": { "const": "EXPORTED" } }, "required": ["Status"] },
+            "then": { "required": ["Path", "PixelBounds"] }
+          },
+          {
+            "if": { "properties": { "Status": { "const": "SKIPPED" } }, "required": ["Status"] },
+            "then": { "required": ["Reason"] }
+          }
+        ]
+      }
+    }
+  }
+}

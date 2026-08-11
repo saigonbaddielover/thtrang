@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "diagram": {
+    "id": "cloud-aws-lambda",
+    "family": "cloud",
+    "subtype": "provider-icon-set",
+    "orientation": "landscape",
+    "page": { "width": 1169, "height": 827 },
+    "standard": { "name": "AWS Architecture Icons", "version": "UNKNOWN", "source": "https://aws.amazon.com/architecture/icons/" },
+    "context": { "provider": "AWS" }
+  },
+  "nodes": [
+    { "id": "ingress", "label": "Ingress function", "semanticType": "aws-lambda-function" },
+    { "id": "processor", "label": "Order handler", "semanticType": "aws-lambda" }
+  ],
+  "edges": [
+    { "id": "invoke", "source": "ingress", "target": "processor", "label": "Order event", "direction": "directed", "relationType": "data-flow" }
+  ]
+}
