@@ -1,5 +1,6 @@
 param(
-    [string]$SkillPath = (Split-Path -Parent $PSScriptRoot)
+    [string]$SkillPath = (Split-Path -Parent $PSScriptRoot),
+    [switch]$IncludeDetails
 )
 
 $ErrorActionPreference = 'Stop'
@@ -55,5 +56,7 @@ finally {
 }
 
 $failed = @($results | Where-Object { -not $_.Passed })
-[pscustomobject]@{ TestCount=$results.Count; FailedCount=$failed.Count; Tests=@($results) } | ConvertTo-Json -Depth 6
+$result = [ordered]@{ Passed=$failed.Count -eq 0; TestCount=$results.Count; FailedCount=$failed.Count; Failures=@($failed) }
+if ($IncludeDetails) { $result.Tests = @($results) }
+[pscustomobject]$result | ConvertTo-Json -Depth 6
 if ($failed.Count -gt 0) { exit 1 }

@@ -4,7 +4,8 @@ param(
     [string]$CorpusRoot,
     [string]$OfficialValidatorPath,
     [string]$PythonExecutable,
-    [switch]$SkipSyncTests
+    [switch]$SkipSyncTests,
+    [switch]$IncludeDetails
 )
 
 $ErrorActionPreference = 'Stop'
@@ -486,7 +487,7 @@ try {
         Add-TestResult 'personal-sync-force-repairs' ($force.ExitCode -eq 0 -and (Get-Content -LiteralPath (Join-Path $syncDestination 'SKILL.md') -Raw -Encoding UTF8) -eq $minimalSkill -and $leftovers.Count -eq 0) $force.Output
         $publish = Invoke-Tool (Join-Path $PSScriptRoot 'publish_personal_skill.ps1') @('-SourcePath',$syncSource,'-DestinationPath',$syncDestination)
         $publishData = $publish.Output | ConvertFrom-Json
-        Add-TestResult 'personal-publish-current-noop' ($publish.ExitCode -eq 0 -and $publishData.Passed -and -not $publishData.Changed) $publish.Output
+        Add-TestResult 'personal-publish-current-noop' ($publish.ExitCode -eq 0 -and $publishData.Passed -and -not $publishData.Changed -and $null -eq $publishData.Check -and $null -eq $publishData.Install) $publish.Output
     }
 
     if ($CorpusRoot) {
@@ -573,5 +574,15 @@ finally {
 }
 
 $failed = @($tests | Where-Object { -not $_.Passed })
-[pscustomobject]@{ Engine=$engine; TestCount=$tests.Count; FailedCount=$failed.Count; Tests=@($tests); SkippedCount=$skipped.Count; Skipped=@($skipped) } | ConvertTo-Json -Depth 8
+$result = [ordered]@{
+    Engine = $engine
+    Passed = $failed.Count -eq 0
+    TestCount = $tests.Count
+    FailedCount = $failed.Count
+    SkippedCount = $skipped.Count
+    Failures = @($failed)
+    Skipped = @($skipped)
+}
+if ($IncludeDetails) { $result.Tests = @($tests) }
+[pscustomobject]$result | ConvertTo-Json -Depth 8
 if ($failed.Count -gt 0) { exit 1 }

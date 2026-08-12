@@ -30,7 +30,14 @@ function Invoke-Sync {
 
 $before = Invoke-Sync 'Check' -SkipTests
 if ($before.ExitCode -eq 0) {
-    [pscustomobject]@{ Mode='Publish'; Passed=$true; Changed=$false; Destination=$before.Data.Destination; Check=$before.Data } | ConvertTo-Json -Depth 9
+    [pscustomobject]@{
+        Mode = 'Publish'
+        Passed = $true
+        Changed = $false
+        SourceCommit = $before.Data.SourceCommit
+        ContentDigest = $before.Data.ContentDigest
+        Destination = $before.Data.Destination
+    } | ConvertTo-Json
     exit 0
 }
 if (-not $before.Data) { throw "Personal skill check failed: $($before.Text)" }
@@ -40,4 +47,15 @@ if ($install.ExitCode -ne 0) { throw "Personal skill install failed: $($install.
 $after = Invoke-Sync 'Check' -SkipTests
 if ($after.ExitCode -ne 0) { throw "Personal skill verification failed: $($after.Text)" }
 
-[pscustomobject]@{ Mode='Publish'; Passed=$true; Changed=$true; Destination=$after.Data.Destination; Install=$install.Data; Check=$after.Data } | ConvertTo-Json -Depth 9
+$testResult = $install.Data.Tests
+[pscustomobject]@{
+    Mode = 'Publish'
+    Passed = $true
+    Changed = $true
+    SourceCommit = $after.Data.SourceCommit
+    ContentDigest = $after.Data.ContentDigest
+    Destination = $after.Data.Destination
+    TestCount = $testResult.TestCount
+    FailedCount = $testResult.FailedCount
+    SkippedCount = $testResult.SkippedCount
+} | ConvertTo-Json

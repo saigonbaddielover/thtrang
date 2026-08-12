@@ -126,6 +126,8 @@ Resolve paths relative to the project or skill. Never hardcode a machine path.
 
 Invoke each script as a separate `pwsh -NoProfile -File` or `powershell.exe -NoProfile -File` process. Do not dot-source or chain scripts that intentionally use exit codes.
 
+Keep terminal output summary-only. Test and publish runners return counts and failure evidence by default; use `-IncludeDetails` on test runners only when successful per-test evidence is required.
+
 Treat nonzero exits as failures. Treat unsupported SVG constructs, unknown outlines, missing manifests, renderer drift, and unavailable required gates explicitly. MCP acceptance proves only that the viewer accepted the request; it is not pixel-level evidence or filesystem persistence.
 
 Treat expected-finding corpus snapshots as detector regression evidence only. They never approve a diagram, excuse a new finding, or convert a known error into a pass.
