@@ -128,8 +128,53 @@ function Test-SegmentClear {
     $true
 }
 
+function Test-PointNear {
+    param([object]$Point,[object]$Reference,[double]$Tolerance)
+    [math]::Abs($Point.X-$Reference.X) -le $Tolerance -and [math]::Abs($Point.Y-$Reference.Y) -le $Tolerance
+}
+
+function Test-SegmentConflict {
+    param([object]$Start,[object]$End,[object]$OtherStart,[object]$OtherEnd,[object]$RouteStart,[object]$RouteEnd,[double]$Tolerance)
+    $horizontal=[math]::Abs($Start.Y-$End.Y) -le $Tolerance
+    $otherHorizontal=[math]::Abs($OtherStart.Y-$OtherEnd.Y) -le $Tolerance
+    if($horizontal -eq $otherHorizontal){
+        if($horizontal-and[math]::Abs($Start.Y-$OtherStart.Y)-le$Tolerance){
+            $minimum=[math]::Max([math]::Min($Start.X,$End.X),[math]::Min($OtherStart.X,$OtherEnd.X))
+            $maximum=[math]::Min([math]::Max($Start.X,$End.X),[math]::Max($OtherStart.X,$OtherEnd.X))
+            return $maximum-$minimum -gt $Tolerance
+        }
+        if(-not$horizontal-and[math]::Abs($Start.X-$OtherStart.X)-le$Tolerance){
+            $minimum=[math]::Max([math]::Min($Start.Y,$End.Y),[math]::Min($OtherStart.Y,$OtherEnd.Y))
+            $maximum=[math]::Min([math]::Max($Start.Y,$End.Y),[math]::Max($OtherStart.Y,$OtherEnd.Y))
+            return $maximum-$minimum -gt $Tolerance
+        }
+        return $false
+    }
+    $horizontalStart=if($horizontal){$Start}else{$OtherStart}
+    $horizontalEnd=if($horizontal){$End}else{$OtherEnd}
+    $verticalStart=if($horizontal){$OtherStart}else{$Start}
+    $verticalEnd=if($horizontal){$OtherEnd}else{$End}
+    $intersection=[pscustomobject]@{X=$verticalStart.X;Y=$horizontalStart.Y}
+    $insideHorizontal=$intersection.X-ge([math]::Min($horizontalStart.X,$horizontalEnd.X)-$Tolerance)-and$intersection.X-le([math]::Max($horizontalStart.X,$horizontalEnd.X)+$Tolerance)
+    $insideVertical=$intersection.Y-ge([math]::Min($verticalStart.Y,$verticalEnd.Y)-$Tolerance)-and$intersection.Y-le([math]::Max($verticalStart.Y,$verticalEnd.Y)+$Tolerance)
+    if(-not($insideHorizontal-and$insideVertical)){return $false}
+    -not((Test-PointNear $intersection $RouteStart $Tolerance)-or(Test-PointNear $intersection $RouteEnd $Tolerance))
+}
+
+function Test-RouteClear {
+    param([object[]]$Points,[object[]]$ExistingRoutes,[double]$Tolerance)
+    for($index=1;$index-lt$Points.Count;$index++){
+        foreach($route in $ExistingRoutes){
+            for($otherIndex=1;$otherIndex-lt$route.Count;$otherIndex++){
+                if(Test-SegmentConflict $Points[$index-1] $Points[$index] $route[$otherIndex-1] $route[$otherIndex] $Points[0] $Points[$Points.Count-1] $Tolerance){return $false}
+            }
+        }
+    }
+    $true
+}
+
 function Get-BestCandidate {
-    param([object]$Start,[object]$End,[object[]]$Obstacles,[double[]]$Xs,[double[]]$Ys,[string[]]$ExitDirections,[string[]]$EntryDirections,[double]$Tolerance)
+    param([object]$Start,[object]$End,[object[]]$Obstacles,[object[]]$ExistingRoutes,[double[]]$Xs,[double[]]$Ys,[string[]]$ExitDirections,[string[]]$EntryDirections,[double]$Tolerance)
     $candidates = [System.Collections.Generic.List[object]]::new()
     $paths = [System.Collections.Generic.List[object]]::new()
     $paths.Add(@($Start,$End))
@@ -146,7 +191,7 @@ function Get-BestCandidate {
         if($EntryDirections.Count-gt0-and$lastDirection-notin$EntryDirections){continue}
         $clear = $true
         for ($index=1; $index -lt $path.Count; $index++) { if (-not (Test-SegmentClear $path[$index-1] $path[$index] $Obstacles $Tolerance)) { $clear=$false; break } }
-        if ($clear) { $candidates.Add((Get-PathMetrics $path $Tolerance)) }
+        if ($clear -and (Test-RouteClear $candidatePoints $ExistingRoutes $Tolerance)) { $candidates.Add((Get-PathMetrics $path $Tolerance)) }
     }
     if ($candidates.Count -eq 0) { return $null }
     $candidates | Sort-Object BendCount,Length | Select-Object -First 1
@@ -177,6 +222,15 @@ foreach ($vertex in @($source.SelectNodes('//mxCell[@vertex="1"]'))) {
     $vertexBounds[[string]$vertex.id] = [pscustomobject]@{ Left=$geometry.Left-$clearance; Top=$geometry.Top-$clearance; Right=$geometry.Right+$clearance; Bottom=$geometry.Bottom+$clearance }
 }
 
+$renderedRoutes=@{}
+foreach($edge in @($source.SelectNodes('//mxCell[@edge="1"]'))){
+    $id=[string]$edge.id
+    $group=$svg.SelectSingleNode("//s:g[@data-cell-id='$id']",$namespace)
+    $path=if($group){$group.SelectSingleNode(".//s:path[@fill='none']",$namespace)}else{$null}
+    if(-not$path){continue}
+    try{$renderedRoutes[$id]=@(Compress-Points @(Get-SvgElementPoints -Element $path -Boundary $group) $tolerance)}catch{}
+}
+
 $metrics = [System.Collections.Generic.List[object]]::new()
 foreach ($edge in @($source.SelectNodes('//mxCell[@edge="1"]'))) {
     $id = [string]$edge.id
@@ -200,7 +254,8 @@ foreach ($edge in @($source.SelectNodes('//mxCell[@edge="1"]'))) {
     $ys = @($start.Y,$end.Y)+@($obstacles | ForEach-Object { $_.Top; $_.Bottom })
     $exitDirections=@(Get-PortDirections $edgeStyle 'Exit' 0.001)
     $entryDirections=@(Get-PortDirections $edgeStyle 'Entry' 0.001)
-    $best = Get-BestCandidate $start $end $obstacles @($xs|Sort-Object -Unique) @($ys|Sort-Object -Unique) $exitDirections $entryDirections $tolerance
+    $existingRoutes=@($renderedRoutes.GetEnumerator()|Where-Object{$_.Key-ne$id}|ForEach-Object{,$_.Value})
+    $best = Get-BestCandidate $start $end $obstacles $existingRoutes @($xs|Sort-Object -Unique) @($ys|Sort-Object -Unique) $exitDirections $entryDirections $tolerance
     if ($best) {
         if ($actual.BendCount -gt $best.BendCount) {
             Add-Issue 'avoidable-bend' $id "Rendered route has $($actual.BendCount) bends; a port-compatible clear route uses $($best.BendCount)" $null "actualLength=$($actual.Length);optimalLength=$($best.Length)" 'reroute-edge' 'WARNING'

@@ -3,7 +3,7 @@
     <mxCell id="0"></mxCell>
     <mxCell id="1" parent="0"></mxCell>
     <mxCell id="x_time" value="Bộ phận chấm công" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Arial;align=center;verticalAlign=middle;fontColor=#172B3A; fontSize=11;fontStyle=1;spacing=5;fillColor=#EAF5EA;strokeColor=#56875B;strokeWidth=1.5;" vertex="1" parent="1">
-      <mxGeometry x="25" y="128" width="150" height="60" as="geometry"></mxGeometry>
+      <mxGeometry x="20" y="128" width="140" height="60" as="geometry"></mxGeometry>
     </mxCell>
     <mxCell id="x_emp" value="Nhân viên" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Arial;align=center;verticalAlign=middle;fontColor=#172B3A; fontSize=11;fontStyle=1;spacing=5;fillColor=#EAF5EA;strokeColor=#56875B;strokeWidth=1.5;" vertex="1" parent="1">
       <mxGeometry x="642" y="270" width="155" height="60" as="geometry"></mxGeometry>
@@ -33,19 +33,19 @@
       <mxGeometry x="230" y="1020" width="205" height="48" as="geometry"></mxGeometry>
     </mxCell>
     <mxCell id="a_ot" value="Input bổ sung nếu có:&lt;br&gt;Bảng chấm công làm thêm giờ&lt;br&gt;Nguồn không xác định trong đề" style="shape=note;html=1;whiteSpace=wrap;fontFamily=Arial;align=center;verticalAlign=middle;fontColor=#172B3A; fontSize=10.5;align=left;spacing=6;fillColor=#FFF8D9;strokeColor=#B99A39;strokeWidth=1.2;" vertex="1" parent="1">
-      <mxGeometry x="25" y="270" width="185" height="100" as="geometry"></mxGeometry>
+      <mxGeometry x="20" y="270" width="205" height="110" as="geometry"></mxGeometry>
     </mxCell>
     <mxCell id="a_cash" value="Thanh toán tiền mặt cho nhân viên&lt;br&gt;(luồng vật lý; không biểu diễn như data flow)" style="shape=note;html=1;whiteSpace=wrap;fontFamily=Arial;align=center;verticalAlign=middle;fontColor=#172B3A; fontSize=10.5;align=left;spacing=6;fillColor=#FFF8D9;strokeColor=#B99A39;strokeWidth=1.2;" vertex="1" parent="1">
       <mxGeometry x="460" y="745" width="165" height="92" as="geometry"></mxGeometry>
     </mxCell>
-    <mxCell id="e01" value="BCC đã được nhân viên xác nhận" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="x_time" target="p1">
+    <mxCell id="e01" value="BCC nhân viên&lt;br&gt;đã xác nhận" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="x_time" target="p1">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
-        <mxPoint x="0" y="-52" as="offset"></mxPoint>
+        <mxPoint x="0" y="-18" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
     <mxCell id="e02" value="BCC đã xác nhận" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="p1" target="p2">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
-        <mxPoint x="42" y="0" as="offset"></mxPoint>
+        <mxPoint x="18" y="0" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
     <mxCell id="e03" value="BTTL liên 2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.35;entryX=0;entryY=0.35;" edge="1" parent="1" source="p2" target="x_emp">
@@ -53,17 +53,17 @@
     </mxCell>
     <mxCell id="e04" value="BTTL liên 1 + chứng từ liên quan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.35;exitY=1;entryX=0.35;entryY=0;" edge="1" parent="1" source="p2" target="p3">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
-        <mxPoint x="-70" y="0" as="offset"></mxPoint>
+        <mxPoint x="-20" y="0" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
-    <mxCell id="e05" value="BTTL + chứng từ cần kiểm tra" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.25;entryX=0;entryY=0.466;" edge="1" parent="1" source="p3" target="x_chief">
+    <mxCell id="e05" value="BTTL + chứng từ&lt;br&gt;kiểm tra" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.25;entryX=0;entryY=0.466;" edge="1" parent="1" source="p3" target="x_chief">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
-        <mxPoint x="0" y="-18" as="offset"></mxPoint>
+        <mxPoint x="0" y="-14" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
-    <mxCell id="e06" value="BTTL đã phê duyệt" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0;exitY=0.833;entryX=1;entryY=0.549;" edge="1" parent="1" source="x_chief" target="p3">
+    <mxCell id="e06" value="BTTL đã&lt;br&gt;phê duyệt" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0;exitY=0.833;entryX=1;entryY=0.549;" edge="1" parent="1" source="x_chief" target="p3">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
-        <mxPoint x="0" y="-10" as="offset"></mxPoint>
+        <mxPoint x="0" y="0" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
     <mxCell id="e07" value="BTTL đã phê duyệt cần ký" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.85;entryX=0;entryY=0.3125;" edge="1" parent="1" source="p3" target="x_dir">
@@ -72,26 +72,24 @@
           <mxPoint x="470" y="544.2"></mxPoint>
           <mxPoint x="470" y="638.8"></mxPoint>
         </Array>
-        <mxPoint x="60" y="0" as="offset"></mxPoint>
+        <mxPoint x="20" y="0" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
     <mxCell id="e08" value="BTTL đã ký" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0;exitY=0.75;entryX=0.5;entryY=1;" edge="1" parent="1" source="x_dir" target="p3">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
         <Array as="points">
-          <mxPoint x="430" y="665"></mxPoint>
-          <mxPoint x="430" y="600"></mxPoint>
-          <mxPoint x="332.5" y="600"></mxPoint>
+          <mxPoint x="332.5" y="665"></mxPoint>
         </Array>
         <mxPoint x="0" y="16" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
-    <mxCell id="e09" value="BTTL đã được kế toán trưởng phê duyệt và giám đốc ký" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="p3" target="p4">
+    <mxCell id="e09" value="BTTL được kế toán trưởng phê duyệt&lt;br&gt;và giám đốc ký" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="p3" target="p4">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
         <Array as="points">
           <mxPoint x="220" y="521"></mxPoint>
           <mxPoint x="220" y="738"></mxPoint>
         </Array>
-        <mxPoint x="-88" y="0" as="offset"></mxPoint>
+        <mxPoint x="-20" y="0" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
     <mxCell id="e10" value="Xác nhận đã nhận lương" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.5;exitY=1;entryX=1;entryY=0.3026;" edge="1" parent="1" source="x_emp" target="p4">
@@ -105,12 +103,12 @@
     </mxCell>
     <mxCell id="e11" value="Chứng từ thanh toán hoàn tất" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="p4" target="p5">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
-        <mxPoint x="54" y="0" as="offset"></mxPoint>
+        <mxPoint x="20" y="0" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
-    <mxCell id="e12" value="BCC + BCCLTG (nếu có) + BTTL + xác nhận nhận lương" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="p5" target="d1">
+    <mxCell id="e12" value="BCC + BCCLTG (nếu có) +&lt;br&gt;BTTL + xác nhận nhận lương" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="p5" target="d1">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
-        <mxPoint x="-92" y="0" as="offset"></mxPoint>
+        <mxPoint x="-20" y="0" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
   </root>

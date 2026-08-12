@@ -100,6 +100,10 @@ Normalize nested shape bounds to page coordinates before validating route candid
 
 For closely spaced parallel edges, never face neighboring labels into the same gap. Put labels on non-facing sides of their owner routes or increase route separation; do not add bends solely to create label space.
 
+A U-route between a shape and a divider must satisfy both endpoint jetty clearance and divider clearance. If the gap cannot satisfy both, change the ports or layout instead of squeezing a micro-jog into the gap.
+
+Treat existing connectors as route constraints when evaluating a lower-bend candidate. A shortcut that crosses or overlaps another rendered connector is not an optimization, even when it clears every shape.
+
 Resize or relayout before shrinking type. After any shape move or resize, recompute physical ports and rerender every incident edge, neighboring corridor, label, and lane boundary in the impact region.
 
 Use MCP `create_diagram` with XML and omit post-layout/routing for final hand-crafted geometry. Use ELK or libavoid only for disposable exploration unless the result can be captured and revalidated.

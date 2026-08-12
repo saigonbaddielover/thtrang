@@ -35,6 +35,8 @@ try{
     $parallelSvg=Join-Path $scratch 'parallel-ports.svg'
     $nestedCanonical=Join-Path $scratch 'nested-obstacle.xml'
     $nestedSvg=Join-Path $scratch 'nested-obstacle.svg'
+    $crossingCanonical=Join-Path $scratch 'crossing-shortcut.xml'
+    $crossingSvg=Join-Path $scratch 'crossing-shortcut.svg'
     Write-Utf8File $canonical @'
 <mxGraphModel grid="1" page="1" pageWidth="827" pageHeight="1169"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="a" value="Start" style="rounded=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="100" y="100" width="100" height="60" as="geometry"/></mxCell><mxCell id="b" value="Finish" style="rounded=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="500" y="100" width="100" height="60" as="geometry"/></mxCell><mxCell id="e" value="Flow" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="a" target="b"><mxGeometry relative="1" as="geometry"/></mxCell></root></mxGraphModel>
 '@
@@ -62,6 +64,15 @@ try{
     $nested=Invoke-Child (Join-Path $PSScriptRoot 'audit_drawio_route_efficiency.ps1') @('-SourcePath',$nestedCanonical,'-SvgPath',$nestedSvg,'-QualityProfilePath',$profile)
     $nestedData=$nested.Output|ConvertFrom-Json
     Add-Result 'nested-lane-obstacle-rejects-false-shortcut' ($nested.ExitCode-eq0-and$nestedData.WarningCount-eq0-and$null-eq$nestedData.Metrics[0].OptimalBendCount) $nested.Output
+    Write-Utf8File $crossingCanonical @'
+<mxGraphModel grid="1" page="1" pageWidth="827" pageHeight="1169"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="a" value="Start" style="rounded=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="100" y="100" width="100" height="60" as="geometry"/></mxCell><mxCell id="b" value="Finish" style="rounded=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="500" y="300" width="100" height="60" as="geometry"/></mxCell><mxCell id="c" value="Upper" style="rounded=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="325" y="20" width="50" height="30" as="geometry"/></mxCell><mxCell id="d" value="Lower" style="rounded=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="325" y="410" width="50" height="30" as="geometry"/></mxCell><mxCell id="e" value="Flow" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="a" target="b"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="250" y="130"/><mxPoint x="250" y="390"/><mxPoint x="500" y="390"/></Array></mxGeometry></mxCell><mxCell id="blocker" value="Existing" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;endArrow=classic;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="c" target="d"><mxGeometry relative="1" as="geometry"/></mxCell></root></mxGraphModel>
+'@
+    Write-Utf8File $crossingSvg '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 827 1169"><g data-cell-id="e"><path fill="none" stroke="#000" d="M 200 130 L 250 130 L 250 390 L 500 390 L 500 330"/></g><g data-cell-id="blocker"><path fill="none" stroke="#000" d="M 350 50 L 350 410"/></g></svg>'
+    $crossing=Invoke-Child (Join-Path $PSScriptRoot 'audit_drawio_route_efficiency.ps1') @('-SourcePath',$crossingCanonical,'-SvgPath',$crossingSvg,'-QualityProfilePath',$profile)
+    $crossingData=$crossing.Output|ConvertFrom-Json
+    $crossingMetric=@($crossingData.Metrics|Where-Object Element -eq 'e')[0]
+    $crossingIssues=@($crossingData.Issues|Where-Object Element -eq 'e')
+    Add-Result 'existing-route-rejects-crossing-shortcut' ($crossing.ExitCode-eq0-and'avoidable-bend'-notin@($crossingIssues.Type)-and($null-eq$crossingMetric.OptimalBendCount-or$crossingMetric.OptimalBendCount-ge$crossingMetric.BendCount)) $crossing.Output
     $failed=@($results|Where-Object{-not$_.Passed})
     [pscustomobject]@{Engine=$engine;Version=$PSVersionTable.PSVersion.ToString();TestCount=$results.Count;FailedCount=$failed.Count;Tests=@($results)}|ConvertTo-Json -Depth 6
     if($failed.Count-gt0){exit 1}

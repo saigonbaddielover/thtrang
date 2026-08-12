@@ -63,6 +63,10 @@ Separate parallel connectors visually. Near-stacked paths are ambiguous even whe
 
 Place labels on non-facing sides of closely spaced parallel connectors. If two labels would occupy the same inter-route gap, move one to the outside or increase route separation before considering extra bends.
 
+For a U-route squeezed between a shape and a divider, reserve enough width for both endpoint jetties and divider clearance. When the available gap is smaller, select different ports or move the shape; a short first or last segment is not a valid compromise.
+
+Validate every lower-bend candidate against rendered connector routes as well as shapes. Reject candidates that introduce a crossing or shared segment; bend reduction is subordinate to route separation and unambiguous flow ownership.
+
 ## Fan-in and fan-out
 
 Assign distinct source and target ports. Give each independent edge its own final shaft and arrowhead. Never allow two flows to share the same final segment unless a semantic junction node explicitly merges them.
