@@ -41,6 +41,8 @@ Validate the rendered contact point against the actual source and target outline
 
 Try route candidates in this order: straight, one-bend L, two-bend dogleg, then a longer orthogonal route. Advance only when every lower-bend candidate violates a named obstacle, reserved label zone, occupied corridor, divider, endpoint normal, or page boundary.
 
+Compute the lower bound from normalized port sides. Offset bottom-to-top or top-to-bottom ports with same-direction endpoint normals require two bends unless their axes align; a one-bend candidate is invalid even when it has the same Manhattan length.
+
 Record the blocking reason for every bend beyond the lowest clear candidate. Router output is only a candidate; remove autorouter micro-jogs, alignment offsets, and detours unless the rendered audit proves they are necessary.
 
 Freeze a rendered per-edge bend baseline before relayout. Never increase the bend count of one edge merely because other edges improve enough to reduce the page total. Move nodes or choose cardinal-center ports before authoring an additional waypoint.

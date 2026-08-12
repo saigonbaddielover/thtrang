@@ -23,8 +23,8 @@
     <mxCell id="n_deliverydoc" value="Phiếu giao hàng&lt;br&gt;(3 liên, đánh số thứ tự)" style="shape=mxgraph.flowchart.document2;size=0.25;html=1;whiteSpace=wrap;fontFamily=Arial;align=center;verticalAlign=middle;fontColor=#172B3A; fontSize=14.5;spacing=4;fillColor=#FFFDF7;strokeColor=#8A6D3B;strokeWidth=2;" vertex="1" parent="ln_sales">
       <mxGeometry x="13" y="125" width="139" height="70" as="geometry"></mxGeometry>
     </mxCell>
-    <mxCell id="n_storecopy" value="Lưu 1 liên" style="shape=mxgraph.dfd.archive;html=1;whiteSpace=wrap;fontFamily=Arial;align=center;verticalLabelPosition=middle;verticalAlign=middle;fontColor=#172B3A;fontSize=14.5;spacing=4;spacingBottom=10;fillColor=#F4F6F7;strokeColor=#6D7A86;strokeWidth=1.4;" vertex="1" parent="ln_sales">
-      <mxGeometry x="10" y="220" width="145" height="80" as="geometry"></mxGeometry>
+    <mxCell id="n_storecopy" value="Lưu 1&lt;br&gt;liên" style="shape=mxgraph.dfd.archive;html=1;whiteSpace=wrap;fontFamily=Arial;align=center;verticalLabelPosition=middle;verticalAlign=middle;fontColor=#172B3A;fontSize=14.5;spacing=4;spacingBottom=10;fillColor=#F4F6F7;strokeColor=#6D7A86;strokeWidth=1.4;" vertex="1" parent="ln_sales">
+      <mxGeometry x="1" y="220" width="163" height="100" as="geometry"></mxGeometry>
     </mxCell>
     <mxCell id="n_wh_receive" value="Nhận 2 liên Phiếu giao hàng" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;fontFamily=Arial;align=center;verticalAlign=middle;fontColor=#172B3A; fontSize=14.5;spacing=5;fillColor=#E7F1FA;strokeColor=#4E7FA7;strokeWidth=1.4;" vertex="1" parent="ln_warehouse">
       <mxGeometry x="25" y="129" width="130" height="62" as="geometry"></mxGeometry>
@@ -69,10 +69,10 @@
       <mxGeometry x="119" y="680" width="100" height="62" as="geometry"></mxGeometry>
     </mxCell>
     <mxCell id="d_inventory" value="Dữ liệu số dư hàng tồn kho" style="shape=mxgraph.flowchart.stored_data;html=1;whiteSpace=wrap;fontFamily=Arial;align=center;verticalAlign=middle;fontColor=#172B3A; fontSize=14.5;spacing=4;fillColor=#F2ECF8;strokeColor=#7E5A9B;strokeWidth=1.4;" vertex="1" parent="ln_accounting">
-      <mxGeometry x="230" y="680" width="100" height="62" as="geometry"></mxGeometry>
+      <mxGeometry x="243" y="680" width="100" height="62" as="geometry"></mxGeometry>
     </mxCell>
     <mxCell id="d_tracking" value="Dữ liệu theo dõi bán hàng" style="shape=mxgraph.flowchart.stored_data;html=1;whiteSpace=wrap;fontFamily=Arial;align=center;verticalAlign=middle;fontColor=#172B3A; fontSize=14.5;spacing=4;fillColor=#F2ECF8;strokeColor=#7E5A9B;strokeWidth=1.4;" vertex="1" parent="ln_accounting">
-      <mxGeometry x="341" y="680" width="100" height="62" as="geometry"></mxGeometry>
+      <mxGeometry x="354" y="680" width="100" height="62" as="geometry"></mxGeometry>
     </mxCell>
     <mxCell id="a_software" value="Phần mềm cài trên 1 máy tính dùng chung cho tất cả nhân viên" style="shape=note;html=1;whiteSpace=wrap;fontFamily=Arial;align=center;verticalAlign=middle;fontColor=#172B3A; fontSize=14.5;align=left;spacing=6;fillColor=#FFF8D9;strokeColor=#B99A39;strokeWidth=1.2;" vertex="1" parent="ln_accounting">
       <mxGeometry x="15" y="50" width="420" height="58" as="geometry"></mxGeometry>
@@ -80,7 +80,7 @@
     <mxCell id="e01" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_order" target="n_deliverydoc">
       <mxGeometry relative="1" as="geometry"></mxGeometry>
     </mxCell>
-    <mxCell id="e02" value="1 liên" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.25;exitY=1;entryX=0.2603448276;entryY=0;" edge="1" parent="1" source="n_deliverydoc" target="n_storecopy">
+    <mxCell id="e02" value="1 liên" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.25;exitY=1;entryX=0.2868098;entryY=0;" edge="1" parent="1" source="n_deliverydoc" target="n_storecopy">
       <mxGeometry relative="1" as="geometry"></mxGeometry>
     </mxCell>
     <mxCell id="e03" value="2 liên" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="n_deliverydoc" target="n_wh_receive">
@@ -104,13 +104,9 @@
     <mxCell id="e06" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_deliver_receive" target="n_deliver">
       <mxGeometry relative="1" as="geometry"></mxGeometry>
     </mxCell>
-    <mxCell id="e07" value="Hàng + 2 liên&lt;br&gt;Phiếu giao hàng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontStyle=1;fontColor=#9A4A11;labelBackgroundColor=#FFFFFF;strokeColor=#C66522;strokeWidth=1.8;dashed=1;dashPattern=7 4;endArrow=classic;endFill=1;exitX=0.75;exitY=0;entryX=0.25;entryY=0;" edge="1" parent="1" source="n_deliver" target="n_customer_receive">
+    <mxCell id="e07" value="Hàng + 2 liên&lt;br&gt;Phiếu giao hàng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontStyle=1;fontColor=#9A4A11;labelBackgroundColor=#FFFFFF;strokeColor=#C66522;strokeWidth=1.8;dashed=1;dashPattern=7 4;endArrow=classic;endFill=1;exitX=1;exitY=0;entryX=0;entryY=0;" edge="1" parent="1" source="n_deliver" target="n_customer_receive">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
-        <Array as="points">
-          <mxPoint x="482.5" y="335"></mxPoint>
-          <mxPoint x="577.5" y="335"></mxPoint>
-        </Array>
-        <mxPoint x="0" y="0" as="offset"></mxPoint>
+        <mxPoint x="0" y="-24" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
     <mxCell id="e08" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_customer_receive" target="n_customer_sign">
@@ -121,11 +117,11 @@
         <mxPoint x="0" y="0" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
-    <mxCell id="e10" value="1 liên đã ký trả lại" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0;exitY=0.35;entryX=0.9230769;entryY=0;" edge="1" parent="1" source="n_customer_sign" target="n_return_doc">
+    <mxCell id="e10" value="1 liên đã ký trả lại" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0;exitY=0.35;entryX=0.8461538;entryY=0;" edge="1" parent="1" source="n_customer_sign" target="n_return_doc">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
         <Array as="points">
-          <mxPoint x="500" y="463.9"></mxPoint>
-          <mxPoint x="500" y="530"></mxPoint>
+          <mxPoint x="490" y="463.9"></mxPoint>
+          <mxPoint x="490" y="530"></mxPoint>
         </Array>
         <mxPoint x="-20" y="-10" as="offset"></mxPoint>
       </mxGeometry>
@@ -138,12 +134,12 @@
         <mxPoint x="-35" y="-5" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
-    <mxCell id="e12" value="Ngày hôm sau" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="n_acc_receive" target="n_seq">
+    <mxCell id="e12" value="Ngày hôm&lt;br&gt;sau" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="n_acc_receive" target="n_seq">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
-        <mxPoint x="0" y="-18" as="offset"></mxPoint>
+        <mxPoint x="0" y="-22" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
-    <mxCell id="e13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0;exitY=1;entryX=1;entryY=0.15;" edge="1" parent="1" source="n_seq" target="n_sum">
+    <mxCell id="e13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0;exitY=0.85;entryX=1;entryY=0.15;" edge="1" parent="1" source="n_seq" target="n_sum">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
         <Array as="points">
           <mxPoint x="930" y="574"></mxPoint>
@@ -153,40 +149,32 @@
     <mxCell id="e14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="n_sum" target="n_software">
       <mxGeometry relative="1" as="geometry"></mxGeometry>
     </mxCell>
-    <mxCell id="e15" value="Ghi nhận doanh thu" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.1;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_software" target="d_revenue">
+    <mxCell id="e15" value="Ghi nhận&lt;br&gt;doanh thu" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.02;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_software" target="d_revenue">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
         <Array as="points">
-          <mxPoint x="968" y="660"></mxPoint>
-          <mxPoint x="743" y="660"></mxPoint>
-        </Array>
-        <mxPoint x="0" y="-25" as="offset"></mxPoint>
-      </mxGeometry>
-    </mxCell>
-    <mxCell id="e16" value="Cập nhật nợ phải thu" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.35;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_software" target="d_ar">
-      <mxGeometry x="0" y="0" relative="1" as="geometry">
-        <Array as="points">
-          <mxPoint x="1013" y="680"></mxPoint>
-          <mxPoint x="854" y="680"></mxPoint>
-        </Array>
-        <mxPoint x="-55" y="0" as="offset"></mxPoint>
-      </mxGeometry>
-    </mxCell>
-    <mxCell id="e17" value="Cập nhật số dư hàng tồn kho" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.65;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_software" target="d_inventory">
-      <mxGeometry x="0" y="0" relative="1" as="geometry">
-        <Array as="points">
-          <mxPoint x="1067" y="700"></mxPoint>
-          <mxPoint x="965" y="700"></mxPoint>
+          <mxPoint x="953.6" y="650"></mxPoint>
+          <mxPoint x="743" y="650"></mxPoint>
         </Array>
         <mxPoint x="0" y="0" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
-    <mxCell id="e18" value="Theo dõi riêng quá trình bán hàng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.9;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_software" target="d_tracking">
+    <mxCell id="e16" value="Cập nhật&lt;br&gt;nợ phải&lt;br&gt;thu" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.0888889;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_software" target="d_ar">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
         <Array as="points">
-          <mxPoint x="1112" y="710"></mxPoint>
-          <mxPoint x="1076" y="710"></mxPoint>
+          <mxPoint x="966" y="700"></mxPoint>
+          <mxPoint x="854" y="700"></mxPoint>
         </Array>
-        <mxPoint x="-80" y="17" as="offset"></mxPoint>
+        <mxPoint x="-40" y="0" as="offset"></mxPoint>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="e17" value="Cập&lt;br&gt;nhật số&lt;br&gt;dư hàng&lt;br&gt;tồn kho" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.1555556;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_software" target="d_inventory">
+      <mxGeometry x="0" y="0" relative="1" as="geometry">
+        <mxPoint x="20" y="0" as="offset"></mxPoint>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="e18" value="Theo dõi riêng&lt;br&gt;quá trình&lt;br&gt;bán hàng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=14.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.7722222;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_software" target="d_tracking">
+      <mxGeometry x="0" y="0" relative="1" as="geometry">
+        <mxPoint x="0" y="0" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
   </root>

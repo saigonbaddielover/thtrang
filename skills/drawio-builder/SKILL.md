@@ -23,6 +23,8 @@ Make construction progress externally reviewable. Within 60 seconds of starting 
 
 Use canonical XML for final precision. Use Mermaid only for a disposable draft when the user explicitly requests it. Never claim viewer-side ELK or libavoid changes are persisted unless their resulting geometry was captured into canonical XML and revalidated.
 
+Parse mxCell style declarations as semicolon-delimited tokens with surrounding whitespace trimmed from every token, key, and value. Treat `fontSize=11` and ` fontSize = 11` identically in every preflight and audit gate.
+
 ## Establish truth before drawing
 
 Lock:
@@ -91,6 +93,8 @@ Require an explicit notation profile for BPMN, UML, ERD, engineering, electrical
 For a dense page, do not create the full edge set before the first rendered audit. Build and audit a zero-edge node-only stage before optimizing route coordinates. Then plan, add, and approve route clusters in this order: semantic backbone, boundary/cross-lane flows, stores and fan-in/fan-out, returns, then labels. Grow the port, corridor, and label ledger just in time; future-cluster geometry remains `UNPLANNED` until that cluster is current. Follow the bounded persistence contract in [construction-gates.md](references/construction-gates.md).
 
 Use cardinal-center ports for the first render of irregular shapes. Off-center ellipse, rhombus, document, cylinder, archive, or custom-stencil ports require an explicit normal endpoint shaft and a passing rendered contact audit before another incident edge is added.
+
+Count bends against port-normal constraints, not endpoint displacement alone. Two offset ports whose required first and last segments are parallel in the same direction need at least two bends; never collapse them to one bend or route through an obstacle to satisfy a naive lower bound. Treat corner ports as ambiguous only when both adjacent sides are intentionally valid.
 
 Resize or relayout before shrinking type. After any shape move or resize, recompute physical ports and rerender every incident edge, neighboring corridor, label, and lane boundary in the impact region.
 

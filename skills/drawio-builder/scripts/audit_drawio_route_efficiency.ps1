@@ -19,9 +19,10 @@ function Get-StyleMap {
     param([string]$Style)
     $map = @{}
     foreach ($part in $Style.Split(';', [System.StringSplitOptions]::RemoveEmptyEntries)) {
-        $pair = $part.Split('=', 2)
-        if ($pair.Count -eq 2) { $map[$pair[0]] = $pair[1] }
-        else { $map[$part] = '1' }
+        $token = $part.Trim()
+        $pair = $token.Split('=', 2)
+        if ($pair.Count -eq 2) { $map[$pair[0].Trim()] = $pair[1].Trim() }
+        else { $map[$token] = '1' }
     }
     $map
 }
@@ -197,8 +198,8 @@ foreach ($edge in @($source.SelectNodes('//mxCell[@edge="1"]'))) {
     $obstacles = @($vertexBounds.GetEnumerator() | Where-Object { $_.Key -notin @([string]$edge.source,[string]$edge.target) } | ForEach-Object { $_.Value })
     $xs = @($start.X,$end.X)+@($obstacles | ForEach-Object { $_.Left; $_.Right })
     $ys = @($start.Y,$end.Y)+@($obstacles | ForEach-Object { $_.Top; $_.Bottom })
-    $exitDirections=@(Get-PortDirections $edgeStyle 'Exit' $tolerance)
-    $entryDirections=@(Get-PortDirections $edgeStyle 'Entry' $tolerance)
+    $exitDirections=@(Get-PortDirections $edgeStyle 'Exit' 0.001)
+    $entryDirections=@(Get-PortDirections $edgeStyle 'Entry' 0.001)
     $best = Get-BestCandidate $start $end $obstacles @($xs|Sort-Object -Unique) @($ys|Sort-Object -Unique) $exitDirections $entryDirections $tolerance
     if ($best) {
         if ($actual.BendCount -gt $best.BendCount) {

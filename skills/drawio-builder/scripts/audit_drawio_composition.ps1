@@ -17,9 +17,10 @@ function Get-StyleMap {
     param([string]$Style)
     $map = @{}
     foreach ($part in $Style.Split(';', [System.StringSplitOptions]::RemoveEmptyEntries)) {
-        $pair = $part.Split('=', 2)
-        if ($pair.Count -eq 2) { $map[$pair[0]] = $pair[1] }
-        else { $map[$part] = '1' }
+        $token = $part.Trim()
+        $pair = $token.Split('=', 2)
+        if ($pair.Count -eq 2) { $map[$pair[0].Trim()] = $pair[1].Trim() }
+        else { $map[$token] = '1' }
     }
     $map
 }

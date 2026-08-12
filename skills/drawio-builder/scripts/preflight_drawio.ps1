@@ -38,12 +38,13 @@ function Get-StyleMap {
 
     $map = @{}
     foreach ($part in $Style.Split(';', [System.StringSplitOptions]::RemoveEmptyEntries)) {
-        $pair = $part.Split('=', 2)
+        $token = $part.Trim()
+        $pair = $token.Split('=', 2)
         if ($pair.Count -eq 2) {
-            $map[$pair[0]] = $pair[1]
+            $map[$pair[0].Trim()] = $pair[1].Trim()
         }
         else {
-            $map[$part] = '1'
+            $map[$token] = '1'
         }
     }
     $map
