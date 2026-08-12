@@ -33,7 +33,7 @@ if (-not (Test-Path -LiteralPath $QualityProfilePath -PathType Leaf)) { throw "Q
 $quality = $null
 try { $quality = Get-Content -LiteralPath $QualityProfilePath -Raw -Encoding UTF8 | ConvertFrom-Json } catch { $quality = $null }
 $requiredArtifactRoleList=@($RequiredArtifactRoles.Split(',')|ForEach-Object{$_.Trim()}|Where-Object{$_}|Sort-Object -Unique)
-if($requiredArtifactRoleList.Count-eq0-or@($requiredArtifactRoleList|Where-Object{$_-notin@('canonical','wrapper','svg','png','pdf')}).Count-gt0){throw "RequiredArtifactRoles must be a comma-separated subset of canonical,wrapper,svg,png,pdf: $RequiredArtifactRoles"}
+if($requiredArtifactRoleList.Count-eq0-or@($requiredArtifactRoleList|Where-Object{$_-notin@('canonical','wrapper','svg','png','word-png','pdf')}).Count-gt0){throw "RequiredArtifactRoles must be a comma-separated subset of canonical,wrapper,svg,png,word-png,pdf: $RequiredArtifactRoles"}
 $inputDigests = Get-DrawioInputDigests -SourcePath $SourcePath -SvgPath $SvgPath -QualityProfilePath $QualityProfilePath -SemanticManifestPath $SemanticManifestPath -NotationProfilePath $NotationProfilePath -ArtifactManifestPath $ArtifactManifestPath -WarningDispositionPath $WarningDispositionPath
 
 $gates = [System.Collections.Generic.List[object]]::new()
@@ -81,6 +81,7 @@ function Add-UnknownPropertyIssues {
 
 Invoke-Gate 'quality-profile' { & (Join-Path $PSScriptRoot 'audit_drawio_quality_profile.ps1') -QualityProfilePath $QualityProfilePath }
 Invoke-Gate 'canonical-preflight' { & (Join-Path $PSScriptRoot 'preflight_drawio.ps1') -SourcePath $SourcePath }
+Invoke-Gate 'composition-word-fit' { & (Join-Path $PSScriptRoot 'audit_drawio_composition.ps1') -SourcePath $SourcePath -QualityProfilePath $QualityProfilePath }
 if ($SemanticManifestPath) {
     Invoke-Gate 'semantic-notation-contract' { Invoke-DrawioContractAudit -SourcePath $SourcePath -Family $Family -SemanticManifestPath $SemanticManifestPath -NotationProfilePath $NotationProfilePath | ConvertTo-Json -Depth 10 }
     if($NotationProfilePath){
@@ -95,6 +96,9 @@ elseif(-not$SemanticManifestPath){Add-StateGate 'notation-contract' 'UNKNOWN' 'N
 $connectorFamily = if ($Family -in @('process','data-flow')) { $Family } else { $Family }
 Invoke-Gate 'connector-geometry' {
     & (Join-Path $PSScriptRoot 'audit_drawio_connectors.ps1') -SourcePath $SourcePath -SvgPath $SvgPath -MinimumStub ([double]$quality.clearance.endpointStub) -DividerClearance ([double]$quality.clearance.parallelDivider) -PageClearance ([double]$quality.clearance.pageConnector) -Profile $connectorFamily
+}
+Invoke-Gate 'route-efficiency' {
+    & (Join-Path $PSScriptRoot 'audit_drawio_route_efficiency.ps1') -SourcePath $SourcePath -SvgPath $SvgPath -QualityProfilePath $QualityProfilePath
 }
 Invoke-Gate 'archive-labels' {
     & (Join-Path $PSScriptRoot 'audit_drawio_archive_labels.ps1') -SourcePath $SourcePath -SvgPath $SvgPath -MinimumClearance ([double]$quality.clearance.labelInk)

@@ -10,7 +10,10 @@ param(
     [string]$DrawioPath,
 
     [string]$PageId,
-    [string]$PageName
+    [string]$PageName,
+    [ValidateSet('Strict','Accept')]
+    [string]$IdentityPolicy = 'Strict',
+    [string]$IdentityReportPath
 )
 
 $ErrorActionPreference = 'Stop'
@@ -96,6 +99,19 @@ if ($Direction -eq 'FromDrawio') {
     if ($model.DocumentElement.Name -ne 'mxGraphModel') {
         throw "Selected page is not an mxGraphModel: $($selected.id)"
     }
+    $identity = [ordered]@{ Policy=$IdentityPolicy; Changed=$false; Added=@(); Removed=@() }
+    if (Test-Path -LiteralPath $CanonicalPath -PathType Leaf) {
+        [xml]$existingCanonical = Get-Content -LiteralPath $CanonicalPath -Raw -Encoding UTF8
+        $existingIds = @($existingCanonical.SelectNodes('//mxCell') | ForEach-Object { [string]$_.id } | Sort-Object -Unique)
+        $candidateIds = @($model.SelectNodes('//mxCell') | ForEach-Object { [string]$_.id } | Sort-Object -Unique)
+        $identity.Added = @($candidateIds | Where-Object { $_ -notin $existingIds })
+        $identity.Removed = @($existingIds | Where-Object { $_ -notin $candidateIds })
+        $identity.Changed = $identity.Added.Count -gt 0 -or $identity.Removed.Count -gt 0
+    }
+    if ($IdentityReportPath) { Write-AtomicUtf8 $IdentityReportPath (($identity | ConvertTo-Json -Depth 4) + "`n") }
+    if ($identity.Changed -and $IdentityPolicy -eq 'Strict') {
+        throw "Imported page changes stable cell identities. Review the identity report or rerun with -IdentityPolicy Accept: added=$($identity.Added.Count); removed=$($identity.Removed.Count)"
+    }
     $directory = Split-Path -Parent $CanonicalPath
     if (-not $directory) { $directory = (Get-Location).Path }
     if (-not (Test-Path -LiteralPath $directory)) { New-Item -ItemType Directory -Path $directory -Force | Out-Null }
@@ -110,7 +126,7 @@ if ($Direction -eq 'FromDrawio') {
     finally {
         if (Test-Path -LiteralPath $candidate) { Remove-Item -LiteralPath $candidate -Force }
     }
-    [pscustomobject]@{ Direction='FromDrawio'; Canonical=$CanonicalPath; Drawio=$DrawioPath; PageId=[string]$selected.id; PageName=[string]$selected.name } | ConvertTo-Json
+    [pscustomobject]@{ Direction='FromDrawio'; Canonical=$CanonicalPath; Drawio=$DrawioPath; PageId=[string]$selected.id; PageName=[string]$selected.name; Identity=$identity } | ConvertTo-Json -Depth 5
     exit 0
 }
 

@@ -33,9 +33,9 @@ Process one page at a time. When a wrapper has multiple pages, require `PageId`.
 
 ## Export
 
-Use the local Draw.io desktop CLI for persistence and export. Run it in a hidden process and check the exit code. Use page bounds rather than content cropping for page-aware deliverables.
+Use the local Draw.io desktop CLI for persistence and export. Run it in a hidden process and check the exit code. Use native `--size page` for page-aware QA assets and native `--size diagram --border <value>` for cropped figures. Treat missing `--size` support as an unsupported renderer rather than modifying canonical geometry with a page sentinel.
 
-The desktop CLI crops to content by default and does not expose a `--size page` option. `export_drawio.ps1` therefore creates a disposable uncompressed wrapper from canonical XML, adds a fully transparent page-bound sentinel, exports from that wrapper, removes the sentinel group from final SVG, and deletes the temporary wrapper. Never add the sentinel to canonical XML or the editable `.drawio` wrapper.
+For Word figures, measure the content aspect first and pass only the limiting `--width` or `--height`; passing both lets the renderer choose one dimension and can violate the requested frame. Write the configured PNG density metadata after export and validate it by reopening the final file.
 
 Before export, canonical XML must equal the selected page in the editable `.drawio` wrapper. Pass `PageId` for a multi-page wrapper. If parity fails, import or sync deliberately before exporting; never overwrite a web edit silently.
 
@@ -62,7 +62,7 @@ Fail loudly on missing files, ambiguous pages, malformed compressed payloads, ex
 
 ## Artifact provenance
 
-Record canonical, wrapper, SVG, PNG, and requested PDF hashes in an artifact manifest with page ID, page dimensions, and renderer name/version. Approval binds the manifest's canonical and SVG paths to the current inputs, requires canonical-to-wrapper page parity, and requires the canonical, wrapper, SVG, and PNG roles. Regenerate the complete requested output set after any canonical import or geometry change.
+Record canonical, wrapper, SVG, page PNG, Word PNG, and requested PDF hashes in an artifact manifest with page ID, page dimensions, delivery metadata, and renderer name/version. Approval binds the manifest's canonical and SVG paths to the current inputs, requires canonical-to-wrapper page parity, and requires every role declared by the task. Regenerate the complete requested output set after any canonical import or geometry change.
 
 Keep the manifest and every referenced artifact on one filesystem volume so the manifest can use portable relative paths. Cross-volume artifact bundles fail before destination replacement.
 

@@ -51,9 +51,9 @@ $quality = $null
 if (-not (Test-Path -LiteralPath $QualityProfilePath -PathType Leaf)) { Add-Issue 'quality-profile-missing' '' $QualityProfilePath }
 else { try { $quality = Get-Content -LiteralPath $QualityProfilePath -Raw -Encoding UTF8 | ConvertFrom-Json } catch { Add-Issue 'quality-profile-json' '' $_.Exception.Message } }
 
-$rootFields = @('schemaVersion','profile','pages','fonts','clearance','composition','export')
+$rootFields = @('schemaVersion','profile','pages','fonts','clearance','composition','delivery','routing','export')
 if (Test-ObjectContract $quality 'quality-profile' $rootFields $rootFields) {
-    if (-not (Test-JsonInteger $quality.schemaVersion) -or [int64]$quality.schemaVersion -ne 3) { Add-Issue 'quality-profile-schema' 'schemaVersion' 'schemaVersion must be the integer 3' }
+    if (-not (Test-JsonInteger $quality.schemaVersion) -or [int64]$quality.schemaVersion -ne 4) { Add-Issue 'quality-profile-schema' 'schemaVersion' 'schemaVersion must be the integer 4' }
     if ($quality.profile -isnot [string] -or [string]::IsNullOrWhiteSpace([string]$quality.profile)) { Add-Issue 'quality-profile-value' 'profile' 'profile must be a nonempty string' }
     if (Test-ObjectContract $quality.pages 'pages' @('portrait','landscape') @('portrait','landscape')) {
         foreach ($orientation in @('portrait','landscape')) {
@@ -69,10 +69,26 @@ if (Test-ObjectContract $quality 'quality-profile' $rootFields $rootFields) {
     }
     $clearanceFields = @('labelInk','nodeLabelInk','collisionOverlap','shapeOutline','arrowContact','endpointStub','parallelDivider','pageConnector','laneMinimum','lanePreferred','edgeLabelAssociation','edgeLabelOwnerMaximum')
     if (Test-ObjectContract $quality.clearance 'clearance' $clearanceFields $clearanceFields) { foreach ($field in $clearanceFields) { if (-not (Test-PositiveNumber $quality.clearance.$field)) { Add-Issue 'quality-profile-number' "clearance.$field" 'Expected a finite positive number' } } }
-    $compositionFields = @('alignmentTolerance','sizeTolerance','spacingVarianceWarning','minimumContrast')
+    $compositionFields = @('alignmentTolerance','sizeTolerance','spacingVarianceWarning','minimumContrast','optimizationRegressionTolerance')
     if (Test-ObjectContract $quality.composition 'composition' $compositionFields $compositionFields) {
-        foreach ($field in @('alignmentTolerance','sizeTolerance','spacingVarianceWarning')) { if (-not (Test-NonnegativeNumber $quality.composition.$field)) { Add-Issue 'quality-profile-number' "composition.$field" 'Expected a finite nonnegative number' } }
+        foreach ($field in @('alignmentTolerance','sizeTolerance','spacingVarianceWarning','optimizationRegressionTolerance')) { if (-not (Test-NonnegativeNumber $quality.composition.$field)) { Add-Issue 'quality-profile-number' "composition.$field" 'Expected a finite nonnegative number' } }
         if (-not (Test-PositiveNumber $quality.composition.minimumContrast 0.999999)) { Add-Issue 'quality-profile-number' 'composition.minimumContrast' 'Expected a finite number greater than or equal to 1' }
+        if ((Test-NonnegativeNumber $quality.composition.optimizationRegressionTolerance) -and [double]$quality.composition.optimizationRegressionTolerance -gt 0.25) { Add-Issue 'quality-profile-number' 'composition.optimizationRegressionTolerance' 'Expected a value no greater than 0.25' }
+    }
+    if (Test-ObjectContract $quality.delivery 'delivery' @('word') @('word')) {
+        $wordFields = @('frameWidthMm','frameHeightMm','minimumEffectiveFontPoints','densityPpi','cropBorder','theme')
+        if (Test-ObjectContract $quality.delivery.word 'delivery.word' $wordFields $wordFields) {
+            foreach ($field in @('frameWidthMm','frameHeightMm','minimumEffectiveFontPoints')) { if (-not (Test-PositiveNumber $quality.delivery.word.$field)) { Add-Issue 'quality-profile-number' "delivery.word.$field" 'Expected a finite positive number' } }
+            if (-not (Test-JsonInteger $quality.delivery.word.densityPpi) -or [int64]$quality.delivery.word.densityPpi -lt 72) { Add-Issue 'quality-profile-number' 'delivery.word.densityPpi' 'Expected an integer greater than or equal to 72' }
+            if (-not (Test-NonnegativeNumber $quality.delivery.word.cropBorder)) { Add-Issue 'quality-profile-number' 'delivery.word.cropBorder' 'Expected a finite nonnegative number' }
+            if ([string]$quality.delivery.word.theme -notin @('light','dark')) { Add-Issue 'quality-profile-value' 'delivery.word.theme' 'Expected light or dark' }
+        }
+    }
+    $routingFields = @('lengthRatioMaximum','lengthAbsoluteTolerance','orthogonalTolerance')
+    if (Test-ObjectContract $quality.routing 'routing' $routingFields $routingFields) {
+        if (-not (Test-PositiveNumber $quality.routing.lengthRatioMaximum 0.999999)) { Add-Issue 'quality-profile-number' 'routing.lengthRatioMaximum' 'Expected a finite number greater than or equal to 1' }
+        if (-not (Test-NonnegativeNumber $quality.routing.lengthAbsoluteTolerance)) { Add-Issue 'quality-profile-number' 'routing.lengthAbsoluteTolerance' 'Expected a finite nonnegative number' }
+        if (-not (Test-PositiveNumber $quality.routing.orthogonalTolerance)) { Add-Issue 'quality-profile-number' 'routing.orthogonalTolerance' 'Expected a finite positive number' }
     }
     if (Test-ObjectContract $quality.export 'export' @('pngScale') @('pngScale')) { if (-not (Test-PositiveNumber $quality.export.pngScale)) { Add-Issue 'quality-profile-number' 'export.pngScale' 'Expected a finite positive number' } }
 }

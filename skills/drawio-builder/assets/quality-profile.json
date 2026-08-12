@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "profile": "a4-print",
   "pages": {
     "portrait": { "width": 827, "height": 1169 },
@@ -29,7 +29,23 @@
     "alignmentTolerance": 2.0,
     "sizeTolerance": 2.0,
     "spacingVarianceWarning": 8.0,
-    "minimumContrast": 4.5
+    "minimumContrast": 4.5,
+    "optimizationRegressionTolerance": 0.02
+  },
+  "delivery": {
+    "word": {
+      "frameWidthMm": 160,
+      "frameHeightMm": 230,
+      "minimumEffectiveFontPoints": 7.5,
+      "densityPpi": 300,
+      "cropBorder": 16,
+      "theme": "light"
+    }
+  },
+  "routing": {
+    "lengthRatioMaximum": 1.1,
+    "lengthAbsoluteTolerance": 8,
+    "orthogonalTolerance": 0.25
   },
   "export": {
     "pngScale": 1.75

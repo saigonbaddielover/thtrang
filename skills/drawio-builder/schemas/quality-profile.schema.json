@@ -4,9 +4,9 @@
   "title": "Draw.io Quality Profile",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "profile", "pages", "fonts", "clearance", "composition", "export"],
+  "required": ["schemaVersion", "profile", "pages", "fonts", "clearance", "composition", "delivery", "routing", "export"],
   "properties": {
-    "schemaVersion": { "const": 3 },
+    "schemaVersion": { "const": 4 },
     "profile": { "type": "string", "minLength": 1 },
     "pages": {
       "type": "object",
@@ -50,12 +50,43 @@
     "composition": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["alignmentTolerance", "sizeTolerance", "spacingVarianceWarning", "minimumContrast"],
+      "required": ["alignmentTolerance", "sizeTolerance", "spacingVarianceWarning", "minimumContrast", "optimizationRegressionTolerance"],
       "properties": {
         "alignmentTolerance": { "type": "number", "minimum": 0 },
         "sizeTolerance": { "type": "number", "minimum": 0 },
         "spacingVarianceWarning": { "type": "number", "minimum": 0 },
-        "minimumContrast": { "type": "number", "minimum": 1 }
+        "minimumContrast": { "type": "number", "minimum": 1 },
+        "optimizationRegressionTolerance": { "type": "number", "minimum": 0, "maximum": 0.25 }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["word"],
+      "properties": {
+        "word": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["frameWidthMm", "frameHeightMm", "minimumEffectiveFontPoints", "densityPpi", "cropBorder", "theme"],
+          "properties": {
+            "frameWidthMm": { "type": "number", "exclusiveMinimum": 0 },
+            "frameHeightMm": { "type": "number", "exclusiveMinimum": 0 },
+            "minimumEffectiveFontPoints": { "type": "number", "exclusiveMinimum": 0 },
+            "densityPpi": { "type": "integer", "minimum": 72 },
+            "cropBorder": { "type": "number", "minimum": 0 },
+            "theme": { "enum": ["light", "dark"] }
+          }
+        }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lengthRatioMaximum", "lengthAbsoluteTolerance", "orthogonalTolerance"],
+      "properties": {
+        "lengthRatioMaximum": { "type": "number", "minimum": 1 },
+        "lengthAbsoluteTolerance": { "type": "number", "minimum": 0 },
+        "orthogonalTolerance": { "type": "number", "exclusiveMinimum": 0 }
       }
     },
     "export": {

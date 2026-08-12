@@ -4,9 +4,9 @@
   "title": "Draw.io Artifact Manifest",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "page", "renderer", "artifacts"],
+  "required": ["schemaVersion", "page", "renderer", "delivery", "artifacts"],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "page": {
       "type": "object",
       "additionalProperties": false,
@@ -26,6 +26,18 @@
         "version": { "type": "string", "minLength": 1 }
       }
     },
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frameWidthMm", "frameHeightMm", "densityPpi", "minimumEffectiveFontPoints", "cropBorder"],
+      "properties": {
+        "frameWidthMm": { "type": "number", "exclusiveMinimum": 0 },
+        "frameHeightMm": { "type": "number", "exclusiveMinimum": 0 },
+        "densityPpi": { "type": "integer", "minimum": 72 },
+        "minimumEffectiveFontPoints": { "type": "number", "exclusiveMinimum": 0 },
+        "cropBorder": { "type": "number", "minimum": 0 }
+      }
+    },
     "artifacts": {
       "type": "array",
       "minItems": 2,
@@ -34,7 +46,7 @@
         "additionalProperties": false,
         "required": ["role", "path", "sha256"],
         "properties": {
-          "role": { "enum": ["canonical", "wrapper", "svg", "png", "pdf"] },
+          "role": { "enum": ["canonical", "wrapper", "svg", "png", "word-png", "pdf"] },
           "path": { "type": "string", "minLength": 1 },
           "sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" }
         }

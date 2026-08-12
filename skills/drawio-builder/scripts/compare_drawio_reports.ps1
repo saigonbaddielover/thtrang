@@ -5,14 +5,16 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$AfterReportPath,
 
-    [ValidateSet('Repair','Construction')]
+    [ValidateSet('Repair','Construction','Optimization')]
     [string]$Operation = 'Repair',
 
     [switch]$ErrorsOnly,
-    [switch]$AllowNoImprovement
+    [switch]$AllowNoImprovement,
+    [string]$QualityProfilePath
 )
 
 $ErrorActionPreference = 'Stop'
+if (-not $QualityProfilePath) { $QualityProfilePath = Join-Path (Split-Path -Parent $PSScriptRoot) 'assets\quality-profile.json' }
 
 function Get-IssueInventory {
     param(
@@ -81,6 +83,20 @@ function Get-InventoryDelta {
     @($rows)
 }
 
+function Get-OptimizationMetrics {
+    param([string]$Path)
+    $report = Get-Content -LiteralPath $Path -Raw -Encoding UTF8 | ConvertFrom-Json
+    $composition = @($report.Gates | Where-Object { [string]$_.Name -eq 'composition-word-fit' } | Select-Object -First 1)
+    $routing = @($report.Gates | Where-Object { [string]$_.Name -eq 'route-efficiency' } | Select-Object -First 1)
+    if ($composition.Count -ne 1 -or $routing.Count -ne 1) { throw 'Optimization requires composition-word-fit and route-efficiency gates in both reports' }
+    [ordered]@{
+        EffectiveMinimumFontPoints = [double]$composition[0].Result.Word.EffectiveMinimumFontPoints
+        CropArea = [double]$composition[0].Result.Crop.Width * [double]$composition[0].Result.Crop.Height
+        TotalBends = [double]$routing[0].Result.TotalBends
+        TotalLength = [double]$routing[0].Result.TotalLength
+    }
+}
+
 $includeWarnings = -not [bool]$ErrorsOnly
 $before = Get-IssueInventory $BeforeReportPath $includeWarnings
 $after = Get-IssueInventory $AfterReportPath $includeWarnings
@@ -95,13 +111,41 @@ if ($null -eq $afterCount) { $afterCount = 0 }
 if ($null -eq $introducedCount) { $introducedCount = 0 }
 if ($null -eq $fixedCount) { $fixedCount = 0 }
 $improved = $afterCount -lt $beforeCount
+$metricRows = @()
+$metricImproved = $false
+$metricRegressed = $false
+if ($Operation -eq 'Optimization') {
+    $quality = Get-Content -LiteralPath $QualityProfilePath -Raw -Encoding UTF8 | ConvertFrom-Json
+    $tolerance = [double]$quality.composition.optimizationRegressionTolerance
+    $beforeMetrics = Get-OptimizationMetrics $BeforeReportPath
+    $afterMetrics = Get-OptimizationMetrics $AfterReportPath
+    $metricRows = @(
+        [pscustomobject]@{ Name='EffectiveMinimumFontPoints'; Direction='higher'; Before=$beforeMetrics.EffectiveMinimumFontPoints; After=$afterMetrics.EffectiveMinimumFontPoints },
+        [pscustomobject]@{ Name='CropArea'; Direction='lower'; Before=$beforeMetrics.CropArea; After=$afterMetrics.CropArea },
+        [pscustomobject]@{ Name='TotalBends'; Direction='lower'; Before=$beforeMetrics.TotalBends; After=$afterMetrics.TotalBends },
+        [pscustomobject]@{ Name='TotalLength'; Direction='lower'; Before=$beforeMetrics.TotalLength; After=$afterMetrics.TotalLength }
+    )
+    foreach ($metric in $metricRows) {
+        $baseline = [math]::Max([math]::Abs([double]$metric.Before),0.000001)
+        $relative = ([double]$metric.After-[double]$metric.Before)/$baseline
+        $metric | Add-Member -NotePropertyName RelativeChange -NotePropertyValue $relative
+        $improvement = if ($metric.Direction -eq 'higher') { $relative } else { -$relative }
+        $metric | Add-Member -NotePropertyName Improved -NotePropertyValue ($improvement -gt $tolerance)
+        $metric | Add-Member -NotePropertyName Regressed -NotePropertyValue ($improvement -lt -$tolerance)
+    }
+    $metricImproved = @($metricRows | Where-Object { $_.Improved }).Count -gt 0
+    $metricRegressed = @($metricRows | Where-Object { $_.Regressed }).Count -gt 0
+}
 $passed = if ($Operation -eq 'Construction') {
     $beforeCount -eq 0 -and $afterCount -eq 0 -and $introduced.Count -eq 0
+}
+elseif ($Operation -eq 'Optimization') {
+    $introduced.Count -eq 0 -and -not $metricRegressed -and ($metricImproved -or $AllowNoImprovement)
 }
 else {
     $introduced.Count -eq 0 -and ($improved -or $AllowNoImprovement)
 }
-$decision = if ($passed -and $Operation -eq 'Construction') { 'ACCEPT STAGE' } elseif ($passed) { 'ACCEPT REPAIR' } elseif ($Operation -eq 'Construction') { 'REJECT STAGE' } else { 'REJECT REPAIR' }
+$decision = if ($passed -and $Operation -eq 'Construction') { 'ACCEPT STAGE' } elseif ($passed -and $Operation -eq 'Optimization') { 'ACCEPT OPTIMIZATION' } elseif ($passed) { 'ACCEPT REPAIR' } elseif ($Operation -eq 'Construction') { 'REJECT STAGE' } elseif ($Operation -eq 'Optimization') { 'REJECT OPTIMIZATION' } else { 'REJECT REPAIR' }
 
 $result = [pscustomobject]@{
     BeforeReport = (Resolve-Path -LiteralPath $BeforeReportPath).Path
@@ -115,6 +159,9 @@ $result = [pscustomobject]@{
     FixedCount = [int]$fixedCount
     Introduced = $introduced
     Fixed = $fixed
+    MetricImproved = $metricImproved
+    MetricRegressed = $metricRegressed
+    Metrics = $metricRows
     Decision = $decision
 }
 $result | ConvertTo-Json -Depth 6

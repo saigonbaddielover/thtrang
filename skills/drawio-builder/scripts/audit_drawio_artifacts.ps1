@@ -93,9 +93,9 @@ else {
 if($null-ne$manifest-and-not(Test-JsonObject $manifest)){Add-Issue 'artifact-schema-type' 'ERROR' 'manifest' ([string]$manifest) 'repair-artifact-manifest';$manifest=$null}
 
 if ($manifest) {
-    Add-UnknownProperties $manifest @('schemaVersion','page','renderer','artifacts') 'manifest'
-    foreach($field in @('schemaVersion','page','renderer','artifacts')){if(-not$manifest.PSObject.Properties[$field]){Add-Issue 'artifact-schema-field' 'ERROR' 'manifest' $field 'repair-artifact-manifest'}}
-    if(-not(Test-JsonInteger $manifest.schemaVersion)-or[int64]$manifest.schemaVersion-ne1){Add-Issue 'unsupported-artifact-schema' 'ERROR' '' ([string]$manifest.schemaVersion) 'upgrade-manifest'}
+    Add-UnknownProperties $manifest @('schemaVersion','page','renderer','delivery','artifacts') 'manifest'
+    foreach($field in @('schemaVersion','page','renderer','delivery','artifacts')){if(-not$manifest.PSObject.Properties[$field]){Add-Issue 'artifact-schema-field' 'ERROR' 'manifest' $field 'repair-artifact-manifest'}}
+    if(-not(Test-JsonInteger $manifest.schemaVersion)-or[int64]$manifest.schemaVersion-ne2){Add-Issue 'unsupported-artifact-schema' 'ERROR' '' ([string]$manifest.schemaVersion) 'upgrade-manifest'}
     if(-not(Test-JsonObject $manifest.page)){Add-Issue 'artifact-schema-type' 'ERROR' 'page' ([string]$manifest.page) 'repair-artifact-manifest'}
     else{
         Add-UnknownProperties $manifest.page @('id','width','height') 'page'
@@ -104,6 +104,15 @@ if ($manifest) {
     }
     if(-not(Test-JsonObject $manifest.renderer)){Add-Issue 'artifact-schema-type' 'ERROR' 'renderer' ([string]$manifest.renderer) 'repair-artifact-manifest'}
     else{Add-UnknownProperties $manifest.renderer @('name','version') 'renderer';if(-not(Test-JsonString $manifest.renderer.name)-or-not(Test-JsonString $manifest.renderer.version)){Add-Issue 'missing-renderer-provenance' 'ERROR' '' 'Renderer name and version must be nonempty strings' 'rerender-assets'}}
+    if(-not(Test-JsonObject $manifest.delivery)){Add-Issue 'artifact-schema-type' 'ERROR' 'delivery' ([string]$manifest.delivery) 'repair-artifact-manifest'}
+    else{
+        $deliveryFields=@('frameWidthMm','frameHeightMm','densityPpi','minimumEffectiveFontPoints','cropBorder')
+        Add-UnknownProperties $manifest.delivery $deliveryFields 'delivery'
+        foreach($field in $deliveryFields){if(-not$manifest.delivery.PSObject.Properties[$field]){Add-Issue 'artifact-schema-field' 'ERROR' 'delivery' $field 'repair-artifact-manifest'}}
+        foreach($field in @('frameWidthMm','frameHeightMm','minimumEffectiveFontPoints')){if(-not(Test-PositiveFiniteNumber $manifest.delivery.$field)){Add-Issue 'artifact-delivery-contract' 'ERROR' $field ([string]$manifest.delivery.$field) 'repair-artifact-manifest'}}
+        if(-not(Test-JsonInteger $manifest.delivery.densityPpi)-or[int64]$manifest.delivery.densityPpi-lt72){Add-Issue 'artifact-delivery-contract' 'ERROR' 'densityPpi' ([string]$manifest.delivery.densityPpi) 'repair-artifact-manifest'}
+        if(-not(Test-JsonNumber $manifest.delivery.cropBorder)-or[double]$manifest.delivery.cropBorder-lt0){Add-Issue 'artifact-delivery-contract' 'ERROR' 'cropBorder' ([string]$manifest.delivery.cropBorder) 'repair-artifact-manifest'}
+    }
     $baseDirectory = Split-Path -Parent (Resolve-Path -LiteralPath $ManifestPath).Path
     if($manifest.artifacts-isnot[System.Array]){$artifactType=if($null-eq$manifest.artifacts){'null'}else{$manifest.artifacts.GetType().FullName};Add-Issue 'artifact-schema-type' 'ERROR' 'artifacts' $artifactType 'repair-artifact-manifest'}
     $artifactEntries=if($manifest.artifacts-is[System.Array]){@($manifest.artifacts)}else{@()}
@@ -121,7 +130,7 @@ if ($manifest) {
         Add-UnknownProperties $artifact @('role','path','sha256') ([string]$artifact.role)
         foreach($field in @('role','path','sha256')){if(-not$artifact.PSObject.Properties[$field]){Add-Issue 'artifact-schema-field' 'ERROR' ([string]$artifact.role) $field 'repair-artifact-manifest'}}
         $role = [string]$artifact.role
-        if(-not(Test-JsonString $artifact.role)-or$role-notin@('canonical','wrapper','svg','png','pdf')){Add-Issue 'unsupported-artifact-role' 'ERROR' $role $role 'repair-artifact-manifest'}
+        if(-not(Test-JsonString $artifact.role)-or$role-notin@('canonical','wrapper','svg','png','word-png','pdf')){Add-Issue 'unsupported-artifact-role' 'ERROR' $role $role 'repair-artifact-manifest'}
         if(-not(Test-JsonString $artifact.path)){Add-Issue 'artifact-path-contract' 'ERROR' $role ([string]$artifact.path) 'repair-artifact-manifest';continue}
         if(-not(Test-JsonString $artifact.sha256)-or[string]$artifact.sha256-notmatch'^[A-Fa-f0-9]{64}$'){Add-Issue 'artifact-hash-contract' 'ERROR' $role ([string]$artifact.sha256) 'repair-artifact-manifest'}
         $path = Join-Path $baseDirectory ([string]$artifact.path)

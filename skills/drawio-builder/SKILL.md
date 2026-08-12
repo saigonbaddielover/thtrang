@@ -9,6 +9,8 @@ description: Create, import, edit, relayout, audit, repair, and export productio
 
 Treat one canonical `mxGraphModel` XML file as the primary source for one page. Treat `.drawio` as the editable wrapper. Treat SVG, PNG, PDF, audit reports, and crops as derived artifacts.
 
+When the final deliverable is a figure for Word, optimize the cropped content envelope rather than the page orientation. Require the configured effective font size after placement, remove embedded titles when the document supplies the heading, and prefer a tall compact layout when a wide layout would shrink below the delivery threshold. Read [word-figure-layout.md](references/word-figure-layout.md) for layout selection, export, and acceptance.
+
 When a user edits a `.drawio` file, import the selected page into canonical XML before further changes. Never recover source from a derived SVG or PNG.
 
 Work on one page at a time:
@@ -103,6 +105,7 @@ Resolve paths relative to the project or skill. Never hardcode a machine path.
 - Run `scripts/export_drawio.ps1` for page-aware SVG, PNG, PDF, and artifact provenance.
 - Run `scripts/validate_drawio.ps1` in `Audit` mode while iterating and in `Approval` mode only with semantic, notation, artifact, warning-disposition, and visual-inspection evidence required by the task.
 - Run `scripts/compare_drawio_reports.ps1 -Operation Construction` between clean build stages and `-Operation Repair` after every repair. Reject a construction stage unless both reports are clean; reject a repair that introduces any new error or warning fingerprint or does not reduce the tracked issue count.
+- Run `scripts/compare_drawio_reports.ps1 -Operation Optimization` for compactness or routing changes. Accept only zero-regression changes that improve at least one delivery metric.
 - Run `scripts/export_drawio_crops.ps1` after validation to create inspectable crops for structured findings.
 - Run `scripts/test_profile_fixtures.ps1` after changing a notation profile, contract schema, or family stencil mapping.
 

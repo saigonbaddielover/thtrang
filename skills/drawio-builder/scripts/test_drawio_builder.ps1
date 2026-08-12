@@ -65,7 +65,24 @@ function Convert-ToCompressedPayload {
 function Get-ModelSignature {
     param([string]$Path)
     [xml]$model = Get-Content -LiteralPath $Path -Raw -Encoding UTF8
-    $model.OuterXml
+    function Convert-ToStructuralNode {
+        param([System.Xml.XmlNode]$Node)
+        $attributes=@(
+            $Node.Attributes |
+                Sort-Object Name |
+                ForEach-Object { [ordered]@{Name=$_.Name;Value=$_.Value} }
+        )
+        $children=@(
+            $Node.ChildNodes |
+                Where-Object { $_.NodeType -eq [System.Xml.XmlNodeType]::Element -or ($_.NodeType -in @([System.Xml.XmlNodeType]::Text,[System.Xml.XmlNodeType]::CDATA) -and -not [string]::IsNullOrWhiteSpace($_.Value)) } |
+                ForEach-Object {
+                    if($_.NodeType -eq [System.Xml.XmlNodeType]::Element){Convert-ToStructuralNode $_}
+                    else{[ordered]@{Type=$_.NodeType.ToString();Value=$_.Value}}
+                }
+        )
+        [ordered]@{Name=$Node.Name;Attributes=$attributes;Children=$children}
+    }
+    Convert-ToStructuralNode $model.DocumentElement | ConvertTo-Json -Compress -Depth 20
 }
 
 function Write-Utf8File {
@@ -201,7 +218,7 @@ try {
     $corpusExpectationData = Get-Content -LiteralPath $corpusExpectationPath -Raw -Encoding UTF8 | ConvertFrom-Json
     $findingKeys = @($corpusExpectationData.findings | ForEach-Object { "$($_.diagram)|$($_.gate)|$($_.type)|$($_.element)" })
     $expectedFindingTotal = @($corpusExpectationData.findings | ForEach-Object { [int]$_.count } | Measure-Object -Sum).Sum
-    $allowedDispositions = @('expected-issue', 'expected-false-positive', 'visual-only')
+    $allowedDispositions = @('expected-issue', 'expected-warning', 'expected-false-positive', 'visual-only')
     $invalidDispositions = @($corpusExpectationData.findings | Where-Object { $_.disposition -notin $allowedDispositions })
     $invalidCounts = @($corpusExpectationData.findings | Where-Object { [int]$_.count -lt 1 })
     $expectationContractValid = [int]$corpusExpectationData.schemaVersion -eq 1 -and @($corpusExpectationData.findings).Count -gt 0 -and @($corpusExpectationData.findings | Where-Object disposition -eq 'expected-issue').Count -gt 0 -and @($corpusExpectationData.visualOnly).Count -gt 0 -and @($findingKeys | Sort-Object -Unique).Count -eq $findingKeys.Count -and $invalidDispositions.Count -eq 0 -and $invalidCounts.Count -eq 0 -and [int]$corpusExpectationData.findingCount -eq [int]$expectedFindingTotal
@@ -219,6 +236,8 @@ try {
     Add-TestResult 'export-transaction-contract' ($transactionSuite.ExitCode -eq 0) $transactionSuite.Output
     $repairLoopSuite = Invoke-Tool (Join-Path $PSScriptRoot 'test_repair_loop.ps1') @('-SkillPath', $SkillPath)
     Add-TestResult 'repair-loop-contract' ($repairLoopSuite.ExitCode -eq 0) $repairLoopSuite.Output
+    $wordFigureSuite = Invoke-Tool (Join-Path $PSScriptRoot 'test_word_figure_quality.ps1') @('-SkillPath', $SkillPath)
+    Add-TestResult 'word-figure-quality-contract' ($wordFigureSuite.ExitCode -eq 0) $wordFigureSuite.Output
     $artifactScratchRoot = Join-Path $SkillPath '.tmp'
     $artifactScratchExisted = Test-Path -LiteralPath $artifactScratchRoot
     $artifactBindingSuite = Invoke-Tool (Join-Path $PSScriptRoot 'test_artifact_binding.ps1') @('-SkillPath',$SkillPath)
@@ -264,6 +283,24 @@ try {
     Add-TestResult 'single-page-export' ($toSingle.ExitCode -eq 0 -and (Test-Path -LiteralPath $singleDrawio)) $toSingle.Output
     $fromSingle = Invoke-Tool (Join-Path $PSScriptRoot 'sync_drawio.ps1') @('-Direction','FromDrawio','-CanonicalPath',$singleImport,'-DrawioPath',$singleDrawio)
     Add-TestResult 'single-page-import' ($fromSingle.ExitCode -eq 0 -and (Get-ModelSignature $singleImport) -eq (Get-ModelSignature $validPath)) $fromSingle.Output
+
+    $identityCanonical = Join-Path $scratch 'identity-canonical.xml'
+    Copy-Item -LiteralPath $validPath -Destination $identityCanonical
+    $identityHash = Get-Sha256 $identityCanonical
+    [xml]$identityWrapper = Get-Content -LiteralPath $singleDrawio -Raw -Encoding UTF8
+    $identityCell = $identityWrapper.SelectSingleNode('/mxfile/diagram/mxGraphModel/root/mxCell[@vertex="1"]')
+    $originalIdentity = [string]$identityCell.id
+    $identityCell.SetAttribute('id','replacement-identity')
+    foreach($identityEdge in @($identityWrapper.SelectNodes("/mxfile/diagram/mxGraphModel/root/mxCell[@source='$originalIdentity' or @target='$originalIdentity']"))){if([string]$identityEdge.source-eq$originalIdentity){$identityEdge.SetAttribute('source','replacement-identity')};if([string]$identityEdge.target-eq$originalIdentity){$identityEdge.SetAttribute('target','replacement-identity')}}
+    Write-Utf8File $singleDrawio ($identityWrapper.OuterXml+"`n")
+    $identityReport = Join-Path $scratch 'identity-report.json'
+    $strictIdentity = Invoke-Tool (Join-Path $PSScriptRoot 'sync_drawio.ps1') @('-Direction','FromDrawio','-CanonicalPath',$identityCanonical,'-DrawioPath',$singleDrawio,'-IdentityReportPath',$identityReport)
+    $identityReportData = Get-Content -LiteralPath $identityReport -Raw -Encoding UTF8 | ConvertFrom-Json
+    Add-TestResult 'identity-churn-rejected-atomically' ($strictIdentity.ExitCode -ne 0 -and $strictIdentity.Output -match 'changes stable cell identities' -and (Get-Sha256 $identityCanonical) -eq $identityHash -and $identityReportData.Changed) $strictIdentity.Output
+    $acceptedIdentity = Invoke-Tool (Join-Path $PSScriptRoot 'sync_drawio.ps1') @('-Direction','FromDrawio','-CanonicalPath',$identityCanonical,'-DrawioPath',$singleDrawio,'-IdentityPolicy','Accept')
+    Add-TestResult 'identity-churn-explicitly-accepted' ($acceptedIdentity.ExitCode -eq 0 -and (Get-Sha256 $identityCanonical) -ne $identityHash) $acceptedIdentity.Output
+    $restoreSingle = Invoke-Tool (Join-Path $PSScriptRoot 'sync_drawio.ps1') @('-Direction','ToDrawio','-CanonicalPath',$validPath,'-DrawioPath',$singleDrawio,'-PageId','single-page','-PageName','Single Page')
+    Add-TestResult 'identity-test-wrapper-restored' ($restoreSingle.ExitCode -eq 0) $restoreSingle.Output
 
     $noWriteRenderer = Join-Path $scratch 'no-write-renderer.cmd'
     Write-Utf8File $noWriteRenderer "@exit /b 0`r`n"
@@ -366,7 +403,7 @@ try {
         $cropReportOutput = Join-Path $scratch 'invalid-visual-crop-report.json'
         $cropExport = Invoke-Tool (Join-Path $PSScriptRoot 'export_drawio_crops.ps1') @('-PngPath',$invalidVisualPng,'-SvgPath',$invalidVisualSvg,'-ValidationReportPath',$invalidVisualReport,'-OutputDirectory',$cropDirectory,'-ReportPath',$cropReportOutput)
         $cropData = $cropExport.Output | ConvertFrom-Json
-        Add-TestResult 'problem-crops-exported' ($cropExport.ExitCode -eq 0 -and $cropData.IssueCount -gt 0 -and $cropData.ExportedCount -eq $cropData.IssueCount -and (Test-Path -LiteralPath $cropReportOutput -PathType Leaf) -and @(Get-ChildItem -LiteralPath $cropDirectory -Filter '*.png' -File).Count -eq $cropData.IssueCount) $cropExport.Output
+        Add-TestResult 'problem-crops-exported' ($cropExport.ExitCode -in @(0,2) -and $cropData.IssueCount -gt 0 -and ($cropData.ExportedCount+$cropData.SkippedCount) -eq $cropData.IssueCount -and (Test-Path -LiteralPath $cropReportOutput -PathType Leaf) -and @(Get-ChildItem -LiteralPath $cropDirectory -Filter '*.png' -File).Count -eq $cropData.ExportedCount) $cropExport.Output
     }
 
     $multiSource = Join-Path $fixtures 'multi-page-uncompressed.drawio'

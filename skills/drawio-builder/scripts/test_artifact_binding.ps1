@@ -39,7 +39,7 @@ function Write-Manifest {
         [ordered]@{role='png';path=[System.IO.Path]::GetFileName($Png);sha256=(Get-FileHash -LiteralPath $Png -Algorithm SHA256).Hash}
     )
     [xml]$model=Get-Content -LiteralPath $Canonical -Raw -Encoding UTF8
-    $manifest=[ordered]@{schemaVersion=1;page=[ordered]@{id='artifact-page';width=[double]$model.mxGraphModel.pageWidth;height=[double]$model.mxGraphModel.pageHeight};renderer=[ordered]@{name='draw.io';version='test'};artifacts=$artifacts}
+    $manifest=[ordered]@{schemaVersion=2;page=[ordered]@{id='artifact-page';width=[double]$model.mxGraphModel.pageWidth;height=[double]$model.mxGraphModel.pageHeight};renderer=[ordered]@{name='draw.io';version='test'};delivery=[ordered]@{frameWidthMm=160;frameHeightMm=230;densityPpi=300;minimumEffectiveFontPoints=7.5;cropBorder=16};artifacts=$artifacts}
     Write-Utf8File $Path (($manifest|ConvertTo-Json -Depth 6)+"`n")
 }
 

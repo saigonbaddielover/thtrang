@@ -1,7 +1,8 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "page": { "id": "page-1", "width": 827, "height": 1169 },
   "renderer": { "name": "draw.io", "version": "31.1.8" },
+  "delivery": { "frameWidthMm": 160, "frameHeightMm": 230, "densityPpi": 300, "minimumEffectiveFontPoints": 7.5, "cropBorder": 16 },
   "artifacts": [
     { "role": "canonical", "path": "drawio-src/example.xml", "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
     { "role": "svg", "path": "assets/svg/example.svg", "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" }

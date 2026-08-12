@@ -9,6 +9,7 @@ param(
     [string]$PageId,
     [string]$SvgPath,
     [string]$PngPath,
+    [string]$WordPngPath,
     [string]$PdfPath,
     [string]$ManifestPath,
     [string]$QualityProfilePath
@@ -63,7 +64,12 @@ function Export-Format {
         [string]$InputPath,
         [string]$Format,
         [string]$OutputPath,
-        [double]$Scale
+        [double]$Scale,
+        [ValidateSet('page','diagram')][string]$Size = 'page',
+        [double]$Border = 0,
+        [int]$Width = 0,
+        [int]$Height = 0,
+        [string]$Theme
     )
 
     if (-not $OutputPath) { return $null }
@@ -75,6 +81,11 @@ function Export-Format {
     $temporaryPath = Join-Path $directory ('.' + [System.IO.Path]::GetFileNameWithoutExtension($OutputPath) + '.' + [guid]::NewGuid().ToString('N') + $extension)
     $arguments = @('-x', '-f', $Format)
     if ($Format -eq 'png') { $arguments += @('-s', [string]::Format([System.Globalization.CultureInfo]::InvariantCulture, '{0}', $Scale)) }
+    $arguments += @('--size', $Size)
+    if ($Size -eq 'diagram') { $arguments += @('--border', [string]::Format([System.Globalization.CultureInfo]::InvariantCulture, '{0}', $Border)) }
+    if ($Width -gt 0) { $arguments += @('--width', [string]$Width) }
+    if ($Height -gt 0) { $arguments += @('--height', [string]$Height) }
+    if ($Theme) { $arguments += @('--theme', $Theme) }
     $arguments += @('-o', $temporaryPath, $InputPath)
     $process = Start-Process -FilePath $Executable -ArgumentList $arguments -WindowStyle Hidden -Wait -PassThru
     if ($process.ExitCode -ne 0) { throw "Draw.io $Format export failed with exit code $($process.ExitCode)" }
@@ -84,33 +95,15 @@ function Export-Format {
     $temporaryPath
 }
 
-function New-PageAwareDrawio {
+function New-ExportDrawio {
     param(
         [System.Xml.XmlDocument]$Canonical,
-        [string]$Path,
-        [double]$PageWidth,
-        [double]$PageHeight
+        [string]$Path
     )
 
     [xml]$wrapper = '<mxfile host="app.diagrams.net" compressed="false"><diagram id="export-page" name="Export"></diagram></mxfile>'
     $model = $wrapper.ImportNode($Canonical.DocumentElement, $true)
     [void]$wrapper.mxfile.diagram.AppendChild($model)
-    $root = $wrapper.SelectSingleNode('/mxfile/diagram/mxGraphModel/root')
-    $sentinel = $wrapper.CreateElement('mxCell')
-    $sentinel.SetAttribute('id', '__drawio_builder_page_bounds__')
-    $sentinel.SetAttribute('value', '')
-    $sentinel.SetAttribute('style', 'shape=rectangle;html=1;fillColor=#ffffff;fillOpacity=0;strokeColor=none;strokeOpacity=0;opacity=0;')
-    $sentinel.SetAttribute('vertex', '1')
-    $sentinel.SetAttribute('parent', '1')
-    $geometry = $wrapper.CreateElement('mxGeometry')
-    $geometry.SetAttribute('x', '0')
-    $geometry.SetAttribute('y', '0')
-    $geometry.SetAttribute('width', [string]::Format([System.Globalization.CultureInfo]::InvariantCulture, '{0}', $PageWidth))
-    $geometry.SetAttribute('height', [string]::Format([System.Globalization.CultureInfo]::InvariantCulture, '{0}', $PageHeight))
-    $geometry.SetAttribute('as', 'geometry')
-    [void]$sentinel.AppendChild($geometry)
-    $layer = $root.SelectSingleNode('./mxCell[@id="1"]')
-    if ($layer) { [void]$root.InsertAfter($sentinel, $layer) } else { [void]$root.PrependChild($sentinel) }
     [System.IO.File]::WriteAllText($Path, $wrapper.OuterXml + "`n", [System.Text.UTF8Encoding]::new($false))
 }
 
@@ -175,15 +168,42 @@ function Assert-WrapperParity {
     [pscustomobject]@{ Id=[string]$diagram.id; Name=[string]$diagram.name }
 }
 
-function Remove-SvgSentinel {
-    param([string]$Path)
-    [xml]$svg = Get-Content -LiteralPath $Path -Raw -Encoding UTF8
-    $namespace = [System.Xml.XmlNamespaceManager]::new($svg.NameTable)
-    $namespace.AddNamespace('s', 'http://www.w3.org/2000/svg')
-    foreach ($group in @($svg.SelectNodes("//s:g[@data-cell-id='__drawio_builder_page_bounds__']", $namespace))) {
-        [void]$group.ParentNode.RemoveChild($group)
+function Set-PngDensity {
+    param([string]$Path,[int]$DensityPpi)
+    Add-Type -AssemblyName System.Drawing
+    $resolved = (Resolve-Path -LiteralPath $Path).Path
+    $source = [System.Drawing.Image]::FromFile($resolved)
+    $replacement = $resolved + '.' + [guid]::NewGuid().ToString('N') + '.png'
+    try {
+        $bitmap = [System.Drawing.Bitmap]::new($source.Width, $source.Height, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+        try {
+            $bitmap.SetResolution([single]$DensityPpi,[single]$DensityPpi)
+            $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+            try {
+                $destination = [System.Drawing.Rectangle]::new(0,0,$source.Width,$source.Height)
+                $graphics.DrawImage($source,$destination,0,0,$source.Width,$source.Height,[System.Drawing.GraphicsUnit]::Pixel)
+            }
+            finally { $graphics.Dispose() }
+            $bitmap.Save($replacement,[System.Drawing.Imaging.ImageFormat]::Png)
+        }
+        finally { $bitmap.Dispose() }
     }
-    [System.IO.File]::WriteAllText($Path, $svg.OuterXml + "`n", [System.Text.UTF8Encoding]::new($false))
+    finally { $source.Dispose() }
+    [System.IO.File]::Delete($resolved)
+    [System.IO.File]::Move($replacement,$resolved)
+}
+
+function Assert-WordPng {
+    param([string]$Path,[int]$MaximumWidth,[int]$MaximumHeight,[string]$LimitingDimension,[int]$DensityPpi)
+    Add-Type -AssemblyName System.Drawing
+    $image = [System.Drawing.Image]::FromFile((Resolve-Path -LiteralPath $Path).Path)
+    try {
+        if ($image.Width -gt $MaximumWidth+2 -or $image.Height -gt $MaximumHeight+2) { throw "Word PNG exceeds target frame: $($image.Width)x$($image.Height)" }
+        if ($LimitingDimension -eq 'width' -and [math]::Abs($image.Width-$MaximumWidth) -gt 2) { throw "Word PNG width is not frame-limited: $($image.Width)" }
+        if ($LimitingDimension -eq 'height' -and [math]::Abs($image.Height-$MaximumHeight) -gt 2) { throw "Word PNG height is not frame-limited: $($image.Height)" }
+        if ([math]::Abs($image.HorizontalResolution-$DensityPpi) -gt 1.0 -or [math]::Abs($image.VerticalResolution-$DensityPpi) -gt 1.0) { throw "Word PNG density is invalid: $($image.HorizontalResolution)x$($image.VerticalResolution)" }
+    }
+    finally { $image.Dispose() }
 }
 
 function Assert-PdfPage {
@@ -316,7 +336,7 @@ function Assert-StagedManifest {
         throw "Artifact manifest staging failed: $Path"
     }
     $manifest = Get-Content -LiteralPath $Path -Raw -Encoding UTF8 | ConvertFrom-Json
-    if ([int]$manifest.schemaVersion -ne 1) { throw "Unsupported artifact manifest schema: $($manifest.schemaVersion)" }
+    if ([int]$manifest.schemaVersion -ne 2) { throw "Unsupported artifact manifest schema: $($manifest.schemaVersion)" }
     if (-not [string]$manifest.renderer.name -or -not [string]$manifest.renderer.version) { throw 'Artifact manifest renderer provenance is incomplete' }
     if ([math]::Abs([double]$manifest.page.width - $PageWidth) -gt 0.01 -or [math]::Abs([double]$manifest.page.height - $PageHeight) -gt 0.01) { throw 'Artifact manifest page dimensions are invalid' }
     $actualArtifacts = @($manifest.artifacts)
@@ -330,7 +350,7 @@ function Assert-StagedManifest {
     }
 }
 
-if (-not $SvgPath -and -not $PngPath -and -not $PdfPath) { throw 'At least one output path is required' }
+if (-not $SvgPath -and -not $PngPath -and -not $WordPngPath -and -not $PdfPath) { throw 'At least one output path is required' }
 if (-not (Test-Path -LiteralPath $CanonicalPath -PathType Leaf)) { throw "Canonical XML not found: $CanonicalPath" }
 if (-not (Test-Path -LiteralPath $DrawioPath -PathType Leaf)) { throw "Draw.io file not found: $DrawioPath" }
 if (-not (Test-Path -LiteralPath $QualityProfilePath -PathType Leaf)) { throw "Quality profile not found: $QualityProfilePath" }
@@ -338,6 +358,7 @@ if (-not (Test-Path -LiteralPath $QualityProfilePath -PathType Leaf)) { throw "Q
 [xml]$canonical = Get-Content -LiteralPath $CanonicalPath -Raw -Encoding UTF8
 $profile = Get-Content -LiteralPath $QualityProfilePath -Raw -Encoding UTF8 | ConvertFrom-Json
 $scale = [double]$profile.export.pngScale
+$word = $profile.delivery.word
 $page = Assert-WrapperParity $canonical $DrawioPath $PageId
 $resolvedExecutable = Resolve-DrawioExecutable $DrawioExecutable $DrawioPath
 $executable = $resolvedExecutable.Path
@@ -349,23 +370,21 @@ $workingDrawio = Join-Path $scratchRoot ('drawio-builder-export-' + [guid]::NewG
 $temporaryOutputs = [System.Collections.Generic.List[string]]::new()
 $bundleItems = [System.Collections.Generic.List[object]]::new()
 try {
-    New-PageAwareDrawio $canonical $workingDrawio $pageWidth $pageHeight
-    $svgTemporary = Export-Format $executable $workingDrawio 'svg' $SvgPath $scale
+    New-ExportDrawio $canonical $workingDrawio
+    $svgTemporary = Export-Format $executable $workingDrawio 'svg' $SvgPath $scale -Size page
     if ($svgTemporary) {
         $temporaryOutputs.Add($svgTemporary)
-        Remove-SvgSentinel $svgTemporary
         [xml]$svg = Get-Content -LiteralPath $svgTemporary -Raw -Encoding UTF8
         $viewBox = @(([string]$svg.svg.viewBox).Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries) | ForEach-Object { [double]$_ })
         if ($viewBox.Count -ne 4) { throw "SVG viewBox is invalid: $($svg.svg.viewBox)" }
         $overflow = $viewBox[0] -lt -1.0 -or $viewBox[1] -lt -1.0 -or $viewBox[2] -gt ($pageWidth + 1.0) -or $viewBox[3] -gt ($pageHeight + 1.0)
         if ($overflow) { throw "SVG content exceeds canonical page bounds: $($svg.svg.viewBox). Move page-edge shapes, labels, or routes inward" }
         if ([math]::Abs($viewBox[0]) -gt 1.0 -or [math]::Abs($viewBox[1]) -gt 1.0 -or [math]::Abs($viewBox[2] - $pageWidth) -gt 1.0 -or [math]::Abs($viewBox[3] - $pageHeight) -gt 1.0) {
-            throw "SVG page sentinel did not establish canonical bounds: $($svg.svg.viewBox)"
+            throw "SVG page export did not establish canonical bounds: $($svg.svg.viewBox)"
         }
-        if ($svg.SelectSingleNode("//*[@data-cell-id='__drawio_builder_page_bounds__']")) { throw 'SVG page sentinel removal failed' }
     }
 
-    $pngTemporary = Export-Format $executable $workingDrawio 'png' $PngPath $scale
+    $pngTemporary = Export-Format $executable $workingDrawio 'png' $PngPath $scale -Size page
     if ($pngTemporary) {
         $temporaryOutputs.Add($pngTemporary)
         Add-Type -AssemblyName System.Drawing
@@ -380,7 +399,25 @@ try {
         finally { $image.Dispose() }
     }
 
-    $pdfTemporary = Export-Format $executable $workingDrawio 'pdf' $PdfPath $scale
+    $wordPngTemporary = $null
+    if ($WordPngPath) {
+        $compositionOutput = @(& (Join-Path $PSScriptRoot 'audit_drawio_composition.ps1') -SourcePath $CanonicalPath -QualityProfilePath $QualityProfilePath) -join "`n"
+        $composition = $compositionOutput | ConvertFrom-Json
+        if ([int]$composition.ErrorCount -gt 0) { throw 'Word PNG export requires a passing composition-word-fit audit' }
+        $maximumWidth = [int][math]::Round([double]$word.frameWidthMm/25.4*[double]$word.densityPpi)
+        $maximumHeight = [int][math]::Round([double]$word.frameHeightMm/25.4*[double]$word.densityPpi)
+        $cropAspect = [double]$composition.Crop.Aspect
+        $frameAspect = [double]$maximumWidth/[double]$maximumHeight
+        $limitingDimension = if ($cropAspect -ge $frameAspect) { 'width' } else { 'height' }
+        $wordWidth = if ($limitingDimension -eq 'width') { $maximumWidth } else { 0 }
+        $wordHeight = if ($limitingDimension -eq 'height') { $maximumHeight } else { 0 }
+        $wordPngTemporary = Export-Format $executable $workingDrawio 'png' $WordPngPath 1.0 -Size diagram -Border ([double]$word.cropBorder) -Width $wordWidth -Height $wordHeight -Theme ([string]$word.theme)
+        $temporaryOutputs.Add($wordPngTemporary)
+        Set-PngDensity $wordPngTemporary ([int]$word.densityPpi)
+        Assert-WordPng $wordPngTemporary $maximumWidth $maximumHeight $limitingDimension ([int]$word.densityPpi)
+    }
+
+    $pdfTemporary = Export-Format $executable $workingDrawio 'pdf' $PdfPath $scale -Size page
     if ($pdfTemporary) {
         $temporaryOutputs.Add($pdfTemporary)
         Assert-PdfPage $pdfTemporary $pageWidth $pageHeight
@@ -388,6 +425,7 @@ try {
 
     if ($svgTemporary) { $bundleItems.Add([pscustomobject]@{ StagedPath=$svgTemporary; DestinationPath=$SvgPath }) }
     if ($pngTemporary) { $bundleItems.Add([pscustomobject]@{ StagedPath=$pngTemporary; DestinationPath=$PngPath }) }
+    if ($wordPngTemporary) { $bundleItems.Add([pscustomobject]@{ StagedPath=$wordPngTemporary; DestinationPath=$WordPngPath }) }
     if ($pdfTemporary) { $bundleItems.Add([pscustomobject]@{ StagedPath=$pdfTemporary; DestinationPath=$PdfPath }) }
 
     if ($ManifestPath) {
@@ -399,12 +437,14 @@ try {
         $artifactSources.Add([pscustomobject]@{ Role='wrapper'; HashPath=$DrawioPath; RelativePath=(Get-RelativeArtifactPath $manifestDirectory $DrawioPath) })
         if ($SvgPath) { $artifactSources.Add([pscustomobject]@{ Role='svg'; HashPath=$svgTemporary; RelativePath=(Get-RelativeArtifactPath $manifestDirectory $SvgPath) }) }
         if ($PngPath) { $artifactSources.Add([pscustomobject]@{ Role='png'; HashPath=$pngTemporary; RelativePath=(Get-RelativeArtifactPath $manifestDirectory $PngPath) }) }
+        if ($WordPngPath) { $artifactSources.Add([pscustomobject]@{ Role='word-png'; HashPath=$wordPngTemporary; RelativePath=(Get-RelativeArtifactPath $manifestDirectory $WordPngPath) }) }
         if ($PdfPath) { $artifactSources.Add([pscustomobject]@{ Role='pdf'; HashPath=$pdfTemporary; RelativePath=(Get-RelativeArtifactPath $manifestDirectory $PdfPath) }) }
         $artifacts = @($artifactSources | ForEach-Object { [pscustomobject]@{ role=$_.Role; path=$_.RelativePath; sha256=(Get-FileHash -LiteralPath $_.HashPath -Algorithm SHA256).Hash } })
         $manifest = [ordered]@{
-            schemaVersion = 1
+            schemaVersion = 2
             page = [ordered]@{ id=$page.Id; width=$pageWidth; height=$pageHeight }
             renderer = [ordered]@{ name='draw.io'; version=[string]$resolvedExecutable.Version }
+            delivery = [ordered]@{ frameWidthMm=[double]$word.frameWidthMm; frameHeightMm=[double]$word.frameHeightMm; densityPpi=[int]$word.densityPpi; minimumEffectiveFontPoints=[double]$word.minimumEffectiveFontPoints; cropBorder=[double]$word.cropBorder }
             artifacts = @($artifacts)
         }
         $manifestTemporary = Join-Path $manifestDirectory ('.' + [System.IO.Path]::GetFileName($ManifestPath) + '.' + [guid]::NewGuid().ToString('N') + '.tmp')
@@ -432,6 +472,7 @@ finally {
     PageName = $page.Name
     Svg = $SvgPath
     Png = $PngPath
+    WordPng = $WordPngPath
     Pdf = $PdfPath
     Manifest = $ManifestPath
     Scale = $scale

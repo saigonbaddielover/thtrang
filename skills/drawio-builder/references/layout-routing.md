@@ -14,6 +14,8 @@
 
 Lay out the semantic backbone before secondary records or annotations. Choose a primary reading direction and maintain it. Reserve whitespace for labels and routes before filling the page.
 
+For Word figures, compare candidate layouts by effective placed font size first, then predicted cross-region routes, then content area. Use portrait or tall geometry on ties. Page orientation is a QA canvas choice; the cropped content envelope is the delivery shape.
+
 Align repeated nodes to a stable grid. Distribute them consistently. Prefer a larger shape or lane over compressed text or a narrow connector gap.
 
 Build dense routing incrementally. Approve the semantic backbone before adding boundary flows, approve boundary flows before store/fan routes, and approve those before returns and labels. Use the route ledger and repair transaction in [construction-gates.md](construction-gates.md).
@@ -37,6 +39,8 @@ Validate the rendered contact point against the actual source and target outline
 ## Corridors
 
 Use orthogonal 90-degree routes for process, document, DFD, and most architecture flows. Keep an endpoint shaft at least as long as the quality profile minimum. Remove bends shorter than that minimum.
+
+Minimize bends through node placement and cardinal ports before adding waypoints. Among clear routes, minimize bend count before path length. A shorter path does not justify a crossing, a shared corridor, a label collision, or a wrong-side endpoint.
 
 Keep long parallel routes away from lane dividers and unrelated borders. Do not run a connector on a node border or through a label background.
 

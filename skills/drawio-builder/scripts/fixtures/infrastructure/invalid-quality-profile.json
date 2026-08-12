@@ -4,6 +4,8 @@
   "pages": {},
   "fonts": { "bodyMinimum": 0, "edgeMinimum": 0, "titleMinimum": 0, "requiredFamilies": [] },
   "clearance": {},
-  "composition": { "alignmentTolerance": -1, "sizeTolerance": -1, "spacingVarianceWarning": -1, "minimumContrast": 0 },
+  "composition": { "alignmentTolerance": -1, "sizeTolerance": -1, "spacingVarianceWarning": -1, "minimumContrast": 0, "optimizationRegressionTolerance": -1 },
+  "delivery": { "word": { "frameWidthMm": 0, "frameHeightMm": 0, "minimumEffectiveFontPoints": 0, "densityPpi": 0, "cropBorder": -1, "theme": "system" } },
+  "routing": { "lengthRatioMaximum": 0.5, "lengthAbsoluteTolerance": -1, "orthogonalTolerance": 0 },
   "export": {}
 }
