@@ -98,6 +98,8 @@ Count bends against port-normal constraints, not endpoint displacement alone. Tw
 
 Normalize nested shape bounds to page coordinates before validating route candidates. Child-local coordinates must never approve a shortcut through a shape inside a swimlane, group, or container.
 
+For closely spaced parallel edges, never face neighboring labels into the same gap. Put labels on non-facing sides of their owner routes or increase route separation; do not add bends solely to create label space.
+
 Resize or relayout before shrinking type. After any shape move or resize, recompute physical ports and rerender every incident edge, neighboring corridor, label, and lane boundary in the impact region.
 
 Use MCP `create_diagram` with XML and omit post-layout/routing for final hand-crafted geometry. Use ELK or libavoid only for disposable exploration unless the result can be captured and revalidated.

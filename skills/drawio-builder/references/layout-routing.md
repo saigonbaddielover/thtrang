@@ -61,6 +61,8 @@ Convert every nested shape boundary to page coordinates before testing candidate
 
 Separate parallel connectors visually. Near-stacked paths are ambiguous even when their coordinates are not identical.
 
+Place labels on non-facing sides of closely spaced parallel connectors. If two labels would occupy the same inter-route gap, move one to the outside or increase route separation before considering extra bends.
+
 ## Fan-in and fan-out
 
 Assign distinct source and target ports. Give each independent edge its own final shaft and arrowhead. Never allow two flows to share the same final segment unless a semantic junction node explicitly merges them.

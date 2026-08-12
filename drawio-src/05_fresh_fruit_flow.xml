@@ -64,7 +64,7 @@
     </mxCell>
     <mxCell id="e01" value="PXK" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="n_pxk" target="n_receive_pxk">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
-        <mxPoint x="0" y="-45" as="offset"></mxPoint>
+        <mxPoint x="0" y="-12" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
     <mxCell id="e02" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_receive_pxk" target="n_pack">
@@ -87,11 +87,10 @@
         <mxPoint x="0" y="-18" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
-    <mxCell id="e06" value="PGH liên 3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.5;exitY=1;entryX=0.25;entryY=1;" edge="1" parent="1" source="n_pgh" target="n_receive_docs">
+    <mxCell id="e06" value="PGH liên 3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.75;entryX=0.25;entryY=1;" edge="1" parent="1" source="n_pgh" target="n_receive_docs">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
         <Array as="points">
-          <mxPoint x="245" y="400"></mxPoint>
-          <mxPoint x="335" y="400"></mxPoint>
+          <mxPoint x="335" y="344"></mxPoint>
           <mxPoint x="335" y="650"></mxPoint>
           <mxPoint x="569" y="650"></mxPoint>
         </Array>
@@ -146,11 +145,11 @@
     <mxCell id="e15" value="PGH + HĐ đã đối chiếu" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_reconcile" target="n_store_docs">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
         <Array as="points">
-          <mxPoint x="490" y="700"></mxPoint>
-          <mxPoint x="490" y="960"></mxPoint>
+          <mxPoint x="470" y="700"></mxPoint>
+          <mxPoint x="470" y="960"></mxPoint>
           <mxPoint x="585" y="960"></mxPoint>
         </Array>
-        <mxPoint x="-40" y="0" as="offset"></mxPoint>
+        <mxPoint x="-16" y="0" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
   </root>
