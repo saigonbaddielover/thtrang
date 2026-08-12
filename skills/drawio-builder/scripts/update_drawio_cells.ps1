@@ -25,6 +25,37 @@ function Set-AttributeValue {
     else { $Element.SetAttribute($Name,[Convert]::ToString($Value,[System.Globalization.CultureInfo]::InvariantCulture)) }
 }
 
+function Remove-ElementWithIndentation {
+    param([System.Xml.XmlElement]$Element)
+    $parent = $Element.ParentNode
+    $previous = $Element.PreviousSibling
+    $parent.RemoveChild($Element) | Out-Null
+    if ($previous -and $previous.NodeType -in @([System.Xml.XmlNodeType]::Whitespace,[System.Xml.XmlNodeType]::SignificantWhitespace) -and -not $previous.Value.Trim()) {
+        $parent.RemoveChild($previous) | Out-Null
+    }
+}
+
+function Get-ChildIndentation {
+    param([System.Xml.XmlElement]$Parent)
+    foreach ($child in @($Parent.ChildNodes)) {
+        if ($child.NodeType -eq [System.Xml.XmlNodeType]::Element -and $child.PreviousSibling -and $child.PreviousSibling.Value -match '(?m)\r?\n(?<indent>[ \t]*)$') {
+            return $Matches.indent
+        }
+    }
+    $null
+}
+
+function Add-IndentedChild {
+    param([System.Xml.XmlElement]$Parent,[System.Xml.XmlElement]$Child,[string]$NewLine,[AllowNull()][string]$Indent)
+    if (-not $PSBoundParameters.ContainsKey('Indent')) { $Indent = Get-ChildIndentation $Parent }
+    $closingWhitespace = $Parent.LastChild
+    if ($Indent -ne $null -and $closingWhitespace -and $closingWhitespace.NodeType -in @([System.Xml.XmlNodeType]::Whitespace,[System.Xml.XmlNodeType]::SignificantWhitespace)) {
+        $Parent.InsertBefore($document.CreateWhitespace($NewLine + $Indent),$closingWhitespace) | Out-Null
+        $Parent.InsertBefore($Child,$closingWhitespace) | Out-Null
+    }
+    else { $Parent.AppendChild($Child) | Out-Null }
+}
+
 Assert-Properties $patch @('updates') 'patch'
 if (-not $patch.updates -or @($patch.updates).Count -eq 0) { throw 'Patch must contain at least one update' }
 
@@ -56,6 +87,8 @@ function Update-Style {
 $document = [System.Xml.XmlDocument]::new()
 $document.PreserveWhitespace = $true
 $document.Load($source)
+$sourceText = Get-Content -LiteralPath $source -Raw -Encoding UTF8
+$newLine = if ($sourceText.Contains("`r`n")) { "`r`n" } else { "`n" }
 $seen = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
 $byId = @{}
 foreach ($cellNode in @($document.SelectNodes('//mxCell'))) { $byId[[string]$cellNode.id] = $cellNode }
@@ -86,14 +119,14 @@ foreach ($update in @($patch.updates)) {
     if (Test-Property $update 'offset') {
         $offset = $geometry.SelectSingleNode('./mxPoint[@as="offset"]')
         if ($null -eq $update.offset) {
-            if ($offset) { $geometry.RemoveChild($offset) | Out-Null }
+            if ($offset) { Remove-ElementWithIndentation $offset }
         }
         else {
             Assert-Properties $update.offset @('x','y') 'offset'
             if (-not $offset) {
                 $offset = $document.CreateElement('mxPoint')
                 $offset.SetAttribute('as','offset')
-                $geometry.AppendChild($offset) | Out-Null
+                Add-IndentedChild $geometry $offset $newLine
             }
             foreach ($name in @('x','y')) {
                 if (Test-Property $update.offset $name) { Set-AttributeValue $offset $name $update.offset.$name }
@@ -101,8 +134,9 @@ foreach ($update in @($patch.updates)) {
         }
     }
     if (Test-Property $update 'waypoints') {
+        $geometryIndent = Get-ChildIndentation $geometry
         $pointsNode = $geometry.SelectSingleNode('./Array[@as="points"]')
-        if ($pointsNode) { $geometry.RemoveChild($pointsNode) | Out-Null }
+        if ($pointsNode) { Remove-ElementWithIndentation $pointsNode }
         if ($null -ne $update.waypoints -and @($update.waypoints).Count -gt 0) {
             $pointsNode = $document.CreateElement('Array')
             $pointsNode.SetAttribute('as','points')
@@ -112,9 +146,11 @@ foreach ($update in @($patch.updates)) {
                 $node = $document.CreateElement('mxPoint')
                 Set-AttributeValue $node 'x' $point.x
                 Set-AttributeValue $node 'y' $point.y
+                if ($geometryIndent -ne $null) { $pointsNode.AppendChild($document.CreateWhitespace($newLine + $geometryIndent + '  ')) | Out-Null }
                 $pointsNode.AppendChild($node) | Out-Null
             }
-            $geometry.AppendChild($pointsNode) | Out-Null
+            if ($geometryIndent -ne $null) { $pointsNode.AppendChild($document.CreateWhitespace($newLine + $geometryIndent)) | Out-Null }
+            Add-IndentedChild $geometry $pointsNode $newLine $geometryIndent
         }
     }
 }

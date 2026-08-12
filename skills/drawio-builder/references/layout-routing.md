@@ -61,6 +61,8 @@ Convert every nested shape boundary to page coordinates before testing candidate
 
 Separate parallel connectors visually. Near-stacked paths are ambiguous even when their coordinates are not identical.
 
+When one process and one external entity exchange several flows, test distinct straight rails on their facing sides before assigning a bottom or outer detour. Keep enough vertical separation for labels and arrowheads; use the detour only when an additional rail would collide or become ambiguous.
+
 Place labels on non-facing sides of closely spaced parallel connectors. If two labels would occupy the same inter-route gap, move one to the outside or increase route separation before considering extra bends.
 
 For a U-route squeezed between a shape and a divider, reserve enough width for both endpoint jetties and divider clearance. When the available gap is smaller, select different ports or move the shape; a short first or last segment is not a valid compromise.
