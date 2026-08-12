@@ -3,7 +3,7 @@
     <mxCell id="0"></mxCell>
     <mxCell id="1" parent="0"></mxCell>
     <mxCell id="x_customer" value="Khách hàng" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Arial;align=center;verticalAlign=middle;fontColor=#172B3A; fontSize=11;fontStyle=1;spacing=5;fillColor=#EAF5EA;strokeColor=#56875B;strokeWidth=1.5;" vertex="1" parent="1">
-      <mxGeometry x="650" y="260" width="145" height="60" as="geometry"></mxGeometry>
+      <mxGeometry x="650" y="231" width="145" height="60" as="geometry"></mxGeometry>
     </mxCell>
     <mxCell id="p1" value="1. Tiếp nhận đơn hàng và lập Phiếu giao hàng" style="shape=ellipse;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;fontFamily=Arial;align=center;verticalAlign=middle;fontColor=#172B3A; fontSize=11;spacing=5;fillColor=#E7F1FA;strokeColor=#4E7FA7;strokeWidth=1.5;" vertex="1" parent="1">
       <mxGeometry x="80" y="220" width="170" height="82" as="geometry"></mxGeometry>
@@ -52,7 +52,7 @@
         <mxPoint x="0" y="0" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
-    <mxCell id="e04" value="Hai liên Phiếu giao hàng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.35;entryX=0;entryY=0.35;" edge="1" parent="1" source="p2" target="x_customer">
+    <mxCell id="e04" value="Hai liên Phiếu giao hàng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="p2" target="x_customer">
       <mxGeometry relative="1" as="geometry"></mxGeometry>
     </mxCell>
     <mxCell id="e05" value="Một liên Phiếu giao hàng đã ký trả lại" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=0.65;exitY=1;entryX=1;entryY=0.5;" edge="1" parent="1" source="x_customer" target="p3">
