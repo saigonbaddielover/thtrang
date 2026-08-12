@@ -468,6 +468,9 @@ try {
         if ($check.ExitCode -ne 0) { Add-TestResult 'personal-sync-check' $false $check.Output }
         $checkData = $check.Output | ConvertFrom-Json
         Add-TestResult 'personal-sync-check' ($check.ExitCode -eq 0 -and $checkData.Passed -and $checkData.DestinationMatchesSource) $check.Output
+        $fastCheck = Invoke-Tool $syncScript @('-Mode','Check','-SourcePath',$syncSource,'-DestinationPath',$syncDestination,'-SkipTests')
+        $fastCheckData = $fastCheck.Output | ConvertFrom-Json
+        Add-TestResult 'personal-sync-fast-check' ($fastCheck.ExitCode -eq 0 -and $fastCheckData.Passed -and $null -eq $fastCheckData.Tests) $fastCheck.Output
         Write-Utf8File (Join-Path $syncDestination 'SKILL.md') 'destination drift'
         $drift = Invoke-Tool $syncScript @('-Mode','Install','-SourcePath',$syncSource,'-DestinationPath',$syncDestination)
         Add-TestResult 'personal-sync-drift-rejected' ($drift.ExitCode -ne 0 -and $drift.Output -match 'Destination drift detected') $drift.Output

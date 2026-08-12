@@ -6,6 +6,7 @@ param(
     [string]$SourcePath = (Split-Path -Parent $PSScriptRoot),
     [string]$DestinationPath,
     [string]$DrawioExecutable,
+    [switch]$SkipTests,
     [switch]$Force
 )
 
@@ -183,7 +184,7 @@ $sourceDigest = Get-ContentDigest $sourceRecords
 $state = Test-DestinationState $destination $sourceRecords
 
 if ($Mode -eq 'Check') {
-    $checkTests = Test-SkillTree $source
+    $checkTests = if ($SkipTests) { $null } else { Test-SkillTree $source }
     $passed = $state.Exists -and -not $state.Drifted -and $state.MatchesSource -and [string]$state.Manifest.sourceCommit -eq $revision.Commit -and [string]$state.Manifest.contentDigest -eq $sourceDigest
     [pscustomobject]@{
         Mode = $Mode
@@ -195,7 +196,7 @@ if ($Mode -eq 'Check') {
         DestinationDrifted = $state.Drifted
         DestinationMatchesSource = $state.MatchesSource
         Issues = @($state.Issues)
-        Tests = $checkTests.Tests
+        Tests = if ($checkTests) { $checkTests.Tests } else { $null }
     } | ConvertTo-Json -Depth 8
     if (-not $passed) { exit 1 }
     exit 0
