@@ -12,6 +12,19 @@ pwsh -NoProfile -File scripts/export_drawio_crops.ps1 -PngPath diagram.png -SvgP
 
 Treat crop exit code `2` as incomplete evidence: at least one issue lacked rendered coordinates or recoverable label ink bounds and still requires full-page inspection. Produce the pre-visual validation report in `Approval` mode with the same family, semantic manifest, notation profile, artifact manifest, quality profile, warning dispositions, and required artifact roles that the final approval command will use; approval rejects a crop report derived from another gate set. The report is expected to remain `NOT APPROVED` until visual evidence is supplied. The crop report PNG must also be the PNG recorded by the supplied artifact manifest, and every exported crop must remain pixel-identical to its declared source region.
 
+Inspect and update canonical cells without composing XML code in the shell:
+
+```powershell
+pwsh -NoProfile -File scripts/inspect_drawio_cells.ps1 -SourcePath diagram.xml -CellId 'node-a,edge-a' -IncludeIncidentEdges
+pwsh -NoProfile -File scripts/update_drawio_cells.ps1 -SourcePath diagram.xml -PatchPath cell-patch.json
+```
+
+Use this patch shape; omitted properties remain unchanged, `null` style keys are removed, `null` offset removes the label offset, and an empty or `null` waypoint list removes explicit waypoints:
+
+```json
+{"updates":[{"id":"edge-a","value":"Approved flow","style":{"exitX":"1","entryX":"0","rounded":null},"offset":null,"waypoints":[{"x":320,"y":180}]}]}
+```
+
 ## Approval audit
 
 Approval mode requires semantic, notation, artifact provenance, manual-rule evidence, and exact-render visual evidence. It must not turn a missing input into a pass. Generate `visual-inspection.json` only after reviewing the full page and every required crop; set `assetSha256` to the SHA-256 of `diagram.svg`, set `cropReportSha256` to the SHA-256 of `audit-report/crop-report.json`, and record every exported crop ID and hash in `reviewedCrops`. If automated gates emit warnings, create `warning-dispositions.json` from `schemas/warning-dispositions.schema.json` and resolve every warning exactly once.

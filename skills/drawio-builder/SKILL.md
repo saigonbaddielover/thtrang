@@ -115,7 +115,9 @@ Resolve paths relative to the project or skill. Never hardcode a machine path.
 - Run `scripts/preflight_drawio.ps1` on canonical XML.
 - Run `scripts/sync_drawio.ps1` for `.drawio` import or update.
 - Run `scripts/export_drawio.ps1` for page-aware SVG, PNG, PDF, and artifact provenance.
-- Run `scripts/build_drawio_corpus.ps1` for repeated single-page corpus sync, export, artifact binding, and zero-finding audit. Use this runner instead of composing per-page command chains in the shell; it discovers the wrapper's actual page ID and fails at the first broken stage.
+- Run `scripts/build_drawio_corpus.ps1` for repeated single-page corpus sync, export, artifact binding, and zero-finding audit. Use this runner instead of composing per-page command chains in the shell; it discovers the wrapper's actual page ID, infers `data-flow` for `*_dfd` pages unless overridden, and fails at the first broken stage.
+- Run `scripts/inspect_drawio_cells.ps1` instead of ad hoc XML queries when examining cells, nested absolute bounds, styles, offsets, waypoints, or incident edges.
+- Run `scripts/update_drawio_cells.ps1` with a reviewed JSON patch instead of shell-generated XML rewrites. It supports targeted value, style, geometry, offset, and waypoint updates, preflights a temporary candidate, and replaces canonical XML only after the candidate passes.
 - Run `scripts/validate_drawio.ps1` in `Audit` mode while iterating and in `Approval` mode only with semantic, notation, artifact, warning-disposition, and visual-inspection evidence required by the task.
 - Run `scripts/compare_drawio_reports.ps1 -Operation Construction` between clean build stages and `-Operation Repair` after every repair. Reject a construction stage unless both reports are clean; reject a repair that introduces any new error or warning fingerprint or does not reduce the tracked issue count.
 - Freeze a rendered baseline before compactness or routing changes, then run `scripts/compare_drawio_reports.ps1 -Operation Optimization` per page. Accept only unchanged route identities, no per-edge bend increase, no aggregate regression, no new finding, and at least one improved delivery metric.
@@ -166,4 +168,4 @@ Keep any page with `UNKNOWN`, `SKIPPED`, unresolved warnings, stale assets, or m
 
 ## Versioned source and personal installation
 
-When a repository contains `skills/drawio-builder`, edit that versioned source instead of the personal installation. After the source is reviewed, run `scripts/sync_personal_skill.ps1 -Mode Check`, then `-Mode Install`, then `-Mode Check` again. Sync is manual and one-way. Never treat personal drift as source.
+When a repository contains `skills/drawio-builder`, edit that versioned source instead of the personal installation. After the source is reviewed and committed, run `scripts/publish_personal_skill.ps1`; it skips an already-current installation or performs the check, install, and final verification sequence. Sync is manual and one-way. Never treat personal drift as source.

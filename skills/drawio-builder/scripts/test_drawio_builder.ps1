@@ -238,6 +238,9 @@ try {
     Add-TestResult 'repair-loop-contract' ($repairLoopSuite.ExitCode -eq 0) $repairLoopSuite.Output
     $wordFigureSuite = Invoke-Tool (Join-Path $PSScriptRoot 'test_word_figure_quality.ps1') @('-SkillPath', $SkillPath)
     Add-TestResult 'word-figure-quality-contract' ($wordFigureSuite.ExitCode -eq 0) $wordFigureSuite.Output
+
+    $cellToolsSuite = Invoke-Tool (Join-Path $PSScriptRoot 'test_cell_tools.ps1') @('-SkillPath', $SkillPath)
+    Add-TestResult 'cell-tools-contract' ($cellToolsSuite.ExitCode -eq 0) $cellToolsSuite.Output
     $artifactScratchRoot = Join-Path $SkillPath '.tmp'
     $artifactScratchExisted = Test-Path -LiteralPath $artifactScratchRoot
     $artifactBindingSuite = Invoke-Tool (Join-Path $PSScriptRoot 'test_artifact_binding.ps1') @('-SkillPath',$SkillPath)
@@ -471,6 +474,9 @@ try {
         $force = Invoke-Tool $syncScript @('-Mode','Install','-SourcePath',$syncSource,'-DestinationPath',$syncDestination,'-Force')
         $leftovers = @(Get-ChildItem -LiteralPath $scratch -Directory | Where-Object { $_.Name -like '.drawio-builder-stage-*' -or $_.Name -like '.drawio-builder-backup-*' })
         Add-TestResult 'personal-sync-force-repairs' ($force.ExitCode -eq 0 -and (Get-Content -LiteralPath (Join-Path $syncDestination 'SKILL.md') -Raw -Encoding UTF8) -eq $minimalSkill -and $leftovers.Count -eq 0) $force.Output
+        $publish = Invoke-Tool (Join-Path $PSScriptRoot 'publish_personal_skill.ps1') @('-SourcePath',$syncSource,'-DestinationPath',$syncDestination)
+        $publishData = $publish.Output | ConvertFrom-Json
+        Add-TestResult 'personal-publish-current-noop' ($publish.ExitCode -eq 0 -and $publishData.Passed -and -not $publishData.Changed) $publish.Output
     }
 
     if ($CorpusRoot) {
