@@ -35,6 +35,7 @@ $requiredPaths = @(
     'scripts\preflight_drawio.ps1',
     'scripts\sync_drawio.ps1',
     'scripts\export_drawio.ps1',
+    'scripts\build_drawio_corpus.ps1',
     'scripts\validate_drawio.ps1',
     'scripts\audit_drawio_quality_profile.ps1',
     'scripts\audit_drawio_artifacts.ps1',
