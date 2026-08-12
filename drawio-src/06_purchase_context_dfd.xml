@@ -33,10 +33,10 @@
     </mxCell>
     <mxCell id="e03" value="Đơn đề nghị mua hàng đã phê duyệt" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.72;entryX=0.5;entryY=1;" edge="1" parent="1" source="x_leader" target="p0">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
-        <Array as="points">
-          <mxPoint x="417.5" y="564.64"></mxPoint>
-        </Array>
         <mxPoint x="0" y="-12" as="offset"></mxPoint>
+        <Array as="points">
+          <mxPoint x="417.5" y="564.64" />
+        </Array>
       </mxGeometry>
     </mxCell>
     <mxCell id="e04" value="Đơn đặt hàng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.15;entryX=0;entryY=0.129;" edge="1" parent="1" source="p0" target="x_supplier">
@@ -54,13 +54,8 @@
         <mxPoint x="0" y="12" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
-    <mxCell id="e07" value="Thông tin/kết quả&#xA;thanh toán" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.88;entryX=0.25;entryY=1;" edge="1" parent="1" source="p0" target="x_supplier">
+    <mxCell id="e07" value="Thông tin/kết quả&#xA;thanh toán" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Arial;fontSize=10.5;fontColor=#273746;labelBackgroundColor=#FFFFFF;strokeColor=#34495E;strokeWidth=1.35;endArrow=classic;endFill=1;exitX=1;exitY=0.88;entryX=0;entryY=0.892;" edge="1" parent="1" source="p0" target="x_supplier">
       <mxGeometry x="0" y="0" relative="1" as="geometry">
-        <Array as="points">
-          <mxPoint x="585" y="454.2"></mxPoint>
-          <mxPoint x="585" y="520"></mxPoint>
-          <mxPoint x="686.25" y="520"></mxPoint>
-        </Array>
         <mxPoint x="0" y="14" as="offset"></mxPoint>
       </mxGeometry>
     </mxCell>
