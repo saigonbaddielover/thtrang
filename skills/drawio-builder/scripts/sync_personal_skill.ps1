@@ -61,12 +61,12 @@ function Get-SourceRevision {
     param([string]$Root)
     $repositoryRoot = @(& git -C $Root rev-parse --show-toplevel 2>$null)
     if ($LASTEXITCODE -ne 0 -or $repositoryRoot.Count -ne 1) { throw 'Skill source must be inside a Git repository' }
-    $commit = @(& git -C $Root rev-parse HEAD 2>$null)
-    if ($LASTEXITCODE -ne 0 -or $commit.Count -ne 1) { throw 'Unable to resolve the skill source commit' }
     $sourceRoot = Get-NormalizedPath $Root
     $repoRoot = Get-NormalizedPath $repositoryRoot[0]
     $relative = $sourceRoot.Substring($repoRoot.Length).TrimStart('\', '/').Replace('\', '/')
     if (-not $relative) { $relative = '.' }
+    $commit = @(& git -C $repoRoot log -1 --format=%H -- $relative 2>$null)
+    if ($LASTEXITCODE -ne 0 -or $commit.Count -ne 1) { throw 'Unable to resolve the latest skill source commit' }
     $status = @(& git -C $repoRoot status --porcelain=v1 --untracked-files=all -- $relative 2>$null)
     if ($LASTEXITCODE -ne 0) { throw 'Unable to inspect the skill source state' }
     [pscustomobject]@{

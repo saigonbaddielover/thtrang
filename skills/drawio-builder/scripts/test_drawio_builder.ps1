@@ -439,7 +439,8 @@ try {
     Add-TestResult 'compressed-import' ($fromCompressed.ExitCode -eq 0 -and (Get-ModelSignature $compressedImport) -eq (Get-ModelSignature $validPath)) $fromCompressed.Output
 
     if (-not $SkipSyncTests) {
-        $syncSource = Join-Path $scratch 'sync-source'
+        $syncRepository = Join-Path $scratch 'sync-repository'
+        $syncSource = Join-Path $syncRepository 'skills\drawio-builder'
         $syncDestination = Join-Path $scratch 'sync-destination'
         New-Item -ItemType Directory -Path (Join-Path $syncSource 'agents'),(Join-Path $syncSource 'scripts') -Force | Out-Null
         $minimalSkill = "---`nname: drawio-builder`ndescription: Use for deterministic Draw.io skill synchronization tests.`n---`n`n# Draw.io Builder`n`nRun deterministic tests.`n"
@@ -449,12 +450,12 @@ try {
         Write-Utf8File (Join-Path $syncSource 'scripts\validate_skill.ps1') $minimalValidator
         $minimalRunner = "param([string]`$SkillPath,[string]`$DrawioExecutable,[string]`$CorpusRoot,[string]`$OfficialValidatorPath,[string]`$PythonExecutable,[switch]`$SkipSyncTests)`n[pscustomobject]@{ Engine=(Get-Process -Id `$PID).Path; TestCount=1; FailedCount=0; Tests=@([pscustomobject]@{Name='fixture';Passed=`$true;Detail='pass'}); SkippedCount=0; Skipped=@() } | ConvertTo-Json -Depth 5`n"
         Write-Utf8File (Join-Path $syncSource 'scripts\test_drawio_builder.ps1') $minimalRunner
-        $null = & git -C $syncSource init -q
-        $null = & git -C $syncSource config user.name 'Draw.io Builder Test'
-        $null = & git -C $syncSource config user.email 'drawio-builder-test@invalid.local'
-        $null = & git -C $syncSource config core.autocrlf false
-        $null = & git -C $syncSource add . 2>$null
-        $null = & git -C $syncSource commit -q -m 'test(sync): create source fixture' 2>$null
+        $null = & git -C $syncRepository init -q
+        $null = & git -C $syncRepository config user.name 'Draw.io Builder Test'
+        $null = & git -C $syncRepository config user.email 'drawio-builder-test@invalid.local'
+        $null = & git -C $syncRepository config core.autocrlf false
+        $null = & git -C $syncRepository add . 2>$null
+        $null = & git -C $syncRepository commit -q -m 'test(sync): create source fixture' 2>$null
         if ($LASTEXITCODE -ne 0) { throw 'Unable to create the synchronization source fixture' }
         $syncScript = Join-Path $PSScriptRoot 'sync_personal_skill.ps1'
         $install = Invoke-Tool $syncScript @('-Mode','Install','-SourcePath',$syncSource,'-DestinationPath',$syncDestination)
@@ -462,7 +463,7 @@ try {
         $installData = $install.Output | ConvertFrom-Json
         Add-TestResult 'personal-sync-install' ($install.ExitCode -eq 0 -and $installData.Passed -and (Test-Path -LiteralPath (Join-Path $syncDestination '.drawio-builder-install.json'))) $install.Output
         $installedManifest = Get-Content -LiteralPath (Join-Path $syncDestination '.drawio-builder-install.json') -Raw -Encoding UTF8 | ConvertFrom-Json
-        $sourceCommit = @(& git -C $syncSource rev-parse HEAD)
+        $sourceCommit = @(& git -C $syncRepository log -1 --format=%H -- skills/drawio-builder)
         Add-TestResult 'personal-sync-provenance' ([string]$installedManifest.sourceCommit -eq ([string]$sourceCommit[0]).Trim() -and [string]$installedManifest.contentDigest -match '^[a-f0-9]{64}$' -and @($installedManifest.files).Count -ge 4) ($installedManifest | ConvertTo-Json -Compress -Depth 5)
         $check = Invoke-Tool $syncScript @('-Mode','Check','-SourcePath',$syncSource,'-DestinationPath',$syncDestination)
         if ($check.ExitCode -ne 0) { Add-TestResult 'personal-sync-check' $false $check.Output }
@@ -471,6 +472,12 @@ try {
         $fastCheck = Invoke-Tool $syncScript @('-Mode','Check','-SourcePath',$syncSource,'-DestinationPath',$syncDestination,'-SkipTests')
         $fastCheckData = $fastCheck.Output | ConvertFrom-Json
         Add-TestResult 'personal-sync-fast-check' ($fastCheck.ExitCode -eq 0 -and $fastCheckData.Passed -and $null -eq $fastCheckData.Tests) $fastCheck.Output
+        Write-Utf8File (Join-Path $syncRepository 'unrelated.txt') 'unrelated change'
+        $null = & git -C $syncRepository add unrelated.txt 2>$null
+        $null = & git -C $syncRepository commit -q -m 'test(sync): add unrelated change' 2>$null
+        $unrelatedCheck = Invoke-Tool $syncScript @('-Mode','Check','-SourcePath',$syncSource,'-DestinationPath',$syncDestination,'-SkipTests')
+        $unrelatedCheckData = $unrelatedCheck.Output | ConvertFrom-Json
+        Add-TestResult 'personal-sync-ignores-unrelated-commit' ($unrelatedCheck.ExitCode -eq 0 -and $unrelatedCheckData.SourceCommit -eq ([string]$sourceCommit[0]).Trim()) $unrelatedCheck.Output
         Write-Utf8File (Join-Path $syncDestination 'SKILL.md') 'destination drift'
         $drift = Invoke-Tool $syncScript @('-Mode','Install','-SourcePath',$syncSource,'-DestinationPath',$syncDestination)
         Add-TestResult 'personal-sync-drift-rejected' ($drift.ExitCode -ne 0 -and $drift.Output -match 'Destination drift detected') $drift.Output

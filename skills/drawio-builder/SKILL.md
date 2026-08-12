@@ -168,4 +168,4 @@ Keep any page with `UNKNOWN`, `SKIPPED`, unresolved warnings, stale assets, or m
 
 ## Versioned source and personal installation
 
-When a repository contains `skills/drawio-builder`, edit that versioned source instead of the personal installation. After the source is reviewed and committed, run `scripts/publish_personal_skill.ps1`; it uses digest-only checks before and after, skips an already-current installation, and runs the full regression gate once on the staged install. Sync is manual and one-way. Never treat personal drift as source.
+When a repository contains `skills/drawio-builder`, edit that versioned source instead of the personal installation. After the source is reviewed and committed, run `scripts/publish_personal_skill.ps1`; it uses digest-only checks before and after, tracks the latest commit that changed the skill subtree, skips an already-current installation, and runs the full regression gate once on the staged install. Sync is manual and one-way. Never treat personal drift as source.
