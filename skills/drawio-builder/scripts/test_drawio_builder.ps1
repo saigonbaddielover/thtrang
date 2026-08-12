@@ -221,7 +221,7 @@ try {
     $allowedDispositions = @('expected-issue', 'expected-warning', 'expected-false-positive', 'visual-only')
     $invalidDispositions = @($corpusExpectationData.findings | Where-Object { $_.disposition -notin $allowedDispositions })
     $invalidCounts = @($corpusExpectationData.findings | Where-Object { [int]$_.count -lt 1 })
-    $expectationContractValid = [int]$corpusExpectationData.schemaVersion -eq 1 -and @($corpusExpectationData.findings).Count -gt 0 -and @($corpusExpectationData.findings | Where-Object disposition -eq 'expected-issue').Count -gt 0 -and @($corpusExpectationData.visualOnly).Count -gt 0 -and @($findingKeys | Sort-Object -Unique).Count -eq $findingKeys.Count -and $invalidDispositions.Count -eq 0 -and $invalidCounts.Count -eq 0 -and [int]$corpusExpectationData.findingCount -eq [int]$expectedFindingTotal
+    $expectationContractValid = [int]$corpusExpectationData.schemaVersion -eq 1 -and [string]$corpusExpectationData.approvalState -eq 'rejected' -and @($corpusExpectationData.findings).Count -gt 0 -and @($corpusExpectationData.findings | Where-Object disposition -eq 'expected-issue').Count -gt 0 -and @($corpusExpectationData.visualOnly).Count -gt 0 -and @($findingKeys | Sort-Object -Unique).Count -eq $findingKeys.Count -and $invalidDispositions.Count -eq 0 -and $invalidCounts.Count -eq 0 -and [int]$corpusExpectationData.findingCount -eq [int]$expectedFindingTotal
     Add-TestResult 'corpus-expectations-contract' $expectationContractValid ($corpusExpectationData | ConvertTo-Json -Compress -Depth 5)
 
     $familyFixtureArguments = @('-SkillPath',$SkillPath,'-ScratchDirectory',(Join-Path $scratch 'family-fixtures'))
@@ -291,14 +291,17 @@ try {
     $identityCell = $identityWrapper.SelectSingleNode('/mxfile/diagram/mxGraphModel/root/mxCell[@vertex="1"]')
     $originalIdentity = [string]$identityCell.id
     $identityCell.SetAttribute('id','replacement-identity')
+    $identityCell.SelectSingleNode('./mxGeometry').SetAttribute('x','137')
     foreach($identityEdge in @($identityWrapper.SelectNodes("/mxfile/diagram/mxGraphModel/root/mxCell[@source='$originalIdentity' or @target='$originalIdentity']"))){if([string]$identityEdge.source-eq$originalIdentity){$identityEdge.SetAttribute('source','replacement-identity')};if([string]$identityEdge.target-eq$originalIdentity){$identityEdge.SetAttribute('target','replacement-identity')}}
     Write-Utf8File $singleDrawio ($identityWrapper.OuterXml+"`n")
+    $identityIncoming = Join-Path $scratch 'identity-incoming.xml'
+    Write-Utf8File $identityIncoming ($identityWrapper.SelectSingleNode('/mxfile/diagram/mxGraphModel').OuterXml+"`n")
     $identityReport = Join-Path $scratch 'identity-report.json'
     $strictIdentity = Invoke-Tool (Join-Path $PSScriptRoot 'sync_drawio.ps1') @('-Direction','FromDrawio','-CanonicalPath',$identityCanonical,'-DrawioPath',$singleDrawio,'-IdentityReportPath',$identityReport)
     $identityReportData = Get-Content -LiteralPath $identityReport -Raw -Encoding UTF8 | ConvertFrom-Json
     Add-TestResult 'identity-churn-rejected-atomically' ($strictIdentity.ExitCode -ne 0 -and $strictIdentity.Output -match 'changes stable cell identities' -and (Get-Sha256 $identityCanonical) -eq $identityHash -and $identityReportData.Changed) $strictIdentity.Output
     $acceptedIdentity = Invoke-Tool (Join-Path $PSScriptRoot 'sync_drawio.ps1') @('-Direction','FromDrawio','-CanonicalPath',$identityCanonical,'-DrawioPath',$singleDrawio,'-IdentityPolicy','Accept')
-    Add-TestResult 'identity-churn-explicitly-accepted' ($acceptedIdentity.ExitCode -eq 0 -and (Get-Sha256 $identityCanonical) -ne $identityHash) $acceptedIdentity.Output
+    Add-TestResult 'identity-churn-explicitly-accepted-with-web-geometry' ($acceptedIdentity.ExitCode -eq 0 -and (Get-Sha256 $identityCanonical) -ne $identityHash -and (Get-ModelSignature $identityCanonical) -eq (Get-ModelSignature $identityIncoming)) $acceptedIdentity.Output
     $restoreSingle = Invoke-Tool (Join-Path $PSScriptRoot 'sync_drawio.ps1') @('-Direction','ToDrawio','-CanonicalPath',$validPath,'-DrawioPath',$singleDrawio,'-PageId','single-page','-PageName','Single Page')
     Add-TestResult 'identity-test-wrapper-restored' ($restoreSingle.ExitCode -eq 0) $restoreSingle.Output
 
@@ -520,7 +523,7 @@ try {
             }
             catch { $corpusFailures.Add("validator-json:$base") }
         }
-        Add-TestResult 'corpus-read-only-gates' ($corpusFailures.Count -eq 0) ([pscustomobject]@{ Failures=@($corpusFailures); Observations=@($corpusObservations) } | ConvertTo-Json -Compress -Depth 5)
+        Add-TestResult 'corpus-audits-executed' ($corpusFailures.Count -eq 0) ([pscustomobject]@{ ApprovalState=[string]$corpusExpectationData.approvalState; Failures=@($corpusFailures); Observations=@($corpusObservations) } | ConvertTo-Json -Compress -Depth 5)
         $expectations = Get-Content -LiteralPath (Join-Path $SkillPath 'tests\corpus-expectations.json') -Raw -Encoding UTF8 | ConvertFrom-Json
         $expectedMap = @{}
         foreach ($expected in @($expectations.findings)) { $expectedMap["$($expected.diagram)|$($expected.gate)|$($expected.type)|$($expected.element)"] = [int]$expected.count }
@@ -537,7 +540,7 @@ try {
             elseif ([int]$expectedMap[$key] -ne [int]$actualMap[$key]) { $findingMismatches.Add("count:${key}:$($expectedMap[$key])!=$($actualMap[$key])") }
         }
         if ([int]$expectations.findingCount -ne $corpusFindings.Count) { $findingMismatches.Add("total:$($expectations.findingCount)!=$($corpusFindings.Count)") }
-        Add-TestResult 'corpus-expected-findings' ($findingMismatches.Count -eq 0) ($findingMismatches -join ', ')
+        Add-TestResult 'corpus-rejected-baseline-matches' ($findingMismatches.Count -eq 0) ($findingMismatches -join ', ')
         $afterHashes = Get-TreeHashes $corpusPath $corpusDirectories
         Add-TestResult 'corpus-inputs-unchanged' (Compare-HashMaps $beforeHashes $afterHashes) "Before=$($beforeHashes.Count); After=$($afterHashes.Count)"
     }

@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "corpus": "thtrang-11",
+  "approvalState": "rejected",
   "findingCount": 107,
   "findings": [
     {"diagram":"01_payroll_system_flow","gate":"connector-geometry","type":"internal-micro-jog","element":"e09","count":1,"disposition":"expected-issue"},

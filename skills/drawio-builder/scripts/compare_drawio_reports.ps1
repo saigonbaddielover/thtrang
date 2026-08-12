@@ -94,7 +94,42 @@ function Get-OptimizationMetrics {
         CropArea = [double]$composition[0].Result.Crop.Width * [double]$composition[0].Result.Crop.Height
         TotalBends = [double]$routing[0].Result.TotalBends
         TotalLength = [double]$routing[0].Result.TotalLength
+        Routes = @($routing[0].Result.Metrics | ForEach-Object {
+            [pscustomobject]@{ Element=[string]$_.Element; BendCount=[int]$_.BendCount }
+        })
     }
+}
+
+function Compare-RouteBends {
+    param(
+        [object[]]$BeforeRoutes,
+        [object[]]$AfterRoutes
+    )
+
+    $beforeMap = @{}
+    $afterMap = @{}
+    foreach ($route in $BeforeRoutes) {
+        if (-not $route.Element -or $beforeMap.ContainsKey($route.Element)) { throw 'Optimization requires unique nonempty route element IDs in the before report' }
+        $beforeMap[$route.Element] = [int]$route.BendCount
+    }
+    foreach ($route in $AfterRoutes) {
+        if (-not $route.Element -or $afterMap.ContainsKey($route.Element)) { throw 'Optimization requires unique nonempty route element IDs in the after report' }
+        $afterMap[$route.Element] = [int]$route.BendCount
+    }
+
+    $added = @($afterMap.Keys | Where-Object { -not $beforeMap.ContainsKey($_) } | Sort-Object)
+    $removed = @($beforeMap.Keys | Where-Object { -not $afterMap.ContainsKey($_) } | Sort-Object)
+    $regressions = [System.Collections.Generic.List[object]]::new()
+    foreach ($element in @($beforeMap.Keys | Where-Object { $afterMap.ContainsKey($_) } | Sort-Object)) {
+        if ($afterMap[$element] -le $beforeMap[$element]) { continue }
+        $regressions.Add([pscustomobject]@{
+            Element = $element
+            Before = $beforeMap[$element]
+            After = $afterMap[$element]
+            AddedBends = $afterMap[$element] - $beforeMap[$element]
+        })
+    }
+    [ordered]@{ Added=$added; Removed=$removed; Regressions=@($regressions) }
 }
 
 $includeWarnings = -not [bool]$ErrorsOnly
@@ -114,6 +149,7 @@ $improved = $afterCount -lt $beforeCount
 $metricRows = @()
 $metricImproved = $false
 $metricRegressed = $false
+$routeComparison = [ordered]@{ Added=@(); Removed=@(); Regressions=@() }
 if ($Operation -eq 'Optimization') {
     $quality = Get-Content -LiteralPath $QualityProfilePath -Raw -Encoding UTF8 | ConvertFrom-Json
     $tolerance = [double]$quality.composition.optimizationRegressionTolerance
@@ -133,8 +169,9 @@ if ($Operation -eq 'Optimization') {
         $metric | Add-Member -NotePropertyName Improved -NotePropertyValue ($improvement -gt $tolerance)
         $metric | Add-Member -NotePropertyName Regressed -NotePropertyValue ($improvement -lt -$tolerance)
     }
+    $routeComparison = Compare-RouteBends $beforeMetrics.Routes $afterMetrics.Routes
     $metricImproved = @($metricRows | Where-Object { $_.Improved }).Count -gt 0
-    $metricRegressed = @($metricRows | Where-Object { $_.Regressed }).Count -gt 0
+    $metricRegressed = @($metricRows | Where-Object { $_.Regressed }).Count -gt 0 -or $routeComparison.Added.Count -gt 0 -or $routeComparison.Removed.Count -gt 0 -or $routeComparison.Regressions.Count -gt 0
 }
 $passed = if ($Operation -eq 'Construction') {
     $beforeCount -eq 0 -and $afterCount -eq 0 -and $introduced.Count -eq 0
@@ -162,6 +199,9 @@ $result = [pscustomobject]@{
     MetricImproved = $metricImproved
     MetricRegressed = $metricRegressed
     Metrics = $metricRows
+    RouteIdentityAdded = @($routeComparison.Added)
+    RouteIdentityRemoved = @($routeComparison.Removed)
+    RouteBendRegressions = @($routeComparison.Regressions)
     Decision = $decision
 }
 $result | ConvertTo-Json -Depth 6

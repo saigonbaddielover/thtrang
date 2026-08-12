@@ -20,9 +20,47 @@ function Write-Report {
     [System.IO.File]::WriteAllText($Path, ($report | ConvertTo-Json -Depth 6) + "`n", [System.Text.UTF8Encoding]::new($false))
 }
 
+function Write-OptimizationReport {
+    param(
+        [string]$Path,
+        [double]$FontPoints,
+        [double]$CropWidth,
+        [double]$CropHeight,
+        [object[]]$Routes
+    )
+    $totalBends = @($Routes | Measure-Object BendCount -Sum).Sum
+    $report = [ordered]@{
+        Gates = @(
+            [ordered]@{
+                Name = 'composition-word-fit'
+                Result = [ordered]@{
+                    Word = [ordered]@{ EffectiveMinimumFontPoints=$FontPoints }
+                    Crop = [ordered]@{ Width=$CropWidth; Height=$CropHeight }
+                    Issues = @()
+                }
+            },
+            [ordered]@{
+                Name = 'route-efficiency'
+                Result = [ordered]@{
+                    TotalBends = [int]$totalBends
+                    TotalLength = [double](@($Routes | Measure-Object Length -Sum).Sum)
+                    Metrics = @($Routes)
+                    Issues = @()
+                }
+            }
+        )
+    }
+    [System.IO.File]::WriteAllText($Path, ($report | ConvertTo-Json -Depth 8) + "`n", [System.Text.UTF8Encoding]::new($false))
+}
+
 function New-Issue {
     param([string]$Type,[string]$Element,[string]$Severity = 'ERROR')
     [pscustomobject]@{ Severity=$Severity; Type=$Type; Element=$Element }
+}
+
+function New-Route {
+    param([string]$Element,[int]$BendCount,[double]$Length)
+    [pscustomobject]@{ Element=$Element; BendCount=$BendCount; Length=$Length }
 }
 
 function Invoke-Compare {
@@ -54,6 +92,10 @@ try {
     $cleanBefore = Join-Path $scratch 'clean-before.json'
     $cleanAfter = Join-Path $scratch 'clean-after.json'
     $dirtyStage = Join-Path $scratch 'dirty-stage.json'
+    $optimizationBefore = Join-Path $scratch 'optimization-before.json'
+    $optimizationImproved = Join-Path $scratch 'optimization-improved.json'
+    $optimizationSwapped = Join-Path $scratch 'optimization-swapped.json'
+    $optimizationIdentityChanged = Join-Path $scratch 'optimization-identity-changed.json'
     Write-Report $before @((New-Issue 'connector-crossing' 'e8'),(New-Issue 'source-micro-jog' 'e2'))
     Write-Report $improved @((New-Issue 'source-micro-jog' 'e2'))
     Write-Report $regressed @((New-Issue 'connector-crossing' 'e8'),(New-Issue 'source-micro-jog' 'e2'),(New-Issue 'target-direction' 'e9'))
@@ -63,6 +105,10 @@ try {
     Write-Report $cleanBefore @()
     Write-Report $cleanAfter @()
     Write-Report $dirtyStage @((New-Issue 'target-direction' 'e9'))
+    Write-OptimizationReport $optimizationBefore 9.0 1000 1000 @((New-Route 'e1' 0 100),(New-Route 'e2' 2 200))
+    Write-OptimizationReport $optimizationImproved 9.5 950 1000 @((New-Route 'e1' 0 100),(New-Route 'e2' 1 180))
+    Write-OptimizationReport $optimizationSwapped 9.5 950 1000 @((New-Route 'e1' 2 120),(New-Route 'e2' 0 150))
+    Write-OptimizationReport $optimizationIdentityChanged 9.5 950 1000 @((New-Route 'e1' 0 100),(New-Route 'e3' 1 180))
 
     $improvedResult = Invoke-Compare $before $improved
     $improvedData = $improvedResult.Output | ConvertFrom-Json
@@ -93,6 +139,18 @@ try {
     $dirtyStageResult = Invoke-Compare $cleanBefore $dirtyStage @('-Operation','Construction')
     $dirtyStageData = $dirtyStageResult.Output | ConvertFrom-Json
     Add-Result 'dirty-construction-stage-rejected' ($dirtyStageResult.ExitCode -eq 1 -and $dirtyStageData.Decision -eq 'REJECT STAGE' -and $dirtyStageData.IntroducedCount -eq 1) $dirtyStageResult.Output
+
+    $optimizationResult = Invoke-Compare $optimizationBefore $optimizationImproved @('-Operation','Optimization')
+    $optimizationData = $optimizationResult.Output | ConvertFrom-Json
+    Add-Result 'per-edge-bend-improvement-accepted' ($optimizationResult.ExitCode -eq 0 -and $optimizationData.Decision -eq 'ACCEPT OPTIMIZATION' -and @($optimizationData.RouteBendRegressions).Count -eq 0) $optimizationResult.Output
+
+    $swappedOptimizationResult = Invoke-Compare $optimizationBefore $optimizationSwapped @('-Operation','Optimization')
+    $swappedOptimizationData = $swappedOptimizationResult.Output | ConvertFrom-Json
+    Add-Result 'per-edge-bend-regression-rejected' ($swappedOptimizationResult.ExitCode -eq 1 -and $swappedOptimizationData.Decision -eq 'REJECT OPTIMIZATION' -and @($swappedOptimizationData.RouteBendRegressions).Count -eq 1 -and $swappedOptimizationData.RouteBendRegressions[0].Element -eq 'e1') $swappedOptimizationResult.Output
+
+    $identityOptimizationResult = Invoke-Compare $optimizationBefore $optimizationIdentityChanged @('-Operation','Optimization')
+    $identityOptimizationData = $identityOptimizationResult.Output | ConvertFrom-Json
+    Add-Result 'optimization-route-identity-churn-rejected' ($identityOptimizationResult.ExitCode -eq 1 -and @($identityOptimizationData.RouteIdentityAdded) -contains 'e3' -and @($identityOptimizationData.RouteIdentityRemoved) -contains 'e2') $identityOptimizationResult.Output
 
     $failed = @($results | Where-Object { -not $_.Passed })
     [pscustomobject]@{

@@ -105,13 +105,15 @@ Resolve paths relative to the project or skill. Never hardcode a machine path.
 - Run `scripts/export_drawio.ps1` for page-aware SVG, PNG, PDF, and artifact provenance.
 - Run `scripts/validate_drawio.ps1` in `Audit` mode while iterating and in `Approval` mode only with semantic, notation, artifact, warning-disposition, and visual-inspection evidence required by the task.
 - Run `scripts/compare_drawio_reports.ps1 -Operation Construction` between clean build stages and `-Operation Repair` after every repair. Reject a construction stage unless both reports are clean; reject a repair that introduces any new error or warning fingerprint or does not reduce the tracked issue count.
-- Run `scripts/compare_drawio_reports.ps1 -Operation Optimization` for compactness or routing changes. Accept only zero-regression changes that improve at least one delivery metric.
+- Freeze a rendered baseline before compactness or routing changes, then run `scripts/compare_drawio_reports.ps1 -Operation Optimization` per page. Accept only unchanged route identities, no per-edge bend increase, no aggregate regression, no new finding, and at least one improved delivery metric.
 - Run `scripts/export_drawio_crops.ps1` after validation to create inspectable crops for structured findings.
 - Run `scripts/test_profile_fixtures.ps1` after changing a notation profile, contract schema, or family stencil mapping.
 
 Invoke each script as a separate `pwsh -NoProfile -File` or `powershell.exe -NoProfile -File` process. Do not dot-source or chain scripts that intentionally use exit codes.
 
 Treat nonzero exits as failures. Treat unsupported SVG constructs, unknown outlines, missing manifests, renderer drift, and unavailable required gates explicitly. MCP acceptance proves only that the viewer accepted the request; it is not pixel-level evidence or filesystem persistence.
+
+Treat expected-finding corpus snapshots as detector regression evidence only. They never approve a diagram, excuse a new finding, or convert a known error into a pass.
 
 ## Enforce rendered QA
 

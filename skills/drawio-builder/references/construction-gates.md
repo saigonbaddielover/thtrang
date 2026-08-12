@@ -47,6 +47,8 @@ Before writing an edge in the current route cluster, record:
 edge | source | source side | source port | first shaft | corridor | final shaft | target port | target side | label zone
 ```
 
+Start each ledger row with a straight candidate. If it fails, record the named blocker before trying one bend; repeat before trying two or more bends. A waypoint without a blocker is a route defect.
+
 Use cardinal-center ports for the first render of ellipses, rhombi, documents, cylinders, archives, and custom stencils. Use an off-center irregular-shape port only when obstacle geometry requires it; give it an explicit normal shaft and verify its actual rendered contact before adding another incident route.
 
 Do not require final port, corridor, waypoint, or label-zone coordinates for future clusters during the node-only stage. Keep those ledger cells `UNPLANNED` until their cluster becomes current.

@@ -5,6 +5,7 @@
 - Layout hierarchy
 - Shape placement
 - Anchors
+- Bend necessity
 - Corridors
 - Fan-in and fan-out
 - Feedback and return flow
@@ -35,6 +36,14 @@ Avoid corner anchors unless the route is intentionally allowed to use either adj
 Start irregular shapes with cardinal-center ports. Treat an off-center port as a higher-risk exception: place an explicit first or final waypoint outside the rendered outline by the endpoint-stub clearance, then render and validate that edge before adding another edge to the region.
 
 Validate the rendered contact point against the actual source and target outlines. A declared side and a correctly directed segment are insufficient when the arrow tip floats, enters the interior, or lands on a neighboring side of an irregular shape.
+
+## Bend necessity
+
+Try route candidates in this order: straight, one-bend L, two-bend dogleg, then a longer orthogonal route. Advance only when every lower-bend candidate violates a named obstacle, reserved label zone, occupied corridor, divider, endpoint normal, or page boundary.
+
+Record the blocking reason for every bend beyond the lowest clear candidate. Router output is only a candidate; remove autorouter micro-jogs, alignment offsets, and detours unless the rendered audit proves they are necessary.
+
+Freeze a rendered per-edge bend baseline before relayout. Never increase the bend count of one edge merely because other edges improve enough to reduce the page total. Move nodes or choose cardinal-center ports before authoring an additional waypoint.
 
 ## Corridors
 

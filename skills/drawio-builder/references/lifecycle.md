@@ -27,6 +27,8 @@ Never patch a derived image and assume the change can be recovered into canonica
 
 Support both standard compressed page payloads and `compressed="false"` wrappers. Write updates atomically and preserve diagram ID and name.
 
+Keep `IdentityPolicy Strict` for routine round trips. When a deliberate web edit changes cell IDs, review the identity report and use `IdentityPolicy Accept` to import the incoming model wholesale. Preserve the web-edited `style`, `mxGeometry`, waypoints, anchors, values, and cell order; never overlay geometry or routing attributes from the previous canonical model while renaming IDs. Establish the accepted import as the new rendered baseline before further optimization.
+
 ## Multi-page files
 
 Process one page at a time. When a wrapper has multiple pages, require `PageId`. List available IDs and names on ambiguity. Extract each page to its own canonical source. Patch only the selected page when syncing back and preserve all other pages.
