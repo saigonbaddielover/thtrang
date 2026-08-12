@@ -100,8 +100,8 @@ function Get-AbsoluteGeometry {
     $height = Convert-ToNumber ([string]$geometry.height)
     if ($Cell.parent -and $Cells.ContainsKey([string]$Cell.parent) -and $Cells[[string]$Cell.parent].vertex -eq '1') {
         $parentGeometry = Get-AbsoluteGeometry $Cells[[string]$Cell.parent] $Cells $Cache
-        $x += $parentGeometry.X
-        $y += $parentGeometry.Y
+        $x += $parentGeometry.Left
+        $y += $parentGeometry.Top
     }
     $result = [pscustomobject]@{ Left=$x; Top=$y; Right=$x+$width; Bottom=$y+$height }
     $Cache[[string]$Cell.id] = $result

@@ -57,6 +57,8 @@ Keep long parallel routes away from lane dividers and unrelated borders. Do not 
 
 Apply divider clearance to vertical and horizontal dividers only across the divider's actual span. Include stroke width in obstacle and separation calculations.
 
+Convert every nested shape boundary to page coordinates before testing candidate segments against obstacles. Local child coordinates are valid for serialization, not for route clearance decisions across swimlanes, groups, or containers.
+
 Separate parallel connectors visually. Near-stacked paths are ambiguous even when their coordinates are not identical.
 
 ## Fan-in and fan-out

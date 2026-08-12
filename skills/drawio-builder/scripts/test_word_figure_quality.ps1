@@ -33,6 +33,8 @@ try{
     $cleanSvg=Join-Path $scratch 'clean.svg'
     $parallelCanonical=Join-Path $scratch 'parallel-ports.xml'
     $parallelSvg=Join-Path $scratch 'parallel-ports.svg'
+    $nestedCanonical=Join-Path $scratch 'nested-obstacle.xml'
+    $nestedSvg=Join-Path $scratch 'nested-obstacle.svg'
     Write-Utf8File $canonical @'
 <mxGraphModel grid="1" page="1" pageWidth="827" pageHeight="1169"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="a" value="Start" style="rounded=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="100" y="100" width="100" height="60" as="geometry"/></mxCell><mxCell id="b" value="Finish" style="rounded=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="500" y="100" width="100" height="60" as="geometry"/></mxCell><mxCell id="e" value="Flow" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="a" target="b"><mxGeometry relative="1" as="geometry"/></mxCell></root></mxGraphModel>
 '@
@@ -53,6 +55,13 @@ try{
     $parallel=Invoke-Child (Join-Path $PSScriptRoot 'audit_drawio_route_efficiency.ps1') @('-SourcePath',$parallelCanonical,'-SvgPath',$parallelSvg,'-QualityProfilePath',$profile)
     $parallelData=$parallel.Output|ConvertFrom-Json
     Add-Result 'parallel-normal-ports-require-two-bends' ($parallel.ExitCode-eq0-and$parallelData.WarningCount-eq0-and$parallelData.Metrics[0].BendCount-eq2) $parallel.Output
+    Write-Utf8File $nestedCanonical @'
+<mxGraphModel grid="1" page="1" pageWidth="827" pageHeight="1169"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="lane" value="Lane" style="swimlane;horizontal=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="300" y="100" width="300" height="400" as="geometry"/></mxCell><mxCell id="obstacle" value="Obstacle" style="rounded=1;fontSize=11;" vertex="1" parent="lane"><mxGeometry x="100" y="100" width="100" height="60" as="geometry"/></mxCell><mxCell id="a" value="Start" style="rounded=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="100" y="200" width="100" height="60" as="geometry"/></mxCell><mxCell id="b" value="Finish" style="rounded=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="600" y="400" width="100" height="60" as="geometry"/></mxCell><mxCell id="e" value="Flow" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;endArrow=classic;exitX=1;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="a" target="b"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="300" y="230"/><mxPoint x="300" y="150"/><mxPoint x="650" y="150"/></Array></mxGeometry></mxCell></root></mxGraphModel>
+'@
+    Write-Utf8File $nestedSvg '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 827 1169"><g data-cell-id="e"><path fill="none" stroke="#000" d="M 200 230 L 300 230 L 300 150 L 650 150 L 650 400"/></g></svg>'
+    $nested=Invoke-Child (Join-Path $PSScriptRoot 'audit_drawio_route_efficiency.ps1') @('-SourcePath',$nestedCanonical,'-SvgPath',$nestedSvg,'-QualityProfilePath',$profile)
+    $nestedData=$nested.Output|ConvertFrom-Json
+    Add-Result 'nested-lane-obstacle-rejects-false-shortcut' ($nested.ExitCode-eq0-and$nestedData.WarningCount-eq0-and$null-eq$nestedData.Metrics[0].OptimalBendCount) $nested.Output
     $failed=@($results|Where-Object{-not$_.Passed})
     [pscustomobject]@{Engine=$engine;Version=$PSVersionTable.PSVersion.ToString();TestCount=$results.Count;FailedCount=$failed.Count;Tests=@($results)}|ConvertTo-Json -Depth 6
     if($failed.Count-gt0){exit 1}

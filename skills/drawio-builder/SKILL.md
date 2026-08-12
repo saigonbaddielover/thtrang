@@ -96,6 +96,8 @@ Use cardinal-center ports for the first render of irregular shapes. Off-center e
 
 Count bends against port-normal constraints, not endpoint displacement alone. Two offset ports whose required first and last segments are parallel in the same direction need at least two bends; never collapse them to one bend or route through an obstacle to satisfy a naive lower bound. Treat corner ports as ambiguous only when both adjacent sides are intentionally valid.
 
+Normalize nested shape bounds to page coordinates before validating route candidates. Child-local coordinates must never approve a shortcut through a shape inside a swimlane, group, or container.
+
 Resize or relayout before shrinking type. After any shape move or resize, recompute physical ports and rerender every incident edge, neighboring corridor, label, and lane boundary in the impact region.
 
 Use MCP `create_diagram` with XML and omit post-layout/routing for final hand-crafted geometry. Use ELK or libavoid only for disposable exploration unless the result can be captured and revalidated.
